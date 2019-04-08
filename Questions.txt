@@ -1,0 +1,2 @@
+Questions:
+1. Do we have enough space to store all the data in cpp vector, and cpp matrix?

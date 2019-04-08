@@ -13,8 +13,7 @@ int main()
     vect1 = {30};
     vector<int> vect2(vect1.begin(), vect1.end());
 
-    for (int x : vect2)
-        cout << x << " ";
+
 
     return 0;
 
