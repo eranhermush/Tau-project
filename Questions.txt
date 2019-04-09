@@ -1,2 +1,13 @@
+Questions and assumptions:
+
 Questions:
 1. Do we have enough space to store all the data in cpp vector, and cpp matrix?
+
+
+Assumptions:
+1. The workers doesnt do the job in 'random' order
+2. The workers are calling to "get_job_size" before they start to get the size of job
+3. The size of job change  when there are no starter workers
+4. The server knows that there are only 2 clients, and it waits to them before continue, it doesnt use threads
+5. The socket program is in c type 
+6. smarter protocol
