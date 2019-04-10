@@ -6,6 +6,7 @@
 #define TAU_PROJECT_PARSER_MAIN_H
 #include <iostream>
 #include <string>
+#include <vector>
 using namespace std;
 /**
  * This class is the main for the parser
@@ -42,7 +43,7 @@ public:
     getter for the matrix
     we assume that the matrix is intialized
     */
-    <vector<vector<string>> get_matrix();
+    vector<vector<string> > get_matrix();
 
 
 };

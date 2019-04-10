@@ -6,13 +6,13 @@
 #include <string>
 
 
-
+#include <thread> 
 #include <netdb.h> 
 #include <netinet/in.h> 
 #include <stdlib.h> 
 #include <sys/socket.h> 
 #include <sys/types.h> 
-
+#include "worker_manager_worker_object.h"
 #include "parser_main.h"
 
 
@@ -31,7 +31,7 @@ class worker_manager{
     int job_size;
     string server_ip;
     int server_port;
-    vector<int> workers;
+    vector<worker_manager_worker_object> workers;
     int main_socket; 
 public:
     /**
@@ -67,6 +67,13 @@ public:
     * @ret: 1 on success, -1 on error
     */
     int create_server_of_worker_manager();
+
+    /*
+    * This function is the thread function: each client that connects to the server, has a thread
+    * This thread listen to its calls and handles them
+
+    */
+    int worker_handler_function(int socket);
 
 };
 

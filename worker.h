@@ -9,7 +9,7 @@
 
 using namespace std;
 /**
- * This class is the worker class
+ * This class is the worker class 
  * it represents each worker, and has functions gives a request for new job, and functions that goes over all the options
  */
 
@@ -31,7 +31,7 @@ public:
      * @param server_port is the port of the worker manager
      * @param job_size - the size of each working iteration
      */
-    worker(vector< vector<string> > matrix_all_options, int id, string server_ip, int server_port, int job_size);
+    worker(vector<vector<string>> matrix_all_options, int id, string server_ip, int server_port, int job_size);
 
     /*
     * this function intialize the worker as a client of the server
