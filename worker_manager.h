@@ -22,7 +22,7 @@ using namespace std;
  * Each worker asks the worker manager for the next job, and the manager organize all the worker job
  */
 
-class worker {
+class worker_manager{
 
     vector< vector<string> > matrix_all_options;
     int sum_of_works;

@@ -11,3 +11,4 @@ Assumptions:
 4. The server knows that there are only 2 clients, and it waits to them before continue, it doesnt use threads
 5. The socket program is in c type 
 6. smarter protocol
+7. Order of enumaration
