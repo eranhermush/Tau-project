@@ -32,7 +32,7 @@ public:
      * @param c: the known char of the regular expression, like 'c'
      * @return  The array of option for this char, or empty vector for unknown char
      */
-    vector<char> from_known_char_to_options_list(char c);  
+    vector<string> from_known_char_to_options_list(char c);  
 
     /**
         convert the parser string to the parser matrix

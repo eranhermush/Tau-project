@@ -1,6 +1,6 @@
 #include "worker.h"
 
-worker_manager::worker(vector< vector<string> > matrix_all_options, int id, string server_ip, int server_port, int job_size)
+worker::worker(vector< vector<string> > matrix_all_options, int id, string server_ip, int server_port, int job_size)
 {
 	this->server_port = server_port;
 	this->server_ip = server_ip;
