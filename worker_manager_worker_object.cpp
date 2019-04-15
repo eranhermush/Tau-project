@@ -1,6 +1,6 @@
 #include "worker_manager_worker_object.h"
-worker_manager_worker_object::worker_manager_worker_object(int id, int socet, thread th){
+worker_manager_worker_object::worker_manager_worker_object(int id, int socket, thread& th){
 	this->worker_id = id;
 	this->worker_socket = socket;
-	thread->worker_thread = th;
+	this->worker_thread = move(th);
 }

@@ -5,18 +5,24 @@
 #include <iostream>
 #include <string>
 
+using namespace std;
 
-#include <thread> 
 #include <netdb.h> 
-#include <netinet/in.h> 
+
+
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
+#include <unistd.h>
 #include <stdlib.h> 
-#include <sys/socket.h> 
+//#include <sys/socket.h> 
+#include <thread> 
+
 #include <sys/types.h> 
 #include "worker_manager_worker_object.h"
 #include "parser_main.h"
 
 
-using namespace std;
 /**
  * This class is the main for the worker manager
  * Each worker asks the worker manager for the next job, and the manager organize all the worker job

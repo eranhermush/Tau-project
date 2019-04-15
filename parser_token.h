@@ -1,7 +1,3 @@
-//
-// Created by Eran on 30/03/2019.
-//
-
 #ifndef TAU_PROJECT_PARSER_TOKEN_H
 #define TAU_PROJECT_PARSER_TOKEN_H
 
