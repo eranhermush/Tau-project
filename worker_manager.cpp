@@ -44,7 +44,7 @@ int worker_manager::create_server_of_worker_manager(){
     int opt = 1; 
     int addrlen = sizeof(address); 
     char buffer[1024] = {0}; 
-    thread worker_handler;
+    //thread worker_handler;
     // Creating socket file descriptor 
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) 
     { 
@@ -77,11 +77,12 @@ int worker_manager::create_server_of_worker_manager(){
 	        perror("accept error"); 
 	        return -1;
 	    }
-	    worker_handler = thread(worker_handler_function(new_socket), i);
+	    //worker_handler = thread(worker_handler_function(new_socket), i);
 	    i++; 
 
 	    // the id is 1
-	    this->workers.push_back(worker_manager_worker_object(1, new_socket, worker_handler));     	
+	    this->workers.push_back(worker_manager_worker_object(1, new_socket));
+	    return 1; // Todo: remove it
     }
 
     

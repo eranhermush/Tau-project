@@ -4,8 +4,11 @@
 #define TAU_PROJECT_WORKER_MANAGER_H
 #include <iostream>
 #include <string>
-#include "worker_manager.h"
+#include <cstring>
+#include <netinet/in.h>
 
+#include "worker_manager.h"
+#include "scheme.h"
 
 using namespace std;
 /**
@@ -21,6 +24,7 @@ class worker {
     string target;
     int server_port;
     int job_size;
+    int id;
     int socket_to_server;
 public:
     /**

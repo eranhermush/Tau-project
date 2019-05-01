@@ -22,11 +22,13 @@ int worker::intialize_worker_client()
         return -1; 
     } 
    
-    memset(&serv_addr, '0', sizeof(serv_addr)); 
+    memset(&serv_addr, '0', sizeof(serv_addr));
    
     serv_addr.sin_family = AF_INET; 
-    serv_addr.sin_port = htons(this->server_port); 
-    serv_addr.sin_addr.s_addr = this->server_ip; 
+    serv_addr.sin_port = htons(this->server_port);
+    const char *const ip = this->server_ip.data();
+    inet_aton(ip, reinterpret_cast<in_addr *>(&serv_addr.sin_addr.s_addr));
+    //serv_addr.sin_addr.s_addr = this->server_ip;
 
    
     if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) 
@@ -45,11 +47,11 @@ int worker::get_a_job_from_server()
 }
 
 int worker::work(int index){
-	vector<int> lengths(size(this->matrix_all_options), 0);
-	for(int i = 0; i < size(lengths); i++){
-		lengths[i] = size(this->matrix_all_options[i]);
+	vector<int> lengths((this->matrix_all_options.size()), 0);
+	for(int i = 0; i < (lengths.size()); i++){
+		lengths[i] = this->matrix_all_options[i].size();
 	}
-	vector<int> indices = index_vector_from_index(index);
+	vector<int> indices = indices_vector_from_index(index);
 	string pass = password_from_indices_vector(indices);
 
 	/* Just for now, use 3-caesar_cipher */
@@ -59,46 +61,53 @@ int worker::work(int index){
 			// found an answer
 			return j+index;
 		}
-		worker::advance_password(&pass, &indices, &lengths);
+		worker::advance_password(pass, indices, lengths);
 	}
 
 	// no password was found
 	return -1;
 }
 
-void worker::advance_password(string& pass, vector<int>& indices, vector<int>& lengths){
-	int len = size(lengths);
-	for(int i = 0; i < len; i++){
+void worker::advance_password(string &pass, vector<int>& indices, vector<int>& lengths){
+	int len = lengths.size();
+    int current_index =0;
+    pass = "";
+    for(int i = 0; i < len; i++){
 		indices[i]++;
-		if(indices[i] < lengths[i]){
-			pass[i] = this->matrix_all_options[i][indices[i]];
+		current_index = indices.at(i);
+		if(indices.at(i) < lengths[i]){
+			pass =pass + this->matrix_all_options.at(i).at(current_index);
 			return;
 		}
 		else{
 			indices[i] = 0;
-			pass[i] = this->matrix_all_options[i][indices[i]];
+			pass = pass + this->matrix_all_options.at(i).at(current_index);
 		}
 	}
 }
 
 vector<int> worker::indices_vector_from_index(int index){
 	// find the index of each charater
-	int len = size(this->matrix_all_options);
+	int len = this->matrix_all_options.size();
 	vector<int> indices(len, 0);
 	for(int i = 0; i < len && index > 0; i++){
-		indices[i] = index % size(this->matrix_all_options[i]);
-		index /= size(this->matrix_all_options[i]);
+		indices[i] = index % this->matrix_all_options[i].size();
+		index /= this->matrix_all_options[i].size();
 	}
 	return indices;
 }
 
 string worker::password_from_indices_vector(vector<int> indices){
+
 	// find the index of each charater
-	int len = size(indices);
+	int len = indices.size();
 	// fill with characters
 	string password(len, '\0');
+	int current_index = 0;
 	for(int i = 0; i < len; i++){
-		password[i] = this->matrix_all_options[i][indices[i]];
+		current_index = indices.at(i);
+	    password =password + this->matrix_all_options.at(i).at(current_index);
 	}
 	return password;
+
 }

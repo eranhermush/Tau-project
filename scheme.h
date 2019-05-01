@@ -1,3 +1,6 @@
+
+#include <iostream>
+#include <string>
 using namespace std;
 
 class scheme{
@@ -6,5 +9,6 @@ class scheme{
 		 @param plaintext - the text to be encrypted
 		 @param offest - the offest of the code
 	*/
+public:
 	static string caesar_cipher(string plaintext, int offest);
-}
+};

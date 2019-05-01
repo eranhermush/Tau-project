@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include <string>
-#include <thread>
+//#include <thread>
 using namespace std;
 
 /**
@@ -14,13 +14,13 @@ using namespace std;
 
 class worker_manager_worker_object {
 	int worker_id, worker_socket;
-	thread worker_thread;
+	//thread worker_thread;
 
 public:
     /**
      * constructor
      * @param: id, socket, thread
      */
-     worker_manager_worker_object(int id, int socket, thread& worker_thread);
+     worker_manager_worker_object(int id, int socket);
 };
 #endif //TAU_WORKER_MANAGER_WORKER_OBJECT_H

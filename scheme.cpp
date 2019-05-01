@@ -1,6 +1,6 @@
 #include "scheme.h"
 
-static string scheme::caesar_cipher(string plaintext, int offest){
+string scheme::caesar_cipher(string plaintext, int offest){
 	char c;
 	for(int i = 0; i < plaintext.length(); i++){
 		c = plaintext[i];
