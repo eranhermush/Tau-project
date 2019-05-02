@@ -30,6 +30,6 @@ void parser_main::from_parser_string_to_matrix(){
         this->matrix_all_options.at(i) = this->from_known_char_to_options_list(this->str_regular_expression.at(i));
     }
 }
-vector<vector<string>> parser_main::get_matrix(){
+vector<vector<string>>& parser_main::get_matrix(){
     return this->matrix_all_options;
 }

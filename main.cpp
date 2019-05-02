@@ -7,14 +7,26 @@ using namespace std;
 #include <string>
 #include "worker_manager.h"
 
+
+void print_matrix(vector< vector<string> > &matrix){
+	for(int i=0;i<matrix.size();i++){
+		for(int j=0; j<matrix.at(i).size(); j++){
+			cout << matrix.at(i).at(j);
+		}
+		cout <<endl;
+	}
+}
+
 int main()
 {	
 	string parser_string;
 	cout << "Hello, please enter the parser string:" << endl;
 	cin >> parser_string;
-	parser_main a (parser_string);
+	parser_main parser (parser_string);
 	
-	cout << a.from_known_char_to_options_list('c').at(0) << endl;
+	// create the matrix
+	parser.from_parser_string_to_matrix();
+	print_matrix(parser.get_matrix());
 
 
     return 0;

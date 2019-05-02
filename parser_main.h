@@ -40,7 +40,7 @@ public:
     getter for the matrix
     we assume that the matrix is intialized
     */
-    vector<vector<string> > get_matrix();
+    vector<vector<string> >& get_matrix();
 
 
 };
