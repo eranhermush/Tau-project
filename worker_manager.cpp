@@ -2,12 +2,11 @@
 
 #include "worker_manager.h"
 
-worker_manager::worker_manager(vector< vector<string> > matrix_all_options, string server_ip, int server_port)
+worker_manager::worker_manager(vector< vector<string> > &matrix_all_options, int server_port)
 {
 
 
 	this->server_port = server_port;
-	this->server_ip = server_ip;
     this->matrix_all_options = matrix_all_options;
     this->sum_of_works = 0;
     this->workers = {};
@@ -55,7 +54,7 @@ int worker_manager::create_server_of_worker_manager(){
 
     address.sin_family = AF_INET; 
     address.sin_addr.s_addr = htonl(INADDR_ANY);
-    address.sin_port = htons( this->server_port); 
+    address.sin_port = htons(this->server_port); 
   
     // Forcefully attaching socket to the port 8080 
     if (bind(server_fd, (struct sockaddr *)&address, sizeof(address))<0) 
@@ -72,11 +71,13 @@ int worker_manager::create_server_of_worker_manager(){
     // wait for connections
     int i = 0;
     while(1){
+        cout << "waiting for clients" <<endl;
 	    if ((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen))<0) 
 	    { 
 	        perror("accept error"); 
 	        return -1;
 	    }
+        cout << "get client" << endl;
 	    //worker_handler = thread(worker_handler_function(new_socket), i);
 	    i++; 
 
@@ -100,4 +101,10 @@ int worker_handler_function(int socket){
 			return -1;
 		}
 	}
+}
+
+
+int worker_manager::main(){
+    create_server_of_worker_manager();
+    return 1;
 }

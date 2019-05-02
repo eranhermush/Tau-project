@@ -35,7 +35,6 @@ class worker_manager{
     int current_index_of_job_in_progress;
     int index_of_job_make_sure_thaat_made; // not use in that section
     int job_size;
-    string server_ip;
     int server_port;
     vector<worker_manager_worker_object> workers;
     int main_socket; 
@@ -43,10 +42,9 @@ public:
     /**
      * constructor
      * @param str- the matrix from the parser with all the options
-     * @param server_ip is the ip of the worker manager
      * @param server_port is the port of the worker manager
      */
-    worker_manager(vector< vector<string> > matrix_all_options, string server_ip, int server_port);
+    worker_manager(vector< vector<string> > &matrix_all_options, int server_port);
 
   
     /*
@@ -81,6 +79,11 @@ public:
     */
     int worker_handler_function(int socket);
 
+
+    /*
+        This function is the main for the manager, it creates here the worker and gives them jobs
+    */
+    int main();
 };
 
 

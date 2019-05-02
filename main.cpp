@@ -7,7 +7,9 @@ using namespace std;
 #include <string>
 #include "worker_manager.h"
 
-
+/*
+	This function is for checking the matrix
+*/
 void print_matrix(vector< vector<string> > &matrix){
 	for(int i=0;i<matrix.size();i++){
 		for(int j=0; j<matrix.at(i).size(); j++){
@@ -19,6 +21,7 @@ void print_matrix(vector< vector<string> > &matrix){
 
 int main()
 {	
+	int server_port = 8811;
 	string parser_string;
 	cout << "Hello, please enter the parser string:" << endl;
 	cin >> parser_string;
@@ -26,7 +29,11 @@ int main()
 	
 	// create the matrix
 	parser.from_parser_string_to_matrix();
-	print_matrix(parser.get_matrix());
+	//print_matrix(parser.get_matrix());
+
+	// creates the manager
+	worker_manager manager(parser.get_matrix(), server_port);
+	manager.main();
 
 
     return 0;
