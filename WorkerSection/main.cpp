@@ -3,14 +3,16 @@ using namespace std;
 #include <bits/stdc++.h>
 #include <string>
 
+#include "worker.h"
 
 
 int main()
 {	
 	int server_port = 8811;
-	string parser_string;
-	cout << "Hello, server:" << endl;
-
+	cout << "Hello, client:" << endl;
+	worker* my_worker=  new worker();
+	// my_worker.get_matrix(); Todo
+	cout <<"f" <<endl;
 
 
     return 0;

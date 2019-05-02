@@ -1,6 +1,16 @@
 #include "worker.h"
 
-worker::worker(vector< vector<string> > matrix_all_options, int id, string server_ip, int server_port, int job_size)
+
+
+worker::worker()
+{
+	cout<<"hi :)"<<endl;
+	this->server_port = 8811;
+	this->server_ip = "127.0.0.1";
+	intialize_worker_client();
+}
+
+void worker::start_worker(vector< vector<string> > &matrix_all_options, int id, string server_ip, int server_port, int job_size)
 {
 	this->server_port = server_port;
 	this->server_ip = server_ip;
@@ -33,9 +43,11 @@ int worker::intialize_worker_client()
    
     if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) 
     { 
+    	perror("f");	
         printf("\nConnection Failed \n"); 
         return -1; 
     } 
+    cout << "connect" << endl;
     this->socket_to_server = sock;
     return 0;
 }
