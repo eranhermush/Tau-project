@@ -108,3 +108,17 @@ int worker_manager::main(){
     create_server_of_worker_manager();
     return 1;
 }
+int worker_manager::send_matrix_to_worker(int index){
+    int ret = 0;
+    //worker my_worker;
+    //my_worker = this->workers.at(i);
+    for(int i=0;i<this->matrix_all_options.size();i++){
+        for(int j=0; j<this->matrix_all_options.at(i).size(); j++){
+            cout << this->matrix_all_options.at(i).at(j);
+        }
+        cout <<endl;
+    }
+    //ret = send(new_socket , hello , strlen(hello) , 0 ); 
+
+    return 1;
+}

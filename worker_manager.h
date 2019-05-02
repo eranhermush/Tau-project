@@ -84,6 +84,13 @@ public:
         This function is the main for the manager, it creates here the worker and gives them jobs
     */
     int main();
+
+    /*
+        This function sends the matrixto the worker,
+        index is the index of the worker in the workerlist 
+        it returns 1 or -1, -1 indicates an error
+    */ 
+    int send_matrix_to_worker(int index);
 };
 
 
