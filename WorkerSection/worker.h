@@ -1,13 +1,11 @@
-
-
-#ifndef TAU_PROJECT_WORKER_MANAGER_H
-#define TAU_PROJECT_WORKER_MANAGER_H
+#ifndef TAU_PROJECT_WORKER_H
+#define TAU_PROJECT_WORKER_H
 #include <iostream>
 #include <string>
 #include <cstring>
+#include <vector>
 #include <netinet/in.h>
-
-#include "worker_manager.h"
+#include <arpa/inet.h>
 #include "scheme.h"
 
 using namespace std;
@@ -77,4 +75,4 @@ public:
 };
 
 
-#endif //TAU_PROJECT_PARSER_WORKER_H
+#endif //TAU_PROJECT_WORKER_H
