@@ -28,6 +28,7 @@ int worker::intialize_worker_client()
 
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
     { 
+    	perror("error: ");	
         printf("\n Socket creation error \n"); 
         return -1; 
     } 
@@ -43,7 +44,7 @@ int worker::intialize_worker_client()
    
     if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) 
     { 
-    	perror("f");	
+    	perror("error: ");	
         printf("\nConnection Failed \n"); 
         return -1; 
     } 
@@ -52,6 +53,10 @@ int worker::intialize_worker_client()
     return 0;
 }
 
+
+vector<vector<string> >& get_matrix(){
+	
+}
 int worker::get_a_job_from_server()
 {
     // Todo

@@ -2,11 +2,12 @@
 
 #include "worker_manager.h"
 
-worker_manager::worker_manager(vector< vector<string> > &matrix_all_options, int server_port)
+worker_manager::worker_manager(vector< vector<string> > &matrix_all_options, int server_port, string user_input)
 {
 
 
 	this->server_port = server_port;
+    this->user_input = user_input.c_str();
     this->matrix_all_options = matrix_all_options;
     this->sum_of_works = 0;
     this->workers = {};
@@ -103,6 +104,10 @@ int worker_handler_function(int socket){
 	}
 }
 
+int worker_manager::send_matrix_to_client(int client_index){
+    send(this->workers.at(client_index) , this->user_input , strlen(this->user_input) , 0 ); 
+     
+}
 
 int worker_manager::main(){
     create_server_of_worker_manager();

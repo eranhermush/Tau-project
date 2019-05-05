@@ -1,5 +1,3 @@
-
-
 #ifndef TAU_PROJECT_WORKER_H
 #define TAU_PROJECT_WORKER_H
 #include <iostream>
@@ -21,7 +19,7 @@ using namespace std;
 #include <sys/types.h> 
 #include "worker_manager_worker_object.h"
 #include "parser_main.h"
-
+#include "another_functions.h"
 
 /**
  * This class is the main for the worker manager
@@ -31,6 +29,7 @@ using namespace std;
 class worker_manager{
 
     vector< vector<string> > matrix_all_options;
+    char *user_input;
     int sum_of_works;
     int current_index_of_job_in_progress;
     int index_of_job_make_sure_thaat_made; // not use in that section
@@ -44,7 +43,7 @@ public:
      * @param str- the matrix from the parser with all the options
      * @param server_port is the port of the worker manager
      */
-    worker_manager(vector< vector<string> > &matrix_all_options, int server_port);
+    worker_manager(vector< vector<string> > &matrix_all_options, int server_port, string user_input);
 
   
     /*
@@ -91,6 +90,13 @@ public:
         it returns 1 or -1, -1 indicates an error
     */ 
     int send_matrix_to_worker(int index);
+
+    /*
+    * This functions sends the matrix to the client, it sends the string of the user, and not the real matrix.
+    * return -1 if there was an error, otherwise returns 1;
+    */
+    int send_matrix_to_client(int client_index);
+
 };
 
 

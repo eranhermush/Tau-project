@@ -21,6 +21,10 @@ public:
      * constructor
      * @param: id, socket, thread
      */
-     worker_manager_worker_object(int id, int socket);
+    worker_manager_worker_object(int id, int socket);
+    /*
+    * This function returns the socket of the worker
+    */
+    int get_socket();
 };
 #endif //TAU_WORKER_MANAGER_WORKER_OBJECT_H

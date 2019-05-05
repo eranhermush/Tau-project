@@ -75,6 +75,11 @@ public:
     * Returns the string matching the indices vector, according to matrix_all_options.
     */
     string password_from_indices_vector(vector<int> indices);
+
+    /*
+    *   This function gets the matix of options from the server
+    */
+    vector<vector<string> >& get_matrix();
 };
 
 

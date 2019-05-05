@@ -10,9 +10,10 @@ int main()
 {	
 	int server_port = 8811;
 	cout << "Hello, client:" << endl;
-	worker* my_worker=  new worker();
+	unique_ptr<worker> my_worker (new worker());
+	//worker* my_worker=  new worker();
 	// my_worker.get_matrix(); Todo
-	cout <<"f" <<endl;
+	cout <<"Im here" <<endl;
 
 
     return 0;

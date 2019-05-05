@@ -32,7 +32,7 @@ int main()
 	//print_matrix(parser.get_matrix());
 
 	// creates the manager
-	worker_manager manager(parser.get_matrix(), server_port);
+	worker_manager manager(parser.get_matrix(), server_port, parser_string);
 	manager.main();
 
 
