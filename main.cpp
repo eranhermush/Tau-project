@@ -33,7 +33,7 @@ int main()
 
 	// creates the manager
 	worker_manager manager(parser.get_matrix(), server_port, parser_string);
-	manager.main();
+	manager.main("abcd");
 
 
     return 0;

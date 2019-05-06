@@ -104,22 +104,75 @@ int worker_manager::worker_handler_function(int socket){
 	}
 }
 
-int worker_manager::send_matrix_to_client(int client_index){
+int worker_manager::send_message(int client_index, string message){
     int ret = 0;
-    ret = send(this->workers.at(client_index).get_socket() , this->user_input , strlen(this->user_input) , 0 ); 
+    ret = send(this->workers.at(client_index).get_socket() , message.c_str() , message.length() , 0 ); 
+    //ret = send(this->workers.at(client_index).get_socket() , this->user_input , strlen(this->user_input) , 0 ); 
     if (ret <0){
         return -1;
     } 
     return 0;
 }
 
-int worker_manager::main(){
+int worker_manager::send_work_size_and_index(unsigned int work_size, unsigned int index, int client_index)
+{
+    int ret = 0;
+    unsigned int* val;
+    ret = another_functions::send_int(work_size, this->workers.at(client_index).get_socket());
+    
+    if (ret <0 ){
+        perror("error send work_size:");
+        return -1;
+    }
+    ret = another_functions::send_int(index, this->workers.at(client_index).get_socket());
+    
+    if (ret <0 ){
+        perror("error send index:");
+        return -1;
+    }
+    return 0;
+}
+
+string worker_manager::get_message(int client_index)
+{
+    char message[1024] = {0};
+    int valread = 0;
+    valread = read(this->workers.at(client_index).get_socket() , message, 1024); 
+    if (valread <0 ){
+        perror("error get_message:");
+        return "";
+    }
+    return message;
+}
+int worker_manager::main(string target){
     create_server_of_worker_manager();
-    int ret = send_matrix_to_client(0);
+    string str = "";
+    int ret = send_message(0,target);
     if(ret <0){
-        perror("error: ");
+        perror("error target: ");
         return 0;
     }
+
+    ret = send_message(0,this->user_input);
+    if(ret <0){
+        perror("error user_input: ");
+        return 0;
+    }
+    ret = this->send_work_size_and_index(this->sum_of_works,0,0);
+    if(ret <0){
+        perror("error send_work_size_and_index: ");
+        return 0;
+    }
+    str = this->get_message(0);
+    cout<<"found: " << str << endl;
+    //ret = my_worker->get_target();
+    //ret = my_worker->get_matrix();
+    //ret = my_worker->get_work_size();
+    //index =  my_worker->get_index();
+    //ret = my_worker->send_message(result);
+
+
+
     return 1;
 }
 int worker_manager::send_matrix_to_worker(int index){

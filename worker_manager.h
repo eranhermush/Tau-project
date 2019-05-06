@@ -82,7 +82,7 @@ public:
     /*
         This function is the main for the manager, it creates here the worker and gives them jobs
     */
-    int main();
+    int main(string target);
 
     /*
         This function sends the matrixto the worker,
@@ -92,10 +92,14 @@ public:
     int send_matrix_to_worker(int index);
 
     /*
-    * This functions sends the matrix to the client, it sends the string of the user, and not the real matrix.
+    * This functions sends the mesasage to the client, it sends the string of the user, and not the real matrix.
     * return -1 if there was an error, otherwise returns 1;
     */
-    int send_matrix_to_client(int client_index);
+    int send_message(int client_index, string mesasage);
+
+    int send_work_size_and_index(unsigned int work_size, unsigned int index,int client_index);
+    string get_message(int client_index);
+
 
 };
 
