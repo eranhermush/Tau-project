@@ -21,12 +21,12 @@ class worker {
     int worker_id;
     vector< vector<string> > matrix_all_options;
     string server_ip;
-    string target;
     int server_port;
     int job_size;
     int id;
     int socket_to_server;
 public:
+    string target;
     /*
         constructor
     */
@@ -74,7 +74,7 @@ public:
     /*
     * Returns the string matching the indices vector, according to matrix_all_options.
     */
-    string password_from_indices_vector(vector<int> indices);
+    string password_from_indices_vector(vector<int>& indices);
 
     /*
     *   This function gets the matix of options from the server

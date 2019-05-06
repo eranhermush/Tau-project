@@ -76,7 +76,7 @@ int worker::get_matrix(){
 		return -1;
 	}
 	parser_main parser (user_message);
-	
+
 	// create the matrix
 	parser.from_parser_string_to_matrix();
 	//print_matrix(parser.get_matrix());
@@ -158,15 +158,12 @@ string worker::work(int index){
 
 		//if(scheme::caesar_cipher(pass, 3) == this->target){
 		scheme_res = scheme::caesar_cipher(pass, 3);
-		cout << scheme_res << "  FF  " << this->target << endl;
 		if((this->target.compare(scheme_res)) == 0){
 			// found an answer
 			//return j+index;
 			return pass;
 		}
-
 		worker::advance_password(pass, indices, lengths);
-		cout << "pass = " << pass << endl;
 
 	}
 
@@ -176,19 +173,19 @@ string worker::work(int index){
 
 void worker::advance_password(string &pass, vector<int>& indices, vector<int>& lengths){
 	int len = lengths.size();
-    int current_index =0;
-    pass = "";
+    int current_index = 0;
     for(int i = 0; i < len; i++){
 		indices[i]++;
-		current_index = indices.at(i);
-		// cout << indices.at(i) << " "<<lengths[i]<< endl;
-		if(indices.at(i) < lengths[i]){
-			pass =pass + this->matrix_all_options.at(i).at(current_index);
+		current_index = indices[i];
+		if(current_index < lengths[i]){
+			/* can increment this character */
+			pass.at(i) = this->matrix_all_options.at(i).at(current_index).at(0);
 			return;
 		}
 		else{
+			/* 'carry' */
 			indices[i] = 0;
-			pass = pass + this->matrix_all_options.at(i).at(0);
+			pass.at(i) = this->matrix_all_options.at(i).at(0).at(0);
 		}
 	}
 }
@@ -198,22 +195,22 @@ vector<int> worker::indices_vector_from_index(int index){
 	int len = this->matrix_all_options.size();
 	vector<int> indices(len, 0);
 	for(int i = 0; i < len && index > 0; i++){
-		indices[i] = index % this->matrix_all_options[i].size();
-		index /= this->matrix_all_options[i].size();
+		indices[i] = index % this->matrix_all_options.at(i).size();
+		index /= this->matrix_all_options.at(i).size();
 	}
 	return indices;
 }
 
-string worker::password_from_indices_vector(vector<int> indices){
+string worker::password_from_indices_vector(vector<int>& indices){
 
 	// find the index of each charater
 	int len = indices.size();
 	// fill with characters
-	string password(len, '\0');
+	string password(len, '0');
 	int current_index = 0;
 	for(int i = 0; i < len; i++){
 		current_index = indices.at(i);
-	    password =password + this->matrix_all_options.at(i).at(current_index);
+	    password.at(i) = this->matrix_all_options.at(i).at(current_index).at(0);
 	}
 	return password;
 
