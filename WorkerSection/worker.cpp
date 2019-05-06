@@ -152,16 +152,22 @@ string worker::work(int index){
 	}
 	vector<int> indices = indices_vector_from_index(index);
 	string pass = password_from_indices_vector(indices);
-
 	/* Just for now, use 3-caesar_cipher */
-
+	string scheme_res = "";
 	for(int j = 0; j < job_size; j++){
-		if(scheme::caesar_cipher(pass, 3) == this->target){
+
+		//if(scheme::caesar_cipher(pass, 3) == this->target){
+		scheme_res = scheme::caesar_cipher(pass, 3);
+		cout << scheme_res << "  FF  " << this->target << endl;
+		if((this->target.compare(scheme_res)) == 0){
 			// found an answer
 			//return j+index;
 			return pass;
 		}
+
 		worker::advance_password(pass, indices, lengths);
+		cout << "pass = " << pass << endl;
+
 	}
 
 	// no password was found
@@ -175,13 +181,14 @@ void worker::advance_password(string &pass, vector<int>& indices, vector<int>& l
     for(int i = 0; i < len; i++){
 		indices[i]++;
 		current_index = indices.at(i);
+		// cout << indices.at(i) << " "<<lengths[i]<< endl;
 		if(indices.at(i) < lengths[i]){
 			pass =pass + this->matrix_all_options.at(i).at(current_index);
 			return;
 		}
 		else{
 			indices[i] = 0;
-			pass = pass + this->matrix_all_options.at(i).at(current_index);
+			pass = pass + this->matrix_all_options.at(i).at(0);
 		}
 	}
 }
