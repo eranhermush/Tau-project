@@ -1,7 +1,7 @@
 #include "another_functions.h"
 
 
-int worker_manager::send_int(unsigned int num, int fd)
+int another_functions::send_int(unsigned int num, int fd)
 {
     uint32_t conv = htonl(num);
     char *data = (char*)&conv;
@@ -14,7 +14,7 @@ int worker_manager::send_int(unsigned int num, int fd)
                 // use select() or epoll() to wait for the socket to be writable again
             }
             else if (errno != EINTR) {
-                printf( "Error in write in send_int: %s\n", strerror( errno ) );
+                perror( "Error in write in send_int: \n" );
                 return -1;
             }
         }
@@ -27,7 +27,7 @@ int worker_manager::send_int(unsigned int num, int fd)
     return 0;
 } 
 
-int receive_int(unsigned int *num, int fd)
+int another_functions::receive_int(unsigned int *num, int fd)
 {
     uint32_t ret;
     char *data = (char*)&ret;

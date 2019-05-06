@@ -7,7 +7,10 @@ worker::worker()
 	cout<<"hi :)"<<endl;
 	this->server_port = 8811;
 	this->server_ip = "127.0.0.1";
+	this->target = target;
+	this->job_size = 0;
 	intialize_worker_client();
+
 }
 
 void worker::start_worker(vector< vector<string> > &matrix_all_options, int id, string server_ip, int server_port, int job_size)
@@ -54,16 +57,78 @@ int worker::intialize_worker_client()
 }
 
 
-vector<vector<string> >& get_matrix(){
+int worker::get_matrix(){
+	char user_message[1024] = {0};
+	int valread = 0;
+	valread = read(this->socket_to_server , user_message, 1024); 
+	if (valread <0 ){
+		perror("error get matrix:");
+		return -1;
+	}
+	parser_main parser (user_message);
 	
+	// create the matrix
+	parser.from_parser_string_to_matrix();
+	//print_matrix(parser.get_matrix());
+
+	// creates the manager
+	this->matrix_all_options = parser.get_matrix();
+	return 0;
+
 }
-int worker::get_a_job_from_server()
+int worker::send_message(string message)
 {
-    // Todo
+    int ret = 0;
+    ret = send(this->socket_to_server, message.c_str() , message.length(), 0 ); 
+    if (ret <0){
+        return -1;
+    } 
     return 0;
 }
+int worker::get_target()
+{
+	char user_message[1024] = {0};
+	int valread = 0;
+	valread = read(this->socket_to_server , user_message, 1024); 
+	if (valread <0 ){
+		perror("error get target:");
+		return -1;
+	}
+	this->target = user_message;
+	return 0;
+}
 
-int worker::work(int index){
+int worker::get_work_size()
+{
+	int ret = 0;
+	unsigned int* val;
+	ret = another_functions::receive_int(val, this->socket_to_server);
+
+	
+	if (ret <0 ){
+		perror("error get size:");
+		return -1;
+	}
+	this->job_size = *val;
+	return 0;
+}
+
+int worker::get_index()
+{
+	int ret = 0;
+	unsigned int* val;
+	ret = another_functions::receive_int(val, this->socket_to_server);
+	
+	if (ret <0 ){
+		perror("error get size:");
+		return -1;
+	}
+	return *val;
+}
+
+
+
+string worker::work(int index){
 	vector<int> lengths((this->matrix_all_options.size()), 0);
 	for(int i = 0; i < (lengths.size()); i++){
 		lengths[i] = this->matrix_all_options[i].size();
@@ -76,13 +141,14 @@ int worker::work(int index){
 	for(int j = 0; j < job_size; j++){
 		if(scheme::caesar_cipher(pass, 3) == this->target){
 			// found an answer
-			return j+index;
+			//return j+index;
+			return pass;
 		}
 		worker::advance_password(pass, indices, lengths);
 	}
 
 	// no password was found
-	return -1;
+	return "";
 }
 
 void worker::advance_password(string &pass, vector<int>& indices, vector<int>& lengths){

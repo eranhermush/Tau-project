@@ -2,7 +2,7 @@
 #define TAU_PROJECT_WORKER_H
 #include <iostream>
 #include <string>
-
+#include <cstring>
 using namespace std;
 
 #include <netdb.h> 
@@ -29,7 +29,7 @@ using namespace std;
 class worker_manager{
 
     vector< vector<string> > matrix_all_options;
-    char *user_input;
+    const char *user_input;
     int sum_of_works;
     int current_index_of_job_in_progress;
     int index_of_job_make_sure_thaat_made; // not use in that section

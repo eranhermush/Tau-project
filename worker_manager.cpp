@@ -92,7 +92,7 @@ int worker_manager::create_server_of_worker_manager(){
     return 0; 
 } 
 
-int worker_handler_function(int socket){
+int worker_manager::worker_handler_function(int socket){
 	int ret_val = 1;
 	char buffer[1024] = {0}; 
 	while (1){
@@ -105,12 +105,21 @@ int worker_handler_function(int socket){
 }
 
 int worker_manager::send_matrix_to_client(int client_index){
-    send(this->workers.at(client_index) , this->user_input , strlen(this->user_input) , 0 ); 
-     
+    int ret = 0;
+    ret = send(this->workers.at(client_index).get_socket() , this->user_input , strlen(this->user_input) , 0 ); 
+    if (ret <0){
+        return -1;
+    } 
+    return 0;
 }
 
 int worker_manager::main(){
     create_server_of_worker_manager();
+    int ret = send_matrix_to_client(0);
+    if(ret <0){
+        perror("error: ");
+        return 0;
+    }
     return 1;
 }
 int worker_manager::send_matrix_to_worker(int index){

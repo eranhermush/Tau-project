@@ -6,8 +6,10 @@
 #include <vector>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <unistd.h>
 #include "scheme.h"
-
+#include "../another_functions.h"
+#include "../parser_main.h"
 using namespace std;
 /**
  * This class is the worker class 
@@ -45,18 +47,16 @@ public:
     */
     int intialize_worker_client();
     /*
-    * Thsi function gets a job from server, it sends a request to the server for a job
-    * it gets the job
-    * it returns the job index if seccess, otherwise -1
+    * Thsi function snds a message to the server
     */
-    int get_a_job_from_server();
+    int send_message(string message);
   
     /* 
     * This function checks the all strings in the range [index, index + job_size),
-    * if any match the target (with the caesar cipher), returns its index.
+    * if any match the target (with the caesar cipher), returns it(s index).
     * Otherwise, -1 is returned.
     */
-    int work(int index);
+    string work(int index);
 
     /*
     * Advances a password and its indices with the format of matrix_all_options by 1.
@@ -79,7 +79,20 @@ public:
     /*
     *   This function gets the matix of options from the server
     */
-    vector<vector<string> >& get_matrix();
+    int get_matrix();
+    /*
+    *   This function gets the target
+    */
+    int get_target();
+    /*
+    *   This function gets the work size
+    */
+    int get_work_size();
+    /*
+    *   This function gets the index
+    */
+    int get_index();
+    
 };
 
 
