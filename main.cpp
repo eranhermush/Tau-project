@@ -21,10 +21,14 @@ void print_matrix(vector< vector<string> > &matrix){
 
 int main()
 {	
-	int server_port = 8811;
+	int server_port = 8810;
 	string parser_string;
+	string target;
 	cout << "Hello, please enter the parser string:" << endl;
 	cin >> parser_string;
+
+	cout << "Hello, please enter the target:" << endl;
+	cin >> target;
 	parser_main parser (parser_string);
 	
 	// create the matrix
@@ -33,7 +37,7 @@ int main()
 
 	// creates the manager
 	worker_manager manager(parser.get_matrix(), server_port, parser_string);
-	manager.main("abcd");
+	manager.main(target);
 
 
     return 0;

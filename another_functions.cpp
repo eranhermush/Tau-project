@@ -50,5 +50,6 @@ int another_functions::receive_int(unsigned int *num, int fd)
     }
     while (left > 0);
     *num = ntohl(ret);
+
     return 0;
 }

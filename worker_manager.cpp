@@ -106,6 +106,11 @@ int worker_manager::worker_handler_function(int socket){
 
 int worker_manager::send_message(int client_index, string message){
     int ret = 0;
+    unsigned int* val;
+    ret = another_functions::send_int(message.length(), this->workers.at(client_index).get_socket());
+    if (ret <0){
+        return -1;
+    } 
     ret = send(this->workers.at(client_index).get_socket() , message.c_str() , message.length() , 0 ); 
     //ret = send(this->workers.at(client_index).get_socket() , this->user_input , strlen(this->user_input) , 0 ); 
     if (ret <0){

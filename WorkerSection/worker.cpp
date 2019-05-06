@@ -2,10 +2,10 @@
 
 
 
-worker::worker()
+worker::worker(int port)
 {
 	cout<<"hi :)"<<endl;
-	this->server_port = 8811;
+	this->server_port = port;
 	this->server_ip = "127.0.0.1";
 	this->target = target;
 	this->job_size = 0;
@@ -60,7 +60,17 @@ int worker::intialize_worker_client()
 int worker::get_matrix(){
 	char user_message[1024] = {0};
 	int valread = 0;
-	valread = read(this->socket_to_server , user_message, 1024); 
+
+
+	int ret = 0;
+	unsigned int len;
+	ret = another_functions::receive_int(&len, this->socket_to_server);
+
+    if (ret <0){
+        return -1;
+    } 
+
+	valread = read(this->socket_to_server , user_message, len); 
 	if (valread <0 ){
 		perror("error get matrix:");
 		return -1;
@@ -89,11 +99,18 @@ int worker::get_target()
 {
 	char user_message[1024] = {0};
 	int valread = 0;
-	valread = read(this->socket_to_server , user_message, 1024); 
+	int ret = 0;
+	unsigned int len =0;
+	ret = another_functions::receive_int(&len, this->socket_to_server);
+    if (ret <0){
+        return -1;
+    }
+	valread = read(this->socket_to_server , user_message, len); 
 	if (valread <0 ){
 		perror("error get target:");
 		return -1;
 	}
+
 	this->target = user_message;
 	return 0;
 }
@@ -101,29 +118,29 @@ int worker::get_target()
 int worker::get_work_size()
 {
 	int ret = 0;
-	unsigned int* val;
-	ret = another_functions::receive_int(val, this->socket_to_server);
+	unsigned int val;
+	ret = another_functions::receive_int(&val, this->socket_to_server);
 
 	
 	if (ret <0 ){
 		perror("error get size:");
 		return -1;
 	}
-	this->job_size = *val;
+	this->job_size = val;
 	return 0;
 }
 
 int worker::get_index()
 {
 	int ret = 0;
-	unsigned int* val;
-	ret = another_functions::receive_int(val, this->socket_to_server);
-	
+	unsigned int val;
+	ret = another_functions::receive_int(&val, this->socket_to_server);
+
 	if (ret <0 ){
 		perror("error get size:");
 		return -1;
 	}
-	return *val;
+	return val;
 }
 
 

@@ -30,7 +30,7 @@ public:
     /*
         constructor
     */
-    worker();
+    worker(int port);
     /**
      * @param str- the matrix from the parser with all the options
      * @param id- the worker id
