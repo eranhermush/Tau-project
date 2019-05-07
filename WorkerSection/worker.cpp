@@ -9,7 +9,6 @@ worker::worker(int port)
 	this->server_ip = "127.0.0.1";
 	this->target = target;
 	this->job_size = 0;
-	intialize_worker_client();
 
 }
 

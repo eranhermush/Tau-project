@@ -24,6 +24,7 @@ int main()
 	int server_port = 8810;
 	string parser_string;
 	string target;
+	int ret_value = 0;
 	cout << "Hello, please enter the parser string:" << endl;
 	cin >> parser_string;
 
@@ -32,7 +33,11 @@ int main()
 	parser_main parser (parser_string);
 	
 	// create the matrix
-	parser.from_parser_string_to_matrix();
+	ret_value = parser.from_parser_string_to_matrix();
+	if(ret_value == -1){
+		cout << "Invalid input :( " << endl;
+		return 0;
+	}
 	//print_matrix(parser.get_matrix());
 
 	// creates the manager

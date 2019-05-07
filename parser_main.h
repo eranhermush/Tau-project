@@ -28,14 +28,16 @@ public:
      * convert regular expression char to its array of values
      * @param c: the known char of the regular expression, like 'c'
      * @return  The array of option for this char, or empty vector for unknown char
+     * @return error_indicator- an int that the function uses to return if there was an error (-1 is error)
      */
-    vector<string> from_known_char_to_options_list(char c);  
+    vector<string> from_known_char_to_options_list(char c, int* error_indicator);  
 
     /**
         convert the parser string to the parser matrix
         assusme that the parser_main object is intialized
+        the function returns -1 if there was an error (i.e. an invalid char)
     */     
-    void from_parser_string_to_matrix();    
+    int from_parser_string_to_matrix();    
     /*
     getter for the matrix
     we assume that the matrix is intialized
