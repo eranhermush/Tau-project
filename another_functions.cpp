@@ -53,3 +53,29 @@ int another_functions::receive_int(unsigned int *num, int fd)
 
     return 0;
 }
+
+int another_functions::send_chars(int fd, const char* message, int len){
+    int ret = 0, sent = 0;
+    while(sent < len){
+        ret = send(fd, message + sent, len - sent, 0);
+        if(ret <= 0){
+            /* error or could not send any bytes*/
+            return -1;
+        }
+        sent += ret;
+    }
+    return 0;
+}
+
+int another_functions::recv_chars(int fd, const char* message, int len){
+    int ret = 0, sent = 0;
+    while(sent < len){
+        ret = send(fd, message + sent, len - sent, 0);
+        if(ret <= 0){
+            /* error or could not send any bytes*/
+            return -1;
+        }
+        sent += ret;
+    }
+    return 0;
+}

@@ -23,4 +23,16 @@ public:
 	*    This code reads an unsigned int in the socket
 	*/
 	static int receive_int(unsigned int *num, int fd);
+
+	/* 
+	*	Sends a message of length len via the socket fd
+		Returns 0 on success and -1 on failure
+	*/
+	static int send_chars(int fd, const char* message, int len);
+
+	/* 
+	*	Read a message of length len from the socket fd
+		Returns 0 on success and -1 on failure
+	*/
+	static int recv_chars(int fd, const char* message, int len);
 };
