@@ -82,6 +82,7 @@ int worker::get_matrix(){
 	//print_matrix(parser.get_matrix());
 
 	// creates the manager
+
 	this->matrix_all_options = parser.get_matrix();
 	return 0;
 
@@ -110,7 +111,6 @@ int worker::get_target()
 		perror("error get target:");
 		return -1;
 	}
-
 	this->target = user_message;
 	return 0;
 }
