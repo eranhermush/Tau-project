@@ -6,39 +6,31 @@ worker_manager::worker_manager(vector< vector<string> > &matrix_all_options, int
 {
 
 
-	this->server_port = server_port;
+    this->server_port = server_port;
     this->user_input = user_input.c_str();
     this->matrix_all_options = matrix_all_options;
     this->sum_of_works = 0;
     this->workers = {};
     this->main_socket = -1;
     for (int i = 0; i< matrix_all_options.size(); i++){
-    	if(i == 0){
-    		this->sum_of_works = matrix_all_options.at(i).size();
-    	}
-    	else{
-    		this->sum_of_works *= matrix_all_options.at(i).size();
-    	}
+        if(i == 0){
+            this->sum_of_works = matrix_all_options.at(i).size();
+        }
+        else{
+            this->sum_of_works *= matrix_all_options.at(i).size();
+        }
     }
-    this->index_of_job_make_sure_thaat_made = 0;
-    this->current_index_of_job_in_progress = 0;
-    this->job_size = this->sum_of_works/2;
+
 }
 vector<vector<string>> worker_manager::intialize_worker()
 {
-	return this->matrix_all_options;
+    return this->matrix_all_options;
 }
 
-int worker_manager::get_job(int id) {
-	this->current_index_of_job_in_progress += this->job_size;
-	return this->job_size;
-}
 
-int worker_manager::get_job_size(){
-	return this->job_size;
-}
 
-int worker_manager::create_server_of_worker_manager(){
+int worker_manager::create_server_of_worker_manager()
+{
     int server_fd, new_socket, valread; 
     struct sockaddr_in address; 
     int opt = 1; 
@@ -73,18 +65,18 @@ int worker_manager::create_server_of_worker_manager(){
     int i = 0;
     while(1){
         cout << "waiting for clients" <<endl;
-	    if ((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen))<0) 
-	    { 
-	        perror("accept error"); 
-	        return -1;
-	    }
+        if ((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen))<0) 
+        { 
+            perror("accept error"); 
+            return -1;
+        }
         cout << "get client" << endl;
 	    //worker_handler = thread(worker_handler_function(new_socket), i);
-	    i++; 
+        i++; 
 
 	    // the id is 1
-	    this->workers.push_back(worker_manager_worker_object(1, new_socket));
-	    return 1; // Todo: remove it
+        this->workers.push_back(worker_manager_worker_object(1, new_socket));
+        return 1; // Todo: remove it
     }
 
     
@@ -92,19 +84,21 @@ int worker_manager::create_server_of_worker_manager(){
     return 0; 
 } 
 
-int worker_manager::worker_handler_function(int socket){
-	int ret_val = 1;
-	char buffer[1024] = {0}; 
-	while (1){
-		ret_val = read(socket, buffer, 1024);
-		if (ret_val < 0){
-			printf("error\n");
-			return -1;
-		}
-	}
+int worker_manager::worker_handler_function(int socket) 
+{
+    int ret_val = 1;
+    char buffer[1024] = {0}; 
+    while (1){
+        ret_val = read(socket, buffer, 1024);
+        if (ret_val < 0){
+            printf("error\n");
+            return -1;
+        }
+    }
 }
 
-int worker_manager::send_message(int client_index, string message){
+int worker_manager::send_message(int client_index, string message) 
+{
     int ret = 0;
     unsigned int* val;
     ret = another_functions::send_int(message.length(), this->workers.at(client_index).get_socket());
@@ -138,7 +132,7 @@ int worker_manager::send_work_size_and_index(unsigned int work_size, unsigned in
     return 0;
 }
 
-string worker_manager::get_message(int client_index)
+string worker_manager::get_message(int client_index) 
 {
     char message[1024] = {0};
     int valread = 0;
@@ -149,7 +143,8 @@ string worker_manager::get_message(int client_index)
     }
     return message;
 }
-int worker_manager::main(string target){
+int worker_manager::main(string target) 
+{
     create_server_of_worker_manager();
     string str = "";
     int ret = send_message(0,target);
@@ -180,7 +175,8 @@ int worker_manager::main(string target){
 
     return 1;
 }
-int worker_manager::send_matrix_to_worker(int index){
+int worker_manager::send_matrix_to_worker(int index)
+{
     int ret = 0;
     //worker my_worker;
     //my_worker = this->workers.at(i);

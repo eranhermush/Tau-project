@@ -31,9 +31,6 @@ class worker_manager{
     vector< vector<string> > matrix_all_options;
     const char *user_input;
     int sum_of_works;
-    int current_index_of_job_in_progress;
-    int index_of_job_make_sure_thaat_made; // not use in that section
-    int job_size;
     int server_port;
     vector<worker_manager_worker_object> workers;
     int main_socket; 
@@ -51,18 +48,7 @@ public:
     */
     vector<vector<string>> intialize_worker();
 
-    /*
-    * This function gets a worker id and returns a job for this worker, i.e. it returns the current index of the working
-    * We assume that the workers do get_job_size job (they should know it by calling to get_size)
-    *
-    */
-    int get_job(int id);
 
-    /*
-     * This function return the current job size for the workers
-     * It is equivalent to getter for job_size
-    */
-    int get_job_size();
 
     /*
     * This function connect the server to the world :)
@@ -76,13 +62,13 @@ public:
     * This thread listen to its calls and handles them
 
     */
-    int worker_handler_function(int socket);
+    int worker_handler_function(int socket) ;
 
 
     /*
         This function is the main for the manager, it creates here the worker and gives them jobs
     */
-    int main(string target);
+    int main(string target) ;
 
     /*
         This function sends the matrixto the worker,
@@ -95,10 +81,10 @@ public:
     * This functions sends the mesasage to the client, it sends the string of the user, and not the real matrix.
     * return -1 if there was an error, otherwise returns 1;
     */
-    int send_message(int client_index, string mesasage);
+    int send_message(int client_index, string mesasage) ;
 
-    int send_work_size_and_index(unsigned int work_size, unsigned int index,int client_index);
-    string get_message(int client_index);
+    int send_work_size_and_index(unsigned int work_size, unsigned int index,int client_index) ;
+    string get_message(int client_index) ;
 
 
 };
