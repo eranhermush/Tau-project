@@ -16,19 +16,25 @@ class File_Password_Generator: public Password_Generator{
 
 			The first password generated would be the one starting at first (its beginning may be truncated)
 			The last password generated would be the the last one starting before last (its ending can be after end)*/
-		File_Password_Generator(const std::string file_path, int first, int last, char delim='\n');
+		File_Password_Generator(const std::string& file_path, int first, int last, char delim='\n');
+
+		/* Copy constructor - also copies the current password and the current file object */
+		File_Password_Generator(const File_Password_Generator& generator);
+
+		/* Returns a unique pointer to a new clone of the generator */
+		std::unique_ptr<Password_Generator> clone() const;
 
 		/* Advances the current password to the next one (if one exists in the range) */
 		void advance_password();
 
 		/* Returns whether the generator has more passwords in its range */
-		bool has_next();
+		bool has_next() const;
 
 		/* Reverts to the first password */
 		void reset();
 
 		/* Returns whether the generator produces passwords of fixed length */
-		bool has_fixed_length(){
+		bool has_fixed_length() const{
 			return false;
 		}
 
@@ -39,11 +45,11 @@ class File_Password_Generator: public Password_Generator{
 		std::string path;
 		int first_byte;
 		int last_byte;
+		int curr_position;
 		char delimiter;
-		std::string curr_password;
 		std::ifstream password_file;
 
-		void init();
+		void init(int file_offest);
 };
 
 

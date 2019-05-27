@@ -13,7 +13,7 @@ static std::vector<char> DATA_PUNCTUATION({'!', '"', '#', '$', '%', '&', '\'', '
 
 /*---------------------------------------------------------------------------*/
 
-/* Fixed_Length_Char_Password_Generator excracts passwords matching a fixed length pattern in a certain range */
+/* Char_Pattern_Password_Generator excracts passwords matching a fixed length pattern in a certain range */
 
 /* The supported patterns consist of the characters 'c', 'C', 'd', 'p', 'x' which indicate:
 	'c' = a lowercase charcater
@@ -30,12 +30,12 @@ static std::vector<char> DATA_PUNCTUATION({'!', '"', '#', '$', '%', '&', '\'', '
 	For example: the 0-th string matching "ddd" is "000" and the 128-th is "128"
 */
 
-class Fixed_Length_Char_Password_Generator: public Password_Generator{
+class Char_Pattern_Password_Generator: public Password_Generator{
 	public:
 		/* rep_string is the pattern string consisting only of 'c'\'C'\'d'\'p' 
 			first is the index of the first password to be loaded
 			last is the index of the last unique password to be produced */
-		Fixed_Length_Char_Password_Generator(const std::string& rep_string, int first, int last);
+		Char_Pattern_Password_Generator(const std::string& rep_string, int first, int last);
 
 		/* rep_string is the pattern string consisting of 'c'\'C'\'d'\'p'\'x'
 			data is a vector containing characters to be matched for the 'x' symbols
@@ -44,10 +44,13 @@ class Fixed_Length_Char_Password_Generator: public Password_Generator{
 			first is the index of the first password to be loaded
 			last is the index of the last unique password to be produced
 
-			For example: calling with ("xddxx",{0,1,0},{{'#'}, {'0','2','4','6','8'}}, 0, 500) would
+			For example: calling with ("xddxx",{0,1,0},{{'#'}, {'0','2','4','6','8'}}, 0, 499) would
 						construct a generator for even 3-digit numbers between two '#' */
-		Fixed_Length_Char_Password_Generator(const std::string& rep_string, const std::vector<int>& rep_indices,
+		Char_Pattern_Password_Generator(const std::string& rep_string, const std::vector<int>& rep_indices,
 											 const std::vector<std::vector<char>>& data, int first, int last);
+
+		/* Returns a unique pointer to a new clone of the generator */
+		std::unique_ptr<Password_Generator> clone() const;
 
 		/* Advances the current password to the next one (if one exists in the range) */
 		void advance_password();
@@ -56,25 +59,25 @@ class Fixed_Length_Char_Password_Generator: public Password_Generator{
 		void set_password(int position);
 
 		/* Returns whether the generator has more passwords in its range */
-		bool has_next();
+		bool has_next() const;
 
 		/* Reverts to the first password */
 		void reset();
 
 		/* Returns whether the generator produces passwords of fixed length */
-		bool has_fixed_length(){
+		bool has_fixed_length() const{
 			return true;
 		}
 
-		int get_first_position(){
+		int get_first_position() const{
 			return first;
 		}
 
-		int get_last_position(){
+		int get_last_position() const{
 			return last;
 		}
 
-		int get_range_length(){
+		int get_range_length() const{
 			return last - first;
 		}
 

@@ -25,7 +25,7 @@ class Nested_Password_Generator: public Password_Generator{
 		}
 
 	private:
-		std::vector<Password_Generator> pass_generators;
+		std::vector<std::unique_ptr<Password_Generator>> pass_generators;
 		std::vector<int> gen_order;
 		std::vector<std::array<int, 2>> pass_ranges;
 		bool has_next;

@@ -1,17 +1,17 @@
 #include "char_password_generator.h"
 
-Fixed_Length_Char_Password_Generator::Fixed_Length_Char_Password_Generator(const std::string& rep_string, int first, int last)
+Char_Pattern_Password_Generator::Char_Pattern_Password_Generator(const std::string& rep_string, int first, int last)
 	:first(first), last(last){
 		init(rep_string, std::vector<int>());
 }
 
-Fixed_Length_Char_Password_Generator::Fixed_Length_Char_Password_Generator(const std::string& rep_string, const std::vector<int>& rep_indices,
+Char_Pattern_Password_Generator::Char_Pattern_Password_Generator(const std::string& rep_string, const std::vector<int>& rep_indices,
  const std::vector<std::vector<char>>& data, int first, int last) 
 :first(first), last(last), additional_data(data){
 	init(rep_string, rep_indices);
 }
 
-void Fixed_Length_Char_Password_Generator::init(const std::string& rep_string, const std::vector<int>& rep_indices){
+void Char_Pattern_Password_Generator::init(const std::string& rep_string, const std::vector<int>& rep_indices){
 	length = 0;
 	int x_count = 0;
 	int x_index = 0;
@@ -52,8 +52,16 @@ void Fixed_Length_Char_Password_Generator::init(const std::string& rep_string, c
 	reset();
 }
 
-void Fixed_Length_Char_Password_Generator::advance_password(){
+
+std::unique_ptr<Password_Generator>  Char_Pattern_Password_Generator::clone() const{
+	return std::unique_ptr<Password_Generator>(new Char_Pattern_Password_Generator(*this));
+}
+
+
+void Char_Pattern_Password_Generator::advance_password(){
 	if(!has_next()){
+		// finished with the last password
+		is_over_flag = true;
 		return;
 	}
 
@@ -74,7 +82,7 @@ void Fixed_Length_Char_Password_Generator::advance_password(){
 	++curr_position;
 }
 
-void Fixed_Length_Char_Password_Generator::set_password(int position){
+void Char_Pattern_Password_Generator::set_password(int position){
 	int sub_length = 0, sub_index = 0;
 	// match each charcter from right (Least Significant) to left (Most Significant)
 	for(int i = length-1; i >= 0; --i){
@@ -87,10 +95,10 @@ void Fixed_Length_Char_Password_Generator::set_password(int position){
 	curr_position = position;
 }
 
-bool Fixed_Length_Char_Password_Generator::has_next(){
+bool Char_Pattern_Password_Generator::has_next() const{
 	return curr_position < last;
 }
 
-void Fixed_Length_Char_Password_Generator::reset(){
+void Char_Pattern_Password_Generator::reset(){
 	set_password(first);
 }
