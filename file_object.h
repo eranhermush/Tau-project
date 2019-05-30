@@ -39,9 +39,9 @@ public:
     void set_index(int start_index, int end_index);
     void set_status(int status);
     void set_id(int id);
-    void set_scheme_msg(std::scheme_msg);
-    void set_password(std::password);
-    void set_files(std::files_for_scheme);
+    void set_scheme_msg(std::string scheme_msg);
+    void set_password(std::string password);
+    void set_files(std::string files_for_scheme);
     std::string get_file_message();
 
 
