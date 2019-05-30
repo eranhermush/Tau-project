@@ -14,9 +14,11 @@ class Nested_Password_Generator: public Password_Generator{
 		void advance_password();
 
 		/* Returns whether the generator has another password to produce */
-		bool has_next();
+		bool has_next(){
+			return has_next_flag;
+		}
 
-		/* Reverts the generator to its original state right after its construction */
+		/* Reverts the generator to its first password */
 		void reset();
 
 		/* Returns whether the generator produces passwords of fixed length */
@@ -25,12 +27,13 @@ class Nested_Password_Generator: public Password_Generator{
 		}
 
 	private:
+		int gen_amount; /* how many generators are used */
 		std::vector<std::unique_ptr<Password_Generator>> pass_generators;
-		std::vector<int> gen_order;
 		std::vector<std::array<int, 2>> pass_ranges;
-		bool has_next;
+		bool has_next_flag = false;
 
 		void init();
+		void update_paswword_suffix(int beginning_index);
 }
 
 #endif
