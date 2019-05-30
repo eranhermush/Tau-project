@@ -9,6 +9,7 @@ File_Password_Generator::File_Password_Generator(const std::string& file_path, i
 File_Password_Generator::File_Password_Generator(const File_Password_Generator& generator):
 	path(generator.path), first_byte(generator.first_byte), last_byte(generator.last_byte), delimiter(generator.delimiter){
 		curr_password = generator.curr_password;
+		is_over_flag = generator.is_over_flag;
 		init(generator.curr_position);
 }
 

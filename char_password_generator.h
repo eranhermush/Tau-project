@@ -49,6 +49,9 @@ class Char_Pattern_Password_Generator: public Password_Generator{
 		Char_Pattern_Password_Generator(const std::string& rep_string, const std::vector<int>& rep_indices,
 											 const std::vector<std::vector<char>>& data, int first, int last);
 
+		/* Copy constructor - also copies the current password and state */
+		Char_Pattern_Password_Generator(const Char_Pattern_Password_Generator& generator);
+
 		/* Returns a unique pointer to a new clone of the generator */
 		std::unique_ptr<Password_Generator> clone() const;
 
@@ -88,6 +91,7 @@ class Char_Pattern_Password_Generator: public Password_Generator{
 		int curr_position;
 		std::vector<int> indices;
 		std::vector<std::reference_wrapper<std::vector<char>>> char_sources;
+		std::vector<int> sources_index; /* stores the index of the source for each characther, used for copying (negative values imply the static data) */
 		std::vector<std::vector<char>> additional_data; /* use is optional */
 
 		void init(const std::string& rep_string, const std::vector<int>& rep_indices);
