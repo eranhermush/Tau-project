@@ -1,5 +1,5 @@
-#ifndef FILE_MANAGER_H
-#define FILE_MANAGER_H
+#ifndef FILE_OBJECT_ARRAY_LIST_H
+#define FILE_OBJECT_ARRAY_LIST_H
 #include <iostream>
 #include <string>
 #include <cstring>
@@ -12,7 +12,7 @@
  * This class is a server class, it reads here the files and updates them
  */
 
-class file_manager{
+class file_object_array_list{
 
     file_object arr;
     file_object arr_didnt_do;
@@ -33,4 +33,4 @@ public:
 };
 
 
-#endif //FILE_MANAGER_H
+#endif //FILE_OBJECT_ARRAY_LIST_H
