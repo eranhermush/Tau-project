@@ -36,12 +36,14 @@ class file_object{
 
 public:
     file_object();
+    int get_id();
     void set_index(int start_index, int end_index);
     void set_status(int status);
     void set_id(int id);
     void set_scheme_msg(std::string scheme_msg);
     void set_password(std::string password);
     void set_files(std::string files_for_scheme);
+    bool operator==(const file_object& lhs);
     std::string get_file_message();
 
 
