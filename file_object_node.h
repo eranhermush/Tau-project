@@ -22,7 +22,7 @@ class file_object_node{
 public:
     file_object_node(file_object& file);
     std::shared_ptr<file_object_node> get_before();
-    void set_before(std::shared_ptr<file_object_node> file)
+    void set_before(std::shared_ptr<file_object_node> file);
     std::shared_ptr<file_object_node> get_after();
     void set_after(std::shared_ptr<file_object_node> file);
     file_object& get_file();
