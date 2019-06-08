@@ -37,7 +37,7 @@ class Password_Generator{
 
 	protected:
 		std::string curr_password;
-		bool is_over_flag;
+		bool is_over_flag = false;
 };
 
 

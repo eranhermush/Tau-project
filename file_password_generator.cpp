@@ -39,6 +39,7 @@ void File_Password_Generator::advance_password(){
 }
 
 void File_Password_Generator::reset(){
+	curr_position = first_byte;
 	password_file.seekg(first_byte);
 	// load the first password
 	advance_password();
