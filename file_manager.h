@@ -1,15 +1,12 @@
-#ifndef FILE_MANAGE_H
-#define FILE_MANAGE_H
+#ifndef FILE_MANAGER_H
+#define FILE_MANAGER_H
 #include <iostream>
 #include <string>
 #include <cstring>
 
 #include <unistd.h>
 #include <stdlib.h> 
-
-
-#include <sys/types.h> 
-
+#include "file_object.h"
 
 /**
  * This class is a server class, it reads here the files and updates them
@@ -18,7 +15,7 @@
 class file_manager{
 
     file_object arr;
-    file_object arr_didnt_do
+    file_object arr_didnt_do;
 
 
 
@@ -36,4 +33,4 @@ public:
 };
 
 
-#endif //FILE_MANAGE_H
+#endif //FILE_MANAGER_H
