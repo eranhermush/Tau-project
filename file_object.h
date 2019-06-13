@@ -30,7 +30,7 @@ class file_object{
 
     int start_index, end_index, status, id;
     std::string scheme_msg, password, files_for_scheme;
-
+    int objects_in_scheme;
 
 
 
@@ -44,6 +44,7 @@ public:
     void set_password(std::string password);
     void set_files(std::string files_for_scheme);
     bool operator==(const file_object& lhs);
+    int get_objects_in_scheme();
     std::string get_file_message();
 
 

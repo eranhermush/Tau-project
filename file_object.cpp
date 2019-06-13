@@ -8,6 +8,7 @@ file_object::file_object(){
 	this->scheme_msg = "";
 	this->password = "";
 	this->files_for_scheme = "";
+    this->objects_in_scheme =0;
 }
 
 
@@ -25,7 +26,11 @@ file_object::file_object(){
     	this->id = id;
     }
     void file_object::set_scheme_msg(std::string scheme_msg){
-    	this-<scheme_msg = scheme_msg;
+    	this->scheme_msg = scheme_msg;
+        this->objects_in_scheme = scheme_msg.length();
+    }
+    int file_object::get_objects_in_scheme(){
+        return this->objects_in_scheme;
     }
     void file_object::set_password(std::string password){
     	this->password = password;

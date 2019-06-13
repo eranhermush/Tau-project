@@ -22,14 +22,11 @@ class file_manager{
 public:
     file_manager();
     go_over_messages();
-    get_new_work()
-    generate_new_work_to_file();
-    check_file_need_to_update();
-
-
-
-
-
+    get_new_work();
+    bool generate_new_work_to_file();
+    bool check_file_need_to_update();
+    std::vector<int> index_to_vector_indexes(int vector);
+    int to_vector_indexes_to_index(std::vector<int> &vec);
 };
 
 

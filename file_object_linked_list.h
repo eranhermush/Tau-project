@@ -19,7 +19,7 @@ class file_object_linked_list{
 
 public:
     file_object_linked_list(file_object_node& node);
-    std::shared_ptr<file_object_node> search_node(file& f);
+    file_object_node& search_node(file_object& f);
     void add_node(file_object_node& node);
     bool remove_node(file_object_node& node);
 
