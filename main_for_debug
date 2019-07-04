@@ -27,7 +27,7 @@ int main()
 	int ret_value = 0;
 	cout << "Hello, please enter the parser string:" << endl;
 	cin >> parser_string;
-	
+
 	cout << "Hello, please enter the target:" << endl;
 	cin >> target;
 	parser_main parser (parser_string);
@@ -41,8 +41,7 @@ int main()
 	//print_matrix(parser.get_matrix());
 
 	// creates the manager
-	file_manager manager(parser.get_matrix());
-	std::vector<int> a 
+	worker_manager manager(parser.get_matrix(), server_port, parser_string);
 	manager.main(target);
 
 
