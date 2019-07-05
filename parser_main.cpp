@@ -22,6 +22,9 @@ vector<string> parser_main::from_known_char_to_options_list(char c, int* error_i
         case 'd':
             result = vector<string>({"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"});
             break;
+        case 'f': // file
+            result = vector<string>();
+            break;
         default:
             result = vector<string>({""});
             *error_indicator = -1;

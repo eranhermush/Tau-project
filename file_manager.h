@@ -2,9 +2,10 @@
 #define FILE_MANAGER_H
 #include <iostream>
 #include <cstring>
-
+#include <stdexcept>
 #include <unistd.h>
 #include <stdlib.h> 
+#include <algorithm>
 #include "file_object.h"
 
 /*
@@ -16,15 +17,26 @@ class file_manager{
     file_object arr;
     file_object arr_didnt_do;
     std::vector< std::vector<std::string> > matrix_all_options;
+    std::vector<std::string> file_names;
+    std::string scheme_string;
 
 
 
 public:
 	/**
 	 * constructor
-	 * @param str- the matrix from the parser with all the options
+	 * @param matrix_all_options- the matrix from the parser with all the options
+     * @param file_names        - the names of our files (with repetitions) that we use in the scheme
 	 */
-    file_manager(std::vector< std::vector<std::string> > &matrix_all_options);
+    file_manager(std::vector< std::vector<std::string> > &matrix_all_options, std::vector<std::string> &file_names, std::string &scheme_string);
+    /**
+        This function validates that the input is valid:
+            The size of the string == the size of the matrix
+            There is a file name for each file option in the scheme
+            it throws an error if the input is invalid
+    */ 
+    bool validate_input();
+
     //go_over_messages();
     //get_new_work();
     //bool generate_new_work_to_file();
@@ -34,7 +46,7 @@ public:
     /*
     * This function gets an index in the scheme and returns the size of the object that this letter represents. e.g. the size of the file.
     */
-    int scheme_at_index_to_len(int index);
+    int size_of_object_in_scheme(int index);
 };
 
 
