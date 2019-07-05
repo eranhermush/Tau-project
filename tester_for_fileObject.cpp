@@ -6,6 +6,8 @@ using namespace std;
 #include "parser_main.h"
 #include <string>
 #include "worker_manager.h"
+#include "file_manager.h"
+#include "file_manager.h"
 
 /*
 	This function is for checking the matrix
@@ -41,7 +43,7 @@ int main()
 	//print_matrix(parser.get_matrix());
 
 	// creates the manager
-	worker_manager manager(parser.get_matrix(), server_port, parser_string);
+	file_manager manager(parser.get_matrix());
 	manager.main(target);
 
 
