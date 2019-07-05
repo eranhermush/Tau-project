@@ -30,8 +30,23 @@ int main()
 	cout << "Hello, please enter the parser string:" << endl;
 	cin >> parser_string;
 
-	cout << "Hello, please enter the target:" << endl;
-	cin >> target;
+    vector<int> index_vec; 
+  	int user_input = 0;
+  	cout << "enter the indexes" << parser_string.length() << endl;
+
+    for (int i = 1; i <= parser_string.length(); i++)
+    {
+  		cin >> user_input;
+        index_vec.push_back(user_input); 
+    }
+    vector<string> files_vec; 
+  	std::string user_input_file = "";
+  	cout << "enter the files" << std::count(this->scheme_string.begin(), this->scheme_string.end(), this->file_char) << endl;
+    for (int i = 1; i <= std::count(this->scheme_string.begin(), this->scheme_string.end(), this->file_char); i++)
+    {
+  		cin >> user_input_file;
+        files_vec.push_back(user_input_file); 
+    }
 	parser_main parser (parser_string);
 	
 	// create the matrix
@@ -44,7 +59,7 @@ int main()
 
 	// creates the manager
 	file_manager manager(parser.get_matrix());
-	manager.main(target);
+	//matrix_all_options, std::vector<std::string> &file_names, std::string &scheme_string)
 
 
     return 0;
