@@ -42,7 +42,14 @@ public:
     //get_new_work();
     //bool generate_new_work_to_file();
     //bool check_file_need_to_update();
+
+    /*
+    * This function gets a general index, and splits it to a vector of indexes, index to every category in the scheme.
+    */
     std::vector<int>& index_to_vector_indexes(int index);
+    /*
+    * This function gets a vector of indexes, index to every category in the scheme and returns a general index that represents them.
+    */
     int vector_indexes_to_index(std::vector<int> &vec);
     /*
     * This function gets an index in the scheme and returns the size of the object that this letter represents. e.g. the size of the file.

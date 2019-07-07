@@ -1,7 +1,7 @@
 
 #include <iostream>
 
-using namespace std;
+//using namespace std;
 #include <bits/stdc++.h>
 #include "parser_main.h"
 #include <string>
@@ -12,7 +12,7 @@ using namespace std;
 /*
 	This function is for checking the matrix
 */
-void print_matrix(vector< vector<string> > &matrix){
+void print_matrix(std::vector< std::vector<std::string> > &matrix){
 	for(int i=0;i<matrix.size();i++){
 		for(int j=0; j<matrix.at(i).size(); j++){
 			cout << matrix.at(i).at(j);
@@ -30,7 +30,7 @@ int main()
 	cout << "Hello, please enter the parser string:" << endl;
 	cin >> parser_string;
 
-    vector<int> index_vec; 
+    std::vector<int> index_vec; 
   	int user_input = 0;
   	cout << "enter the indexes" << parser_string.length() << endl;
 
@@ -39,9 +39,9 @@ int main()
   		cin >> user_input;
         index_vec.push_back(user_input); 
     }
-    vector<string> files_vec; 
+    std::vector<std::string> files_vec; 
   	std::string user_input_file = "";
-  	cout << "enter the files" << std::count(this->scheme_string.begin(), this->scheme_string.end(), this->file_char) << endl;
+  	cout << "enter the files" << std::count(parser_string.begin(), parser_string.end(),'f') << endl;
     for (int i = 1; i <= std::count(this->scheme_string.begin(), this->scheme_string.end(), this->file_char); i++)
     {
   		cin >> user_input_file;
@@ -58,7 +58,14 @@ int main()
 	//print_matrix(parser.get_matrix());
 
 	// creates the manager
-	file_manager manager(parser.get_matrix());
+	file_manager manager(parser.get_matrix(),files_vec,parser_string);
+	int index = manager.vector_indexes_to_index(index_vec);
+	cout << "the index is: " << index << endl;
+	std::vector<int> v = manager.index_to_vector_indexes(index);
+	cout << "the vector is ";
+	for (int i = 0; i < v.size(); i++) {
+		std::cout << v.at(i) << ' ';
+	}
 	//matrix_all_options, std::vector<std::string> &file_names, std::string &scheme_string)
 
 
