@@ -43,7 +43,7 @@ public:
     void set_scheme_msg(std::string scheme_msg);
     void set_password(std::string password);
     void set_files(std::string files_for_scheme);
-    bool operator==(const file_object& lhs);
+    //bool operator==(const file_object& lhs);
     int get_objects_in_scheme();
     std::string get_file_message();
 

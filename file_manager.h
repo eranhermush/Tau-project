@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <stdlib.h> 
 #include <algorithm>
+#include <fstream>
 #include "file_object.h"
 
 /*
@@ -46,7 +47,7 @@ public:
     /*
     * This function gets a general index, and splits it to a vector of indexes, index to every category in the scheme.
     */
-    std::vector<int>& index_to_vector_indexes(int index);
+    std::vector<int> index_to_vector_indexes(int index);
     /*
     * This function gets a vector of indexes, index to every category in the scheme and returns a general index that represents them.
     */

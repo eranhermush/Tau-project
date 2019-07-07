@@ -53,21 +53,25 @@ int file_manager::size_of_object_in_scheme(int index)
             file_index++;
         }
     }
+    // we start to count from 0, and file_index counts how many files were(the len)
+    file_index--;
     return Get_number_of_lines_in_file(this->file_names[file_index]);
 }
 int file_manager::Get_number_of_lines_in_file(std::string filename)
 {
     int number_of_lines = 0;
     std::string line;
-    std::ifstream myfile("textexample.txt");
+    std::ifstream myfile;
+    myfile.open(filename);
 
     while (std::getline(myfile, line))
         ++number_of_lines;
     return number_of_lines;
 }
 
-std::vector<int>& file_manager::index_to_vector_indexes(int index){
-    vector<int> result; 
+std::vector<int> file_manager::index_to_vector_indexes(int index){
+    std::vector<int> result; 
+
     // fill the array with 0 this->scheme_string.length() times 
     result.assign(this->scheme_string.length(), 0); 
     int sum = 1;
@@ -77,8 +81,9 @@ std::vector<int>& file_manager::index_to_vector_indexes(int index){
 
     for (int i = this->scheme_string.length()-1; i >= 0; i--)
     {
-        result[i] = (int) index/sum;
         sum = sum / size_of_object_in_scheme(i);
+        result[i] = (int) index/sum;
+        index -= result[i]*sum;
     }
     return result;
 }

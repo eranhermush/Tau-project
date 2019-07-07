@@ -7,7 +7,6 @@
 #include <string>
 #include "worker_manager.h"
 #include "file_manager.h"
-#include "file_manager.h"
 
 /*
 	This function is for checking the matrix
@@ -32,7 +31,7 @@ int main()
 
     std::vector<int> index_vec; 
   	int user_input = 0;
-  	cout << "enter the indexes" << parser_string.length() << endl;
+  	cout << "enter the indexes: " << parser_string.length() << endl;
 
     for (int i = 1; i <= parser_string.length(); i++)
     {
@@ -42,7 +41,7 @@ int main()
     std::vector<std::string> files_vec; 
   	std::string user_input_file = "";
   	cout << "enter the files" << std::count(parser_string.begin(), parser_string.end(),'f') << endl;
-    for (int i = 1; i <= std::count(this->scheme_string.begin(), this->scheme_string.end(), this->file_char); i++)
+    for (int i = 1; i <= std::count(parser_string.begin(), parser_string.end(),'f'); i++)
     {
   		cin >> user_input_file;
         files_vec.push_back(user_input_file); 
@@ -66,6 +65,7 @@ int main()
 	for (int i = 0; i < v.size(); i++) {
 		std::cout << v.at(i) << ' ';
 	}
+	std::cout << std::endl;
 	//matrix_all_options, std::vector<std::string> &file_names, std::string &scheme_string)
 
 

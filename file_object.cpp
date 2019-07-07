@@ -39,10 +39,12 @@ file_object::file_object(){
     	this->files_for_scheme = files_for_scheme;
     }
     std::string file_object::get_file_message(){
-    	std::string result = this->status + '\n' + std::to_string(this->id) + '\n' + std::to_string(this->status)+ '\n' + this->scheme_msg + 
+    	std::string result = std::to_string(this->status) + '\n' + std::to_string(this->id) + '\n' + std::to_string(this->status)+ '\n' + this->scheme_msg + 
     		'\n' + std::to_string(this->start_index) + '\n' + std::to_string(this->end_index)+ '\n' + this->files_for_scheme + '\n' + this->password;
     	return result;
     }
+    /*
     bool operator==(const file_object& lhs){
     	return lhs.get_id() == this->id;
     }
+    */
