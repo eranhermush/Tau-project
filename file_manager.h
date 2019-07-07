@@ -58,7 +58,7 @@ public:
     int size_of_object_in_scheme(int index);
 
     /*
-        This function returns how many lines are in a file
+    *    This function returns how many lines are in a file
     */
     int Get_number_of_lines_in_file(std::string filename);
 
