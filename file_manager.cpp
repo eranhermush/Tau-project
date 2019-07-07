@@ -1,6 +1,7 @@
 #include "file_manager.h"
 
-file_manager::file_manager(std::vector< std::vector<std::string> > &matrix_all_options, std::vector<std::string> &file_names, std::string &scheme_string)
+file_manager::file_manager(std::vector< std::vector<std::string> > &matrix_all_options, std::vector<std::string> &file_names, 
+    std::string &scheme_string,std::string &passwords, std::string &password_function)
 {
     this->matrix_all_options = matrix_all_options;
     this->file_names = file_names;
@@ -10,10 +11,21 @@ file_manager::file_manager(std::vector< std::vector<std::string> > &matrix_all_o
     this->sum_of_works = 0;
     this->current_index_of_work = 0;
     this->work_size = 30;
+    this->passwords = passwords;
+    this->password_function = password_function;
     validate_input();
     save_sum_of_works();
 }
+std::string file_manager::get_files_in_string()
+{
+    std::string result = "";
+    for (int i = 0; i<this->file_names.size();i++)
+    {
+        result += this->file_names[i];
+    }
+    return result;
 
+}
 bool file_manager::validate_input()
 {
     if(this->scheme_string.length() <=0)
@@ -151,5 +163,8 @@ int file_manager::create_new_work(file_object& file_obj)
     this->current_index_of_work = std::min(this->current_index_of_work + this->work_size, this->sum_of_works-1);
     file_obj.set_status(0);
     file_obj.set_scheme_msg(this->scheme_string);
+    file_obj.set_passwords(this->passwords);
+    file_obj.set_password_function(this->password_function);
+    file_obj.set_files_for_scheme(get_files_in_string());
     return 0;
 }

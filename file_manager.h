@@ -19,7 +19,7 @@ class file_manager{
     file_object arr_didnt_do;
     std::vector< std::vector<std::string> > matrix_all_options;
     std::vector<std::string> file_names;
-    std::string scheme_string;
+    std::string scheme_string, passwords, password_function;
     char file_char; // char of a file in the string scheme
     int curr_id;
     int sum_of_works;
@@ -43,7 +43,7 @@ public:
 	 * @param matrix_all_options- the matrix from the parser with all the options
      * @param file_names        - the names of our files (with repetitions) that we use in the scheme
 	 */
-    file_manager(std::vector< std::vector<std::string> > &matrix_all_options, std::vector<std::string> &file_names, std::string &scheme_string);
+    file_manager(std::vector< std::vector<std::string> > &matrix_all_options, std::vector<std::string> &file_names, std::string &scheme_string, std::string &passwords, std::string &password_function);
     /*
         This function validates that the input is valid:
             The size of the string == the size of the matrix
@@ -60,6 +60,7 @@ public:
     int get_sum_of_works();
 
     void set_work_size(int size);
+    std::string get_files_in_string();
     //go_over_messages();
     //bool generate_new_work_to_file();
     //bool check_file_need_to_update();

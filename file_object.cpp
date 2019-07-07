@@ -44,7 +44,7 @@ void file_object::set_password_function(std::string password_function)
     this->password_function = password_function;
 }
 
-void file_object::set_files(std::string files_for_scheme)
+void file_object::set_files_for_scheme(std::string files_for_scheme)
 {
 	this->files_for_scheme = files_for_scheme;
 }

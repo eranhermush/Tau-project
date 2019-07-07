@@ -54,10 +54,17 @@ int main()
 		cout << "Invalid input :( " << endl;
 		return 0;
 	}
+	std::string password_functions;
+	std::string passwords;
+
+	cout << "enter the passwords"  << endl;
+	cin >> passwords;
+	cout << "enter the password functions"  << endl;
+	cin >> password_functions;
 	//print_matrix(parser.get_matrix());
 
 	// creates the manager
-	file_manager manager(parser.get_matrix(),files_vec,parser_string);
+	file_manager manager(parser.get_matrix(),files_vec,parser_string,passwords, password_functions);
 	int index = manager.vector_indexes_to_index(index_vec);
 	cout << "the index is: " << index << endl;
 	std::vector<int> v = manager.index_to_vector_indexes(index);

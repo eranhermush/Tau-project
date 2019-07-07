@@ -44,7 +44,7 @@ public:
     void set_scheme_msg(std::string scheme_msg);
     void set_passwords(std::string passwords);
     void set_password_function(std::string password_function);
-    void set_files(std::string files_for_scheme);
+    void set_files_for_scheme(std::string files_for_scheme);
 
     /*
     * This function returns the message that we will write in the file
