@@ -42,14 +42,6 @@ public:
      */
     worker_manager(vector< vector<string> > &matrix_all_options, int server_port, string user_input);
 
-  
-    /*
-    * this function gives a starter worker the matrix of the work, and than the worker should go to "g"
-    */
-    vector<vector<string>> intialize_worker();
-
-
-
     /*
     * This function connect the server to the world :)
     * it makes the 'connect' and the bind, and it waits for the clients
@@ -57,25 +49,11 @@ public:
     */
     int create_server_of_worker_manager();
 
-    /*
-    * This function is the thread function: each client that connects to the server, has a thread
-    * This thread listen to its calls and handles them
-
-    */
-    int worker_handler_function(int socket) ;
-
 
     /*
         This function is the main for the manager, it creates here the worker and gives them jobs
     */
-    int main(string target) ;
-
-    /*
-        This function sends the matrixto the worker,
-        index is the index of the worker in the workerlist 
-        it returns 1 or -1, -1 indicates an error
-    */ 
-    int send_matrix_to_worker(int index);
+    int main(string target);
 
     /*
     * This functions sends the mesasage to the client, it sends the string of the user, and not the real matrix.
