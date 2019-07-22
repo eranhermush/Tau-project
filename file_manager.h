@@ -125,8 +125,9 @@ public:
     * This function gets a file name, and transforms it to file_obj instance
     * returns -1 if there was an error
     * Warning: This function doesnt change the arrays of this class
+    * we assume that the file is valid -> was written by "write_work_to_file"
     */
-    int write_work_to_file(file_object& file_obj);
+    int file_to_file_object(file_object& file_obj, std::string filename);
 
 };
 

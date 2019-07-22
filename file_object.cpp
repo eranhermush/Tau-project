@@ -54,7 +54,7 @@ int file_object::get_status()
 }
 std::string file_object::get_message_to_write_in_file_without_status()
 {
-    std::string result = std::to_string(this->id) + '\n' + std::to_string(this->worker_id) + '\n' + this->password_function+ '\n' + this->scheme_msg + 
+    std::string result = std::to_string(this->id) + '\n' + std::to_string(this->worker_id) + '\n' + this->scheme_msg+ '\n' + this->password_function + 
         '\n' + std::to_string(this->start_index) + '\n' + std::to_string(this->end_index)+ '\n' + this->files_for_scheme + '\n' + this->passwords;
     return result;
 }
