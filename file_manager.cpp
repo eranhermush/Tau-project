@@ -189,19 +189,28 @@ int file_manager::write_work_to_file(file_object& file_obj)
         std::cout << "Error opening file ";
         return -1;
     }
-    myfile << "2\n";
+    myfile << "0\n";
     myfile << file_obj.get_message_to_write_in_file_without_status();
     myfile.flush();
     myfile.close();
-    std::cout << file_obj.get_message_to_write_in_file_without_status() << std::endl;
     // write the data
-    fp = std::fopen(path.c_str(),"w");
+/*
+    fp = std::fopen(path.c_str(),"a+");
+    fseek(fp, 0, SEEK_SET);
     if (fp == NULL) {
         perror("Error fopen");
         return -1;
     }
+        
     fwrite(buffer_of_doesnt_start_index, sizeof(buffer_of_doesnt_start_index),1,fp);
+    //fprintf(fp, "0");
     fclose (fp);
+    */
     std::cout << "end" << std::endl;
+    return 0;
+}
+
+int file_manager::write_work_to_file(file_object& file_obj)
+{
     return 0;
 }

@@ -121,6 +121,13 @@ public:
     */
     int write_work_to_file(file_object& file_obj);
 
+    /*
+    * This function gets a file name, and transforms it to file_obj instance
+    * returns -1 if there was an error
+    * Warning: This function doesnt change the arrays of this class
+    */
+    int write_work_to_file(file_object& file_obj);
+
 };
 
 
