@@ -25,12 +25,13 @@
     files_for_scheme:           If the scheme includes files, the file names will be here (or db identify), in order 
     password_function:          The specific password fuction that we want to go over, we assume that there is a file in the worker that has a function(encryption) with that name
     passwords:                  The passwords that we want to find
+    worker_id:                  The worker id
 
  */
 
 class file_object{
 
-    int start_index, end_index, status, id;
+    int start_index, end_index, status, id, worker_id;
     std::string scheme_msg, passwords, files_for_scheme, password_function;
 
 
@@ -45,7 +46,8 @@ public:
     void set_passwords(std::string passwords);
     void set_password_function(std::string password_function);
     void set_files_for_scheme(std::string files_for_scheme);
-
+    void set_worker_id(int id);
+    int get_worker_id();
     /*
     * This function returns the message that we will write in the file
     */

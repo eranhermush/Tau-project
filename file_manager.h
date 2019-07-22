@@ -15,8 +15,8 @@
 
 class file_manager{
 
-    file_object arr;
-    file_object arr_didnt_do;
+    std::vector<file_object> arr_of_works;
+    std::vector<file_object> arr_didnt_do;
     std::vector< std::vector<std::string> > matrix_all_options;
     std::vector<std::string> file_names;
     std::string scheme_string, passwords, password_function;
@@ -107,11 +107,18 @@ public:
     int get_id_to_file();
 
     /*
-    * This function creates a new work, and puts it in the file that it gets.
+    * This function creates a new work, and puts it in the file object that it gets.
+    * it also adds the work to the arr of the class
     * When the function returns, the file object is update and we can put it in the real file.
     * @ret: if the function returns -1 it means that we cant create the new file, since we go over all the possible passwords.
     */
     int create_new_work(file_object& file_obj);
+    /*
+    * This function gets a file_object instance, and writes it to a file
+    * It first writes all the data, and then write the status (it does for consistency)
+    * @ret: if the function returns -1 iff there was an error
+    */
+    int write_work_to_file(file_object& file_obj);
 
 };
 

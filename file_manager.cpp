@@ -152,7 +152,7 @@ int file_manager::get_id_to_file()
     return this->curr_id-1;
 }
 
-int file_manager::create_new_work(file_object& file_obj)
+int file_manager::create_new_work(file_object& file_obj, int worker_id)
 {
     if (this->current_index_of_work >= this->sum_of_works)
     {
@@ -166,5 +166,26 @@ int file_manager::create_new_work(file_object& file_obj)
     file_obj.set_passwords(this->passwords);
     file_obj.set_password_function(this->password_function);
     file_obj.set_files_for_scheme(get_files_in_string());
+    file_obj.set_worker_id(worker_id);
+
+    this->arr_of_works.push_back(file_obj);
     return 0;
+}
+
+int file_manager::write_work_to_file(file_object& file_obj)
+{
+    std::ofstream myfile;
+    FILE *fp;
+    char buffer_of_doesnt_start_index[] = "0";
+    // write the data without the status (write status 2)
+    int worker_id = file_obj.get_worker_id();
+    myfile.open(std::to_string(worker_id) + ".txt");
+    myfile << "2\n";
+    myfile << file_obj.get_message_to_write_in_file_without_status();
+    myfile.flush();
+    myfile.close();
+    // write the data
+    fp = fopen(std::to_string(worker_id) + ".txt","w");
+    retVal = fwrite(buffer_of_doesnt_start_index, sizeof(buffer_of_doesnt_start_index),1,fp);
+    fclose (fp);
 }
