@@ -1,6 +1,6 @@
 #include "file_manager.h"
 
-file_manager::file_manager(std::vector< std::vector<std::string> > &matrix_all_options, std::vector<std::string> &file_names, 
+file_manager::file_manager(std::string path, std::vector< std::vector<std::string> > &matrix_all_options, std::vector<std::string> &file_names, 
     std::string &scheme_string,std::string &passwords, std::string &password_function)
 {
     this->matrix_all_options = matrix_all_options;
@@ -13,6 +13,7 @@ file_manager::file_manager(std::vector< std::vector<std::string> > &matrix_all_o
     this->work_size = 30;
     this->passwords = passwords;
     this->password_function = password_function;
+    this->dir_path = path;
     validate_input();
     save_sum_of_works();
 }
@@ -179,13 +180,28 @@ int file_manager::write_work_to_file(file_object& file_obj)
     char buffer_of_doesnt_start_index[] = "0";
     // write the data without the status (write status 2)
     int worker_id = file_obj.get_worker_id();
-    myfile.open(std::to_string(worker_id) + ".txt");
+    //std::string path = dir_path+"\\"+std::to_string(worker_id) + ".txt";
+    std::string path = std::to_string(worker_id) + ".txt";
+    std::cout << "path = " << path << std::endl;
+    myfile.open(path,std::fstream::in | std::fstream::out | std::fstream::trunc);
+    if (! (myfile.is_open()))
+    {
+        std::cout << "Error opening file ";
+        return -1;
+    }
     myfile << "2\n";
     myfile << file_obj.get_message_to_write_in_file_without_status();
     myfile.flush();
     myfile.close();
+    std::cout << file_obj.get_message_to_write_in_file_without_status() << std::endl;
     // write the data
-    fp = fopen(std::to_string(worker_id) + ".txt","w");
-    retVal = fwrite(buffer_of_doesnt_start_index, sizeof(buffer_of_doesnt_start_index),1,fp);
+    fp = std::fopen(path.c_str(),"w");
+    if (fp == NULL) {
+        perror("Error fopen");
+        return -1;
+    }
+    fwrite(buffer_of_doesnt_start_index, sizeof(buffer_of_doesnt_start_index),1,fp);
     fclose (fp);
+    std::cout << "end" << std::endl;
+    return 0;
 }

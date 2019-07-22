@@ -7,6 +7,7 @@
 #include <stdlib.h> 
 #include <algorithm>
 #include <fstream>
+#include <stdio.h>
 #include "file_object.h"
 
 /*
@@ -24,6 +25,7 @@ class file_manager{
     int curr_id;
     int sum_of_works;
     int current_index_of_work, work_size;
+    std::string dir_path;
 
 
 
@@ -43,7 +45,7 @@ public:
 	 * @param matrix_all_options- the matrix from the parser with all the options
      * @param file_names        - the names of our files (with repetitions) that we use in the scheme
 	 */
-    file_manager(std::vector< std::vector<std::string> > &matrix_all_options, std::vector<std::string> &file_names, std::string &scheme_string, std::string &passwords, std::string &password_function);
+    file_manager(std::string path, std::vector< std::vector<std::string> > &matrix_all_options, std::vector<std::string> &file_names, std::string &scheme_string, std::string &passwords, std::string &password_function);
     /*
         This function validates that the input is valid:
             The size of the string == the size of the matrix
@@ -112,11 +114,10 @@ public:
     * When the function returns, the file object is update and we can put it in the real file.
     * @ret: if the function returns -1 it means that we cant create the new file, since we go over all the possible passwords.
     */
-    int create_new_work(file_object& file_obj);
+    int create_new_work(file_object& file_obj, int worker_id);
     /*
     * This function gets a file_object instance, and writes it to a file
     * It first writes all the data, and then write the status (it does for consistency)
-    * @ret: if the function returns -1 iff there was an error
     */
     int write_work_to_file(file_object& file_obj);
 

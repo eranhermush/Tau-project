@@ -22,7 +22,6 @@ void print_matrix(std::vector< std::vector<std::string> > &matrix){
 
 int main()
 {	
-	int server_port = 8810;
 	string parser_string;
 	string target;
 	int ret_value = 0;
@@ -64,16 +63,25 @@ int main()
 	//print_matrix(parser.get_matrix());
 
 	// creates the manager
-	file_manager manager(parser.get_matrix(),files_vec,parser_string,passwords, password_functions);
-	int index = manager.vector_indexes_to_index(index_vec);
-	cout << "the index is: " << index << endl;
-	std::vector<int> v = manager.index_to_vector_indexes(index);
-	cout << "the vector is ";
-	for (int i = 0; i < v.size(); i++) {
-		std::cout << v.at(i) << ' ';
-	}
-	std::cout << std::endl;
-	//matrix_all_options, std::vector<std::string> &file_names, std::string &scheme_string)
+	file_manager manager("a",parser.get_matrix(),files_vec,parser_string,passwords, password_functions);
+	file_object a;
+	int result = manager.create_new_work(a, 12);
+	std::cout << "first result is " << result << std::endl;
+	manager.write_work_to_file(a);
+	std::cout << "finish" << std::endl;
+	/*
+	This is the tester for the indexes section
+	*/
+	/*
+		int index = manager.vector_indexes_to_index(index_vec);
+		cout << "the index is: " << index << endl;
+		std::vector<int> v = manager.index_to_vector_indexes(index);
+		cout << "the vector is ";
+		for (int i = 0; i < v.size(); i++) {
+			std::cout << v.at(i) << ' ';
+		}
+		std::cout << std::endl;
+	*/
 
 
     return 0;
