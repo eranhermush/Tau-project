@@ -177,35 +177,31 @@ int file_manager::write_work_to_file(file_object& file_obj)
 {
     std::ofstream myfile;
     FILE *fp;
-    char buffer_of_doesnt_start_index[] = "0";
     // write the data without the status (write status 2)
     int worker_id = file_obj.get_worker_id();
-    //std::string path = dir_path+"\\"+std::to_string(worker_id) + ".txt";
+    //std::string path = ".\\" + dir_path+"\\" + std::to_string(worker_id) + ".txt";
     std::string path = std::to_string(worker_id) + ".txt";
-    std::cout << "path = " << path << std::endl;
     myfile.open(path,std::fstream::in | std::fstream::out | std::fstream::trunc);
     if (! (myfile.is_open()))
     {
         std::cout << "Error opening file ";
         return -1;
     }
-    myfile << "0\n";
+    myfile << "2\n";
     myfile << file_obj.get_message_to_write_in_file_without_status();
     myfile.flush();
     myfile.close();
     // write the data
-/*
-    fp = std::fopen(path.c_str(),"a+");
+
+    fp = std::fopen(path.c_str(),"r+");
     fseek(fp, 0, SEEK_SET);
     if (fp == NULL) {
         perror("Error fopen");
         return -1;
     }
-        
-    fwrite(buffer_of_doesnt_start_index, sizeof(buffer_of_doesnt_start_index),1,fp);
-    //fprintf(fp, "0");
-    fclose (fp);
-    */
+    fprintf(fp, "0");
+    std::fclose (fp);
+    
     std::cout << "end" << std::endl;
     return 0;
 }
