@@ -54,6 +54,7 @@ public:
     std::string get_message_to_write_in_file();
     int get_status();
     std::string get_message_to_write_in_file_without_status();
+    std::string to_string();
 
 
 };

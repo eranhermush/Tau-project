@@ -69,6 +69,8 @@ int main()
 	std::cout << "first result is " << result << std::endl;
 	manager.write_work_to_file(a);
 	std::cout << "finish" << std::endl;
+	manager.file_to_file_object(a, "12.txt");
+	std::cout << a.to_string() << std::endl;
 	/*
 	This is the tester for the indexes section
 	*/

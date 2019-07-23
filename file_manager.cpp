@@ -201,8 +201,6 @@ int file_manager::write_work_to_file(file_object& file_obj)
     }
     fprintf(fp, "0");
     std::fclose (fp);
-    
-    std::cout << "end" << std::endl;
     return 0;
 }
 
@@ -212,12 +210,15 @@ int file_manager::file_to_file_object(file_object& file_obj, std::string filenam
     std::string msg;
     std::string files = "";
     std::ifstream myfile (filename);
+    int status = 0;
     /*
         std::string result = std::to_string(this->id) + '\n' + std::to_string(this->worker_id) + '\n' + this->scheme_msg+ '\n' + this->password_function + 
         '\n' + std::to_string(this->start_index) + '\n' + std::to_string(this->end_index)+ '\n' + this->files_for_scheme + '\n' + this->passwords;
     */
     if (myfile.is_open())
     {
+        getline (myfile,line);
+        file_obj.set_status(std::stoi(line));
         getline (myfile,line);
         file_obj.set_id(std::stoi(line));
         getline (myfile,line);
@@ -229,7 +230,9 @@ int file_manager::file_to_file_object(file_object& file_obj, std::string filenam
         file_obj.set_password_function(line);
         getline (myfile,line);
         getline (myfile,line2);
+
         file_obj.set_index(std::stoi(line),std::stoi(line2));
+
         for (int i = 1; i <= std::count(msg.begin(), msg.end(),'f'); i++)
         {
             getline (myfile,line);
