@@ -5,6 +5,7 @@
 #include <bits/stdc++.h>
 #include "parser_main.h"
 #include <string>
+
 #include "worker_manager.h"
 #include "file_manager.h"
 
@@ -19,9 +20,28 @@ void print_matrix(std::vector< std::vector<std::string> > &matrix){
 		cout <<endl;
 	}
 }
+/*
+http://www.martinbroadhurst.com/list-the-files-in-a-directory-in-c.html
 
+#include <sys/types.h>
+#include <dirent.h>
+ 
+void read_directory(const std::string& name, stringvec& v)
+{
+    DIR* dirp = opendir(name.c_str());
+    struct dirent * dp;
+    while ((dp = readdir(dirp)) != NULL) {
+        v.push_back(dp->d_name);
+    }
+    closedir(dirp);
+}
+*/
 int main()
 {	
+
+
+
+
 	string parser_string;
 	string target;
 	int ret_value = 0;
