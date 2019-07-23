@@ -129,6 +129,23 @@ public:
     */
     int file_to_file_object(file_object& file_obj, std::string filename);
 
+    /*
+    * This function goes over all the files in the directory. For each file it does:
+    * 1. Checks that the file is a valid file - i.e. it is in our protocol of writing to file.
+    * 2. Checks that the workerid in the file == the filename
+    * 3. Checks that the data in the file is consistent with the data in the array
+    * 4. Checks that it is not a new worker (status != 3)
+    * If the answer to one (or more) of questions(1-3) and question 4 were false, this functions does the following:
+    *    a. removes the worker from the worker arr
+    *    b. add this work to the didntWork arr
+    *    c. delete the file
+    * If the answers were true we does:
+    *    a. Checks the status. if the status is 1 or 0 - we ignore the file (maybe later we will add timing element)
+    *    b. If the status is 2 - we removes this work from the arr, and update the file with a new work
+    *    c. If the status is 3 we gives the worker a new work.
+    */
+    void go_over_files();
+
 };
 
 

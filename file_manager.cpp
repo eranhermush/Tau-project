@@ -179,7 +179,7 @@ int file_manager::write_work_to_file(file_object& file_obj)
     FILE *fp;
     // write the data without the status (write status 2)
     int worker_id = file_obj.get_worker_id();
-    //std::string path = ".\\" + dir_path+"\\" + std::to_string(worker_id) + ".txt";
+    //std::string path =  dir_path+"\\" + std::to_string(worker_id) + ".txt";
     std::string path = std::to_string(worker_id) + ".txt";
     myfile.open(path,std::fstream::in | std::fstream::out | std::fstream::trunc);
     if (! (myfile.is_open()))
@@ -249,4 +249,8 @@ int file_manager::file_to_file_object(file_object& file_obj, std::string filenam
         return -1;
     }
     return 0;   
+}
+void file_manager::go_over_files()
+{
+    
 }

@@ -20,6 +20,7 @@
                                     0: doesnt start to work on that
                                     1: in process
                                     2: done
+                                    3: Start worker
     scheme_msg:                 The scheme string, like "ccCd"
     start_index and end index:  Represents the indexes of the password to go over them, in the original ordering
     files_for_scheme:           If the scheme includes files, the file names will be here (or db identify), in order 
