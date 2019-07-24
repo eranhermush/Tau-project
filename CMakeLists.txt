@@ -8,4 +8,4 @@ add_executable(Tau-project main.cpp parser_main.h parser_main.cpp worker_manager
 
 add_executable(Worker_run WorkerSection/main.cpp WorkerSection/worker.h WorkerSection/worker.cpp WorkerSection/scheme.h WorkerSection/scheme.cpp parser_main.h parser_main.cpp another_functions.h another_functions.cpp)
 
-add_executable(EranTester tester_for_fileObject.cpp file_object.h file_object.cpp file_manager.h file_manager.cpp parser_main.h parser_main.cpp worker_manager_worker_object.h worker_manager_worker_object.cpp worker_manager.h worker_manager.cpp another_functions.h another_functions.cpp)
+add_executable(EranTester tester_for_fileObject.cpp file_object.h file_object.cpp file_manager.h file_manager.cpp parser_main.h parser_main.cpp worker_manager_worker_object.h worker_manager_worker_object.cpp worker_manager.h worker_manager.cpp another_functions.h another_functions.cpp helpful_functions.h helpful_functions.cpp)

@@ -21,6 +21,7 @@
                                     1: in process
                                     2: done
                                     3: Start worker
+                                    4: Finish Work (and done this work)
     scheme_msg:                 The scheme string, like "ccCd"
     start_index and end index:  Represents the indexes of the password to go over them, in the original ordering
     files_for_scheme:           If the scheme includes files, the file names will be here (or db identify), in order 
@@ -49,6 +50,8 @@ public:
     void set_files_for_scheme(std::string files_for_scheme);
     void set_worker_id(int id);
     int get_worker_id();
+    int get_start_index();
+    int get_end_index();
     /*
     * This function returns the message that we will write in the file
     */

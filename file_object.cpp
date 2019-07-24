@@ -80,3 +80,11 @@ std::string file_object::to_string()
         '\n' + "files" + this->files_for_scheme + '\n' + "passwords " + this->passwords;
     return result;
 }
+int file_object::get_start_index()
+{
+	return this->start_index;
+}
+int file_object::get_end_index()
+{
+	return this-> end_index;
+}

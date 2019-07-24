@@ -155,13 +155,24 @@ int file_manager::get_id_to_file()
 
 int file_manager::create_new_work(file_object& file_obj, int worker_id)
 {
+    file_object file_obj_former;
     if (this->current_index_of_work >= this->sum_of_works)
     {
         return -1;
     }
+    if (arr_didnt_do.empty())
+    {
+        file_obj.set_index(this->current_index_of_work, std::min(this->current_index_of_work + this->work_size, this->sum_of_works-1));
+        this->current_index_of_work = std::min(this->current_index_of_work + this->work_size, this->sum_of_works-1);
+    }
+    else
+    {
+        file_obj_former = arr_didnt_do.back();
+        arr_didnt_do.pop_back();
+        file_obj.set_index(file_obj_former.get_start_index(), file_obj_former.get_end_index());
+    }
+
     file_obj.set_id(get_id_to_file());
-    file_obj.set_index(this->current_index_of_work, std::min(this->current_index_of_work + this->work_size, this->sum_of_works-1));
-    this->current_index_of_work = std::min(this->current_index_of_work + this->work_size, this->sum_of_works-1);
     file_obj.set_status(0);
     file_obj.set_scheme_msg(this->scheme_string);
     file_obj.set_passwords(this->passwords);
@@ -250,6 +261,10 @@ int file_manager::file_to_file_object(file_object& file_obj, std::string filenam
     }
     return 0;   
 }
+
+
+
+
 void file_manager::go_over_files()
 {
     

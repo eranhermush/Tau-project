@@ -9,7 +9,7 @@
 #include <fstream>
 #include <stdio.h>
 #include "file_object.h"
-
+#include "helpful_functions.h"
 /*
  * This class is a server class, it reads here the files and updates them
  */
@@ -145,6 +145,7 @@ public:
     *    c. If the status is 3 we gives the worker a new work.
     */
     void go_over_files();
+
 
 };
 

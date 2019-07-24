@@ -8,6 +8,7 @@
 
 #include "worker_manager.h"
 #include "file_manager.h"
+#include "helpful_functions.h"
 
 /*
 	This function is for checking the matrix
@@ -20,22 +21,7 @@ void print_matrix(std::vector< std::vector<std::string> > &matrix){
 		cout <<endl;
 	}
 }
-/*
-http://www.martinbroadhurst.com/list-the-files-in-a-directory-in-c.html
 
-#include <sys/types.h>
-#include <dirent.h>
- 
-void read_directory(const std::string& name, stringvec& v)
-{
-    DIR* dirp = opendir(name.c_str());
-    struct dirent * dp;
-    while ((dp = readdir(dirp)) != NULL) {
-        v.push_back(dp->d_name);
-    }
-    closedir(dirp);
-}
-*/
 int main()
 {	
 
@@ -45,65 +31,93 @@ int main()
 	string parser_string;
 	string target;
 	int ret_value = 0;
-	cout << "Hello, please enter the parser string:" << endl;
-	cin >> parser_string;
+	int index_test = 0;
+	std::cout << "enter an index: 1 - check the server, 2- check the index section, 3 - check the files " << std::endl;
+	cin >> index_test;
+	if (index_test == 1 || index_test == 2)
+	{
+		std::cout << "Hello, please enter the parser string:" << endl;
+		cin >> parser_string;
 
-    std::vector<int> index_vec; 
-  	int user_input = 0;
-  	cout << "enter the indexes: " << parser_string.length() << endl;
+	    std::vector<int> index_vec; 
+	  	int user_input = 0;
+	  	cout << "enter the indexes: " << parser_string.length() << endl;
 
-    for (int i = 1; i <= parser_string.length(); i++)
-    {
-  		cin >> user_input;
-        index_vec.push_back(user_input); 
-    }
-    std::vector<std::string> files_vec; 
-  	std::string user_input_file = "";
-  	cout << "enter the files" << std::count(parser_string.begin(), parser_string.end(),'f') << endl;
-    for (int i = 1; i <= std::count(parser_string.begin(), parser_string.end(),'f'); i++)
-    {
-  		cin >> user_input_file;
-        files_vec.push_back(user_input_file); 
-    }
-	parser_main parser (parser_string);
-	
-	// create the matrix
-	ret_value = parser.from_parser_string_to_matrix();
-	if(ret_value == -1){
-		cout << "Invalid input :( " << endl;
-		return 0;
-	}
-	std::string password_functions;
-	std::string passwords;
-
-	cout << "enter the passwords"  << endl;
-	cin >> passwords;
-	cout << "enter the password functions"  << endl;
-	cin >> password_functions;
-	//print_matrix(parser.get_matrix());
-
-	// creates the manager
-	file_manager manager("a",parser.get_matrix(),files_vec,parser_string,passwords, password_functions);
-	file_object a;
-	int result = manager.create_new_work(a, 12);
-	std::cout << "first result is " << result << std::endl;
-	manager.write_work_to_file(a);
-	std::cout << "finish" << std::endl;
-	manager.file_to_file_object(a, "12.txt");
-	std::cout << a.to_string() << std::endl;
-	/*
-	This is the tester for the indexes section
-	*/
-	/*
-		int index = manager.vector_indexes_to_index(index_vec);
-		cout << "the index is: " << index << endl;
-		std::vector<int> v = manager.index_to_vector_indexes(index);
-		cout << "the vector is ";
-		for (int i = 0; i < v.size(); i++) {
-			std::cout << v.at(i) << ' ';
+	    for (int i = 1; i <= parser_string.length(); i++)
+	    {
+	  		cin >> user_input;
+	        index_vec.push_back(user_input); 
+	    }
+	    std::vector<std::string> files_vec; 
+	  	std::string user_input_file = "";
+	  	cout << "enter the files" << std::count(parser_string.begin(), parser_string.end(),'f') << endl;
+	    for (int i = 1; i <= std::count(parser_string.begin(), parser_string.end(),'f'); i++)
+	    {
+	  		cin >> user_input_file;
+	        files_vec.push_back(user_input_file); 
+	    }
+		parser_main parser (parser_string);
+		
+		// create the matrix
+		ret_value = parser.from_parser_string_to_matrix();
+		if(ret_value == -1){
+			cout << "Invalid input :( " << endl;
+			return 0;
 		}
-		std::cout << std::endl;
-	*/
+		std::string password_functions;
+		std::string passwords;
+
+		cout << "enter the passwords"  << endl;
+		cin >> passwords;
+		cout << "enter the password functions"  << endl;
+		cin >> password_functions;
+		//print_matrix(parser.get_matrix());
+
+		// creates the manager
+		file_manager manager("a",parser.get_matrix(),files_vec,parser_string,passwords, password_functions);
+		if(index_test == 1)
+		{
+			file_object a;
+			int result = manager.create_new_work(a, 12);
+			std::cout << "first result is " << result << std::endl;
+			manager.write_work_to_file(a);
+			std::cout << "finish" << std::endl;
+			manager.file_to_file_object(a, "12.txt");
+			std::cout << a.to_string() << std::endl;			
+		}
+		else
+		{
+			/*
+			This is the tester for the indexes section
+			*/
+			int index = manager.vector_indexes_to_index(index_vec);
+			cout << "the index is: " << index << endl;
+			std::vector<int> v = manager.index_to_vector_indexes(index);
+			cout << "the vector is ";
+			for (int i = 0; i < v.size(); i++) {
+				std::cout << v.at(i) << ' ';
+			}
+			std::cout << std::endl;
+		}
+
+	}
+
+
+	
+
+	
+	if (index_test == 3)
+	{
+		std::vector<std::string> file_names;
+		std::string directory_name;
+		cout << "enter the directory name "  << endl;
+		cin >> directory_name;
+		helpful_functions::read_directory(directory_name, file_names);
+		helpful_functions::my_print(file_names);
+	}
+	else{
+		std::cout << "error :( " << std::endl;
+	}
     return 0;
 
 }
