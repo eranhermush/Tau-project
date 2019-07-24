@@ -145,3 +145,8 @@ void file_object::intialize()
 	this->passwords = "";
 	this->files_for_scheme = "";
 }
+void intialize_to_error()
+{
+	intialize();
+	this->status = 5;
+}

@@ -22,6 +22,7 @@
                                     2: done
                                     3: Start worker
                                     4: Finish Work (and done this work)
+                                    5: There are no messages any more (a message from server to client instead of a new work)               
     scheme_msg:                 The scheme string, like "ccCd"
     start_index and end index:  Represents the indexes of the password to go over them, in the original ordering
     files_for_scheme:           If the scheme includes files, the file names will be here (or db identify), in order 
@@ -69,8 +70,12 @@ public:
 
     // we checks here if the files are equal
     bool check_equal(file_object& obj);
+
+    // intialize the object to default values 
     void intialize();
 
+    // intialize the object to error values  (-1/"" to all, expect status, which is 5)   
+    void intialize_to_error();
 
 };
 

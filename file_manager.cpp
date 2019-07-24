@@ -198,7 +198,7 @@ int file_manager::write_work_to_file(file_object& file_obj)
         std::cout << "Error opening file ";
         return -1;
     }
-    myfile << "2\n";
+    myfile << "1\n";
     myfile << file_obj.get_message_to_write_in_file_without_status();
     myfile.flush();
     myfile.close();
@@ -265,21 +265,6 @@ int file_manager::file_to_file_object(file_object& file_obj, std::string filenam
     return 0;   
 }
 
-/*
-* This function goes over all the files in the directory. For each file it does:
-* 1. Checks that the file is a valid file - i.e. it is in our protocol of writing to file.
-* 2. Checks that the workerid in the file == the filename
-* 3. Checks that the data in the file is consistent with the data in the array
-* 4. Checks that it is not a new worker (status != 3)
-* If the answer to one (or more) of questions(1-3) and question 4 were false, this functions does the following:
-*    a. removes the worker from the worker arr
-*    b. add this work to the didntWork arr
-*    c. delete the file
-* If the answers were true we does:
-*    a. Checks the status. if the status is 1 or 0 - we ignore the file (maybe later we will add timing element)
-*    b. If the status is 2 - we removes this work from the arr, and update the file with a new work
-*    c. If the status is 3 we gives the worker a new work.
-*/
 bool check_validate_of_file(std::string file_name, std::string full_file_name, file_object& file_obj, bool print_error)
 {
     file_object file_in_arr;
@@ -340,13 +325,13 @@ bool check_validate_of_file(std::string file_name, std::string full_file_name, f
     return true;
 }
 
-
+// Todo: add print_erorr to all functions
 void file_manager::go_over_files( bool print_error)
 {
 
     std::vector<std::string> file_names;
     std::string file_name;
-    file_object obj;
+    file_object obj, new_obj;
     bool val = true;
     int file_name_int = 0;
     helpful_functions::read_directory(this->dir_path, file_names);
@@ -391,8 +376,36 @@ void file_manager::go_over_files( bool print_error)
             }
         }
         else
-        {
-            
+        {   
+            // if we finish a job, we remove it from the array
+            if(obj.get_status() == 4 ||  obj.get_status() == 2)
+            {
+                for (int j = this->arr_of_works.size()-1; j >= 0 ; j--)
+                {
+                    if(this->arr_of_works.at(j).get_worker_id() == file_name_int)
+                    {
+                        this->arr_of_works.erase (myvector.begin()+j);
+                    }
+                }
+            }
+            // if we want a new job - we make it here
+            if(obj.get_status() == 3 ||  obj.get_status() == 2)
+            {
+                new_obj.intialize();
+                retVal = create_new_work(new_obj, file_name_int);
+                if(retVal == -1){
+                    new_obj.intialize_to_error();
+                }
+                retVal = write_work_to_file(new_obj);
+                if(retVal == -1)
+                {
+                    if(print_error)
+                    {
+                        std::cout << "an error in write_work_to_file id =  " << file_name_int << std::endl;
+                    }
+                }
+                
+            }            
         }
     }
 }

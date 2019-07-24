@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 using namespace std;
+
 /**
  * This class is the main for the parser
  * it has functions that convert the regular expression string to array of tokens
@@ -18,6 +19,7 @@ class parser_main {
     vector< vector<string> > matrix_all_options;
 
 public:
+
     /**
      * constructor
      * @param str- the regular expression string
@@ -44,8 +46,6 @@ public:
     */
     vector<vector<string> >& get_matrix();
 
-
 };
-
 
 #endif //TAU_PROJECT_PARSER_MAIN_H

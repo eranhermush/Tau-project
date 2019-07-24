@@ -118,6 +118,7 @@ public:
     /*
     * This function gets a file_object instance, and writes it to a file
     * It first writes all the data, and then write the status (it does for consistency)
+    *  ****** This file changes the array of the working files ***********
     */
     int write_work_to_file(file_object& file_obj);
 
