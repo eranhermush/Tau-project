@@ -2,14 +2,7 @@
 
 file_object::file_object()
 {
-	this->start_index = 0;
-	this->end_index = 0;
-	this->status = -1;
-	this->id = -1;
-	this->scheme_msg = "";
-	this->passwords = "";
-    this->password_function = "";
-	this->files_for_scheme = "";
+	intialize();
 }
 
 
@@ -87,4 +80,68 @@ int file_object::get_start_index()
 int file_object::get_end_index()
 {
 	return this-> end_index;
+}
+std::string file_object::get_scheme_msg()
+{
+	return this->scheme_msg;
+}
+std::string file_object::get_passwords()
+{
+	return this->passwords;
+}
+std::string file_object::get_password_function()
+{
+	return this->files_for_scheme;
+}
+std::string file_object::get_files_for_scheme()
+{
+	return this->password_function;
+}
+
+bool file_object::check_equal(file_object& obj)
+{
+	if (this->status != obj.get_status()){
+		return false;
+	}
+	if (this->worker_id != obj.get_worker_id()){
+		return false;
+	}
+	if (this->start_index != obj.get_start_index()){
+		return false;
+	}
+	if (this->end_index != obj.get_end_index()){
+		return false;
+	}
+	if (this->id != obj.get_id()){
+		return false;
+	}
+    if  (strcmp(this->scheme_msg, file_obj.get_scheme_msg()) != 0 ) 
+    {
+        return false;
+    }
+    if  (strcmp(this->passwords, file_obj.get_passwords()) != 0 ) 
+    {
+        return false;
+    }    
+    if  (strcmp(this->files_for_scheme, file_obj.get_password_function()) != 0 ) 
+    {
+        return false;
+    }
+    if  (strcmp(this->password_function, file_obj.get_files_for_scheme()) != 0 ) 
+    {
+        return false;
+    }   
+    return true;
+}
+void file_object::intialize()
+{
+	this->start_index = -1;
+	this->end_index = -1;
+	this->status = -1;
+	this->id = -1;
+	this->worker_id = -1;
+	this->scheme_msg = "";
+	this->password_function = "";
+	this->passwords = "";
+	this->files_for_scheme = "";
 }

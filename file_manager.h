@@ -127,7 +127,7 @@ public:
     * Warning: This function doesnt change the arrays of this class
     * we assume that the file is valid -> was written by "write_work_to_file"
     */
-    int file_to_file_object(file_object& file_obj, std::string filename);
+    int file_to_file_object(file_object& file_obj, std::string filename, bool print_error);
 
     /*
     * This function goes over all the files in the directory. For each file it does:
@@ -144,9 +144,13 @@ public:
     *    b. If the status is 2 - we removes this work from the arr, and update the file with a new work
     *    c. If the status is 3 we gives the worker a new work.
     */
-    void go_over_files();
+    void go_over_files( bool print_error);
 
-
+    /*
+    * This function gets a file name and returns if this file is validate - like the protocol.
+    * print_error indicates if we want to print to stdout the error
+    */
+    bool check_validate_of_file(std::string file_name, std::string full_file_name, file_object& file_obj, bool print_error);
 };
 
 

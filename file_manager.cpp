@@ -190,7 +190,7 @@ int file_manager::write_work_to_file(file_object& file_obj)
     FILE *fp;
     // write the data without the status (write status 2)
     int worker_id = file_obj.get_worker_id();
-    std::string path =  dir_path+"/" + std::to_string(worker_id) + ".txt";
+    std::string path =  dir_path + "/" + std::to_string(worker_id) + ".txt";
     //std::string path = std::to_string(worker_id) + ".txt";
     myfile.open(path,std::fstream::in | std::fstream::out | std::fstream::trunc);
     if (! (myfile.is_open()))
@@ -215,7 +215,7 @@ int file_manager::write_work_to_file(file_object& file_obj)
     return 0;
 }
 
-int file_manager::file_to_file_object(file_object& file_obj, std::string filename)
+int file_manager::file_to_file_object(file_object& file_obj, std::string filename, bool print_error)
 {
     std::string line, line2;
     std::string msg;
@@ -256,16 +256,145 @@ int file_manager::file_to_file_object(file_object& file_obj, std::string filenam
     }
     else
     {
-        std::cout << "Error " << std::endl;
+        if (print_error)
+        {
+            std::cout << "Error " << std::endl;
+        }
         return -1;
     }
     return 0;   
 }
 
-
-
-
-void file_manager::go_over_files()
+/*
+* This function goes over all the files in the directory. For each file it does:
+* 1. Checks that the file is a valid file - i.e. it is in our protocol of writing to file.
+* 2. Checks that the workerid in the file == the filename
+* 3. Checks that the data in the file is consistent with the data in the array
+* 4. Checks that it is not a new worker (status != 3)
+* If the answer to one (or more) of questions(1-3) and question 4 were false, this functions does the following:
+*    a. removes the worker from the worker arr
+*    b. add this work to the didntWork arr
+*    c. delete the file
+* If the answers were true we does:
+*    a. Checks the status. if the status is 1 or 0 - we ignore the file (maybe later we will add timing element)
+*    b. If the status is 2 - we removes this work from the arr, and update the file with a new work
+*    c. If the status is 3 we gives the worker a new work.
+*/
+bool check_validate_of_file(std::string file_name, std::string full_file_name, file_object& file_obj, bool print_error)
 {
-    
+    file_object file_in_arr;
+    int retVal = 0;
+    bool find = false;
+    int file_name_int = 0;
+    try
+    {
+        // we also validate here that the filen-name consist of integers, we make substr to avoid the ".txt"
+        file_name_int = std::stoi(file_name.substr(0, file_name.length() - 4)); 
+
+        retVal = file_to_file_object(file_obj, full_file_name, print_error);
+        if (retVal == -1){
+            return false;
+        }
+    }
+    catch (int e)
+    {
+        if (print_error)
+        {
+            cout << "An exception occurred on open file in validate. Exception Nr. " << e << '\n';
+        }
+        if (file_obj.get_status() == 3)
+        {
+            return true;
+        }
+
+        return false;
+    }
+    // start worker
+    if (file_obj.get_status() == 3)
+    {
+        return true;
+    }
+    // checks the worker id 
+    if  (file_obj.get_worker_id() != file_name_int) 
+    {
+        return false;
+    }
+    for (int i = 0; i < this->arr_of_works.size(); i++) {
+        if(this->arr_of_works.at(i).get_worker_id() == file_name_int)
+        {
+            file_in_arr = this->arr_of_works.at(i);
+            find = true;
+            break;
+        }
+    }
+    // there is not a relevant file in the arr
+    if (! find)
+    {
+        return false;
+    }
+    // if the relevant file is not consistent with the real file
+    if (! file_obj.check_equal(file_in_arr))
+    {
+        return false;
+    }
+    return true;
 }
+
+
+void file_manager::go_over_files( bool print_error)
+{
+
+    std::vector<std::string> file_names;
+    std::string file_name;
+    file_object obj;
+    bool val = true;
+    int file_name_int = 0;
+    helpful_functions::read_directory(this->dir_path, file_names);
+    for (int i = 0; i < file_names.size(); i++) {
+        file_name = this->dir_path + "/" + file_names.at(i);
+        try{
+            file_name_int = std::stoi(file_name.substr(0, file_name.length() - 4)); 
+        }
+
+        catch (int e)
+        {
+            val = false;
+            file_name_int = -1;
+        }
+        if (val)
+        {
+            obj.intialize();
+            val = check_validate_of_file(file_names.at(i), file_name, obj,  print_error);
+
+        }
+
+
+        if(! val)
+        {
+            // removes the files
+            if( remove(file_name) != 0 )
+            {
+                if (print_error){
+                    perror( "Error deleting file" );
+                }
+            }
+            
+            // updates the arrays
+            for (int j = this->arr_of_works.size()-1; j >= 0 ; j--)
+            {
+                if(this->arr_of_works.at(j).get_worker_id() == file_name_int)
+                {
+                    file_in_arr = this->arr_of_works.at(j);
+                    arr_didnt_do.push_back(file_in_arr);
+                    this->arr_of_works.erase (myvector.begin()+j);
+                }
+            }
+        }
+        else
+        {
+            
+        }
+    }
+}
+
+

@@ -40,7 +40,6 @@ class file_object{
 
 public:
     file_object();
-    int get_id();
     void set_index(int start_index, int end_index);
     void set_status(int status);
     void set_id(int id);
@@ -49,16 +48,28 @@ public:
     void set_password_function(std::string password_function);
     void set_files_for_scheme(std::string files_for_scheme);
     void set_worker_id(int id);
+
     int get_worker_id();
     int get_start_index();
     int get_end_index();
+    int get_id();
+    std::string get_scheme_msg();
+    std::string get_passwords();
+    std::string get_password_function();
+    std::string get_files_for_scheme();
+
     /*
     * This function returns the message that we will write in the file
     */
     std::string get_message_to_write_in_file();
+
     int get_status();
     std::string get_message_to_write_in_file_without_status();
     std::string to_string();
+
+    // we checks here if the files are equal
+    bool check_equal(file_object& obj);
+    void intialize();
 
 
 };
