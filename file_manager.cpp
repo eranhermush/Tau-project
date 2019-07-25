@@ -231,8 +231,10 @@ int file_manager::file_to_file_object(file_object& file_obj, std::string filenam
         getline (myfile,line);
         file_obj.set_status(std::stoi(line));
         getline (myfile,line);
+
         file_obj.set_id(std::stoi(line));
         getline (myfile,line);
+
         file_obj.set_worker_id(std::stoi(line));
         getline (myfile,line);
         file_obj.set_scheme_msg(line);
@@ -274,26 +276,27 @@ bool file_manager::check_validate_of_file(std::string file_name, std::string ful
     try
     {
         // we also validate here that the filen-name consist of integers, we make substr to avoid the ".txt"
-        file_name_int = std::stoi(file_name.substr(0, file_name.length() - 4)); 
+        file_name_int = std::stoi(file_name.substr(0, file_name.length() -4)); 
 
         retVal = file_to_file_object(file_obj, full_file_name, print_error);
         if (retVal == -1){
             return false;
         }
     }
-    catch (int e)
+    catch ( ...)
     {
-        if (print_error)
-        {
-            std::cout << "An exception occurred on open file in validate. Exception Nr. " << e << '\n';
-        }
+
         if (file_obj.get_status() == 3)
         {
             return true;
         }
-
+        if (print_error)
+        {
+            std::cout << "An exception occurred on open file in validate. Exception Nr. "   <<'\n';
+        }
         return false;
     }
+
     // start worker
     if (file_obj.get_status() == 3)
     {
@@ -317,6 +320,7 @@ bool file_manager::check_validate_of_file(std::string file_name, std::string ful
     {
         return false;
     }
+
     // if the relevant file is not consistent with the real file
     if (! file_obj.check_equal(file_in_arr))
     {
@@ -340,10 +344,10 @@ void file_manager::go_over_files( bool print_error)
     for (int i = 0; i < file_names.size(); i++) {
         file_name = this->dir_path + "/" + file_names.at(i);
         try{
-            file_name_int = std::stoi(file_name.substr(0, file_name.length() - 4)); 
+            file_name_int = std::stoi(file_name.substr(this->dir_path.length()+1, file_name.length() - 3));
         }
 
-        catch (int e)
+        catch (...)
         {
             val = false;
             file_name_int = -1;
@@ -352,13 +356,13 @@ void file_manager::go_over_files( bool print_error)
         {
             obj.intialize();
             val = check_validate_of_file(file_names.at(i), file_name, obj,  print_error);
-
         }
 
 
         if(! val)
         {
             // removes the files
+            std::cout << "remove a file, val not true " << std::endl;
             if( remove(file_name.c_str()) != 0 )
             {
                 if (print_error){

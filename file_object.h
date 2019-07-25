@@ -69,6 +69,7 @@ public:
     std::string to_string();
 
     // we checks here if the files are equal
+    // Warning: this function doesnt compare the status tag
     bool check_equal(file_object& obj);
 
     // intialize the object to default values 

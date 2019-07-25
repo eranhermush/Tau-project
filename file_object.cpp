@@ -46,9 +46,14 @@ int file_object::get_status()
     return this->status;
 }
 std::string file_object::get_message_to_write_in_file_without_status()
-{
+{	
     std::string result = std::to_string(this->id) + '\n' + std::to_string(this->worker_id) + '\n' + this->scheme_msg+ '\n' + this->password_function + 
         '\n' + std::to_string(this->start_index) + '\n' + std::to_string(this->end_index)+ '\n' + this->files_for_scheme + '\n' + this->passwords;
+    if(this->files_for_scheme.length() == 0)
+    {
+		result = std::to_string(this->id) + '\n' + std::to_string(this->worker_id) + '\n' + this->scheme_msg+ '\n' + this->password_function + 
+        	'\n' + std::to_string(this->start_index) + '\n' + std::to_string(this->end_index)+  '\n' + this->passwords;
+    }
     return result;
 }
 std::string file_object::get_message_to_write_in_file()
@@ -68,8 +73,8 @@ int file_object::get_worker_id()
 std::string file_object::to_string()
 {
     std::string result = "id: " + std::to_string(this->id) + '\n' + "worker id: " + std::to_string(this->worker_id) + 
-    '\n' + "scheme msg " + this->scheme_msg+ '\n' + "password functions : " + this->password_function + 
-        '\n' + "start index " + std::to_string(this->start_index) + '\n' + + "end index " +std::to_string(this->end_index)+ 
+    	'\n' + "scheme msg " + this->scheme_msg+ '\n' + "password functions : " + this->password_function + 
+        '\n' + "start index " + std::to_string(this->start_index) + '\n' + "end index " + std::to_string(this->end_index)+ 
         '\n' + "files" + this->files_for_scheme + '\n' + "passwords " + this->passwords;
     return result;
 }
@@ -100,9 +105,7 @@ std::string file_object::get_files_for_scheme()
 
 bool file_object::check_equal(file_object& obj)
 {
-	if (this->status != obj.get_status()){
-		return false;
-	}
+
 	if (this->worker_id != obj.get_worker_id()){
 		return false;
 	}
@@ -112,21 +115,26 @@ bool file_object::check_equal(file_object& obj)
 	if (this->end_index != obj.get_end_index()){
 		return false;
 	}
+
 	if (this->id != obj.get_id()){
 		return false;
 	}
+
     if  (!(this->scheme_msg == obj.get_scheme_msg() )) 
     {
         return false;
-    }
+    }  
+
     if  (!(this->passwords  == obj.get_passwords() ))
     {
         return false;
-    }    
+    }   
+
     if  (!(this->files_for_scheme == obj.get_password_function() ))
     {
         return false;
     }
+
     if  (!(this->password_function == obj.get_files_for_scheme() ))
     {
         return false;
