@@ -195,7 +195,7 @@ int file_manager::write_work_to_file(file_object& file_obj)
     myfile.open(path,std::fstream::in | std::fstream::out | std::fstream::trunc);
     if (! (myfile.is_open()))
     {
-        std::cout << "Error opening file ";
+        std::cout << "Error opening file in write_work_to_file" << std::endl;
         return -1;
     }
     myfile << "1\n";
@@ -207,7 +207,7 @@ int file_manager::write_work_to_file(file_object& file_obj)
     fp = std::fopen(path.c_str(),"r+");
     fseek(fp, 0, SEEK_SET);
     if (fp == NULL) {
-        perror("Error fopen");
+        perror("Error fopen in write_work_to_file ");
         return -1;
     }
     fprintf(fp, "0");
@@ -258,7 +258,7 @@ int file_manager::file_to_file_object(file_object& file_obj, std::string filenam
     {
         if (print_error)
         {
-            std::cout << "Error " << std::endl;
+            std::cout << "Error my file is not open :( file name is " << filename << std::endl;
         }
         return -1;
     }
