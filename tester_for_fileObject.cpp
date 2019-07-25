@@ -32,6 +32,7 @@ int main()
 	string target;
 	int ret_value = 0;
 	int index_test = 0;
+	bool to_print = true;
 	std::cout << "enter an index: 1 - check the server, 2- check the index section, 3 - check the files " << std::endl;
 	cin >> index_test;
 	if (index_test == 1 || index_test == 2)
@@ -82,7 +83,7 @@ int main()
 			std::cout << "first result is " << result << std::endl;
 			manager.write_work_to_file(a);
 			std::cout << "finish" << std::endl;
-			manager.file_to_file_object(a, "12.txt");
+			manager.file_to_file_object(a, "12.txt", to_print);
 			std::cout << a.to_string() << std::endl;			
 		}
 		else

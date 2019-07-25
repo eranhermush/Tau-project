@@ -265,7 +265,7 @@ int file_manager::file_to_file_object(file_object& file_obj, std::string filenam
     return 0;   
 }
 
-bool check_validate_of_file(std::string file_name, std::string full_file_name, file_object& file_obj, bool print_error)
+bool file_manager::check_validate_of_file(std::string file_name, std::string full_file_name, file_object& file_obj, bool print_error)
 {
     file_object file_in_arr;
     int retVal = 0;
@@ -285,7 +285,7 @@ bool check_validate_of_file(std::string file_name, std::string full_file_name, f
     {
         if (print_error)
         {
-            cout << "An exception occurred on open file in validate. Exception Nr. " << e << '\n';
+            std::cout << "An exception occurred on open file in validate. Exception Nr. " << e << '\n';
         }
         if (file_obj.get_status() == 3)
         {
@@ -332,6 +332,8 @@ void file_manager::go_over_files( bool print_error)
     std::vector<std::string> file_names;
     std::string file_name;
     file_object obj, new_obj;
+    file_object file_in_arr;
+    int retVal = 0;
     bool val = true;
     int file_name_int = 0;
     helpful_functions::read_directory(this->dir_path, file_names);
@@ -357,7 +359,7 @@ void file_manager::go_over_files( bool print_error)
         if(! val)
         {
             // removes the files
-            if( remove(file_name) != 0 )
+            if( remove(file_name.c_str()) != 0 )
             {
                 if (print_error){
                     perror( "Error deleting file" );
@@ -371,7 +373,7 @@ void file_manager::go_over_files( bool print_error)
                 {
                     file_in_arr = this->arr_of_works.at(j);
                     arr_didnt_do.push_back(file_in_arr);
-                    this->arr_of_works.erase (myvector.begin()+j);
+                    this->arr_of_works.erase (this->arr_of_works.begin()+j);
                 }
             }
         }
@@ -384,7 +386,7 @@ void file_manager::go_over_files( bool print_error)
                 {
                     if(this->arr_of_works.at(j).get_worker_id() == file_name_int)
                     {
-                        this->arr_of_works.erase (myvector.begin()+j);
+                        this->arr_of_works.erase (this->arr_of_works.begin()+j);
                     }
                 }
             }

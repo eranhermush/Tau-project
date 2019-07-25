@@ -115,19 +115,19 @@ bool file_object::check_equal(file_object& obj)
 	if (this->id != obj.get_id()){
 		return false;
 	}
-    if  (strcmp(this->scheme_msg, file_obj.get_scheme_msg()) != 0 ) 
+    if  (!(this->scheme_msg == obj.get_scheme_msg() )) 
     {
         return false;
     }
-    if  (strcmp(this->passwords, file_obj.get_passwords()) != 0 ) 
+    if  (!(this->passwords  == obj.get_passwords() ))
     {
         return false;
     }    
-    if  (strcmp(this->files_for_scheme, file_obj.get_password_function()) != 0 ) 
+    if  (!(this->files_for_scheme == obj.get_password_function() ))
     {
         return false;
     }
-    if  (strcmp(this->password_function, file_obj.get_files_for_scheme()) != 0 ) 
+    if  (!(this->password_function == obj.get_files_for_scheme() ))
     {
         return false;
     }   
@@ -145,7 +145,7 @@ void file_object::intialize()
 	this->passwords = "";
 	this->files_for_scheme = "";
 }
-void intialize_to_error()
+void file_object::intialize_to_error()
 {
 	intialize();
 	this->status = 5;
