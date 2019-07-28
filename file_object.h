@@ -29,13 +29,14 @@
     password_function:          The specific password fuction that we want to go over, we assume that there is a file in the worker that has a function(encryption) with that name
     passwords:                  The passwords that we want to find
     worker_id:                  The worker id
+    arguments:                  Arguments to the hash functions, see server_string_to_vectors in helpful_functions.h to more details
 
  */
 
 class file_object{
 
     int start_index, end_index, status, id, worker_id;
-    std::string scheme_msg, passwords, files_for_scheme, password_function;
+    std::string scheme_msg, passwords, files_for_scheme, password_function, arguments_to_hash;
 
 
 
@@ -49,6 +50,7 @@ public:
     void set_password_function(std::string password_function);
     void set_files_for_scheme(std::string files_for_scheme);
     void set_worker_id(int id);
+    void set_arguments(std::string &args);
 
     int get_worker_id();
     int get_start_index();
@@ -58,7 +60,7 @@ public:
     std::string get_passwords();
     std::string get_password_function();
     std::string get_files_for_scheme();
-
+    std::string get_arguments();
     /*
     * This function returns the message that we will write in the file
     */

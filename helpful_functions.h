@@ -41,11 +41,11 @@ class helpful_functions
 	    /*
 	    * credit: https://stackoverflow.com/questions/4654636/how-to-determine-if-a-string-is-a-number-with-c
 	    */
-	    bool is_number( std::string& s);
+	    static bool is_number( std::string& s);
 	    /*
 	    * credit: https://stackoverflow.com/questions/447206/c-isfloat-function
 	    */
-		bool isFloat( std::string& myString );
+		static bool isFloat( std::string& myString );
 
 	    /*
 	    * This function gets the next integer from the string, returns false iff there was an error:
@@ -55,7 +55,7 @@ class helpful_functions
 		*
 	    * it puts the number in the result varirable
 	    */
-	    bool helpful_functions::get_next_int(std::string &str, int start_index, int size, int &result);
+	    static bool get_next_int(std::string &str, int start_index, int size, int& result);
 
 };
 #endif

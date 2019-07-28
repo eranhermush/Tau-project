@@ -28,10 +28,11 @@ void helpful_functions::my_print(std::vector<std::string> &input)
     }
     std::cout << std::endl;
 }
-bool helpful_functions::is_number(const std::string& s)
+bool helpful_functions::is_number(std::string& s)
 {
-    return !s.empty() && std::find_if(s.begin(), 
-        s.end(), [](char c) { return !std::isdigit(c); }) == s.end();
+    std::string::const_iterator it = s.begin();
+    while (it != s.end() && std::isdigit(*it)) ++it;
+    return !s.empty() && it == s.end();
 }
 
 
@@ -47,7 +48,7 @@ bool helpful_functions::get_next_int(std::string &str, int start_index, int size
 	{
 		return false;
 	}
-	current_working = server_str.substr(start_index, size);
+	current_working = str.substr(start_index, size);
 	if (! is_number(current_working))
 	{
 		return false;
@@ -55,13 +56,28 @@ bool helpful_functions::get_next_int(std::string &str, int start_index, int size
 	result = std::stoi(current_working);
 	return true;
 }
-bool isFloat( std::string &myString ) {
-    std::istringstream iss(myString);
-    float f;
-    iss >> noskipws >> f; // noskipws considers leading whitespace invalid
-    // Check the entire string was consumed and if either failbit or badbit is set
-    return iss.eof() && !iss.fail(); 
+bool helpful_functions::isFloat(std::string &s)
+{
+    std::size_t char_pos(0);
+
+    // check the significand
+    if (s[char_pos] == '+' || s[char_pos] == '-') ++char_pos; // skip the sign if exist
+
+    int n_nm, n_pt;
+    for (n_nm = 0, n_pt = 0; std::isdigit(s[char_pos]) || s[char_pos] == '.'; ++char_pos) {
+        s[char_pos] == '.' ? ++n_pt : ++n_nm;
+    }
+    if (n_pt>1 || n_nm<1) // no more than one point, at least one digit
+        return false;
+
+    // skip the trailing whitespaces
+    while (s[char_pos] == ' ') {
+        ++ char_pos;
+    }
+
+    return char_pos == s.size();  // must reach the ending 0 of the string
 }
+
 
 bool helpful_functions::server_string_to_vectors(std::string& server_str, std::vector<std::string> &str_vec, std::vector<int> &int_vec,std::vector<float> &float_vec)
 {
@@ -77,21 +93,21 @@ bool helpful_functions::server_string_to_vectors(std::string& server_str, std::v
 	bool get_int_result;
 	while (index < server_str.length())
 	{
-		get_int_result = get_next_int(server_str, index, 1, x);
+		get_int_result = helpful_functions::get_next_int(server_str, index, 1, x);
 		if (! get_int_result)
 		{
 			return false;
 		}
 		index++;
 
-		get_int_result = get_next_int(server_str, index, 1, d1);
+		get_int_result = helpful_functions::get_next_int(server_str, index, 1, d1);
 		if (! get_int_result)
 		{
 			return false;
 		}
 		index++;
 
-		get_int_result = get_next_int(server_str, index, d1, d2);
+		get_int_result = helpful_functions::get_next_int(server_str, index, d1, d2);
 		if (! get_int_result)
 		{
 			return false;
@@ -111,7 +127,7 @@ bool helpful_functions::server_string_to_vectors(std::string& server_str, std::v
 		}
 		if (x == 1)
 		{
-			get_int_result = get_next_int(server_str, index, 1, counter);
+			get_int_result = helpful_functions::get_next_int(server_str, index, 1, counter);
 			if (! get_int_result)
 			{
 				return false;
@@ -120,7 +136,7 @@ bool helpful_functions::server_string_to_vectors(std::string& server_str, std::v
 		}
 		if (x == 2)
 		{
-			if (! isFloat(current_working))
+			if (! helpful_functions::isFloat(current_working))
 			{
 				return false;
 			}

@@ -48,11 +48,11 @@ int file_object::get_status()
 std::string file_object::get_message_to_write_in_file_without_status()
 {	
     std::string result = std::to_string(this->id) + '\n' + std::to_string(this->worker_id) + '\n' + this->scheme_msg+ '\n' + this->password_function + 
-        '\n' + std::to_string(this->start_index) + '\n' + std::to_string(this->end_index)+ '\n' + this->files_for_scheme + '\n' + this->passwords;
+        '\n' + std::to_string(this->start_index) + '\n' + std::to_string(this->end_index)+ '\n' + this->files_for_scheme + '\n' + this->passwords  + '\n' + this->arguments_to_hash;
     if(this->files_for_scheme.length() == 0)
     {
 		result = std::to_string(this->id) + '\n' + std::to_string(this->worker_id) + '\n' + this->scheme_msg+ '\n' + this->password_function + 
-        	'\n' + std::to_string(this->start_index) + '\n' + std::to_string(this->end_index)+  '\n' + this->passwords;
+        	'\n' + std::to_string(this->start_index) + '\n' + std::to_string(this->end_index)+  '\n' + this->passwords + '\n' + this->arguments_to_hash;
     }
     return result;
 }
@@ -75,7 +75,7 @@ std::string file_object::to_string()
     std::string result = "id: " + std::to_string(this->id) + '\n' + "worker id: " + std::to_string(this->worker_id) + 
     	'\n' + "scheme msg " + this->scheme_msg+ '\n' + "password functions : " + this->password_function + 
         '\n' + "start index " + std::to_string(this->start_index) + '\n' + "end index " + std::to_string(this->end_index)+ 
-        '\n' + "files" + this->files_for_scheme + '\n' + "passwords " + this->passwords;
+        '\n' + "files" + this->files_for_scheme + '\n' + "passwords " + this->passwords + '\n' + "arguments to hash:  " + this->arguments_to_hash;
     return result;
 }
 int file_object::get_start_index()
@@ -139,6 +139,10 @@ bool file_object::check_equal(file_object& obj)
     {
         return false;
     }   
+    if  (!(this->arguments_to_hash == obj.get_arguments() ))
+    {
+        return false;
+    } 
     return true;
 }
 void file_object::intialize()
@@ -152,9 +156,18 @@ void file_object::intialize()
 	this->password_function = "";
 	this->passwords = "";
 	this->files_for_scheme = "";
+	this->arguments_to_hash = "";
 }
 void file_object::intialize_to_error()
 {
 	intialize();
 	this->status = 5;
+}
+void file_object::set_arguments(std::string &args)
+{
+	this->arguments_to_hash = args;
+}
+std::string file_object::get_arguments()
+{
+	return this->arguments_to_hash;
 }
