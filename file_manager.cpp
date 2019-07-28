@@ -1,7 +1,7 @@
 #include "file_manager.h"
 
 file_manager::file_manager(std::string path, std::vector< std::vector<std::string> > &matrix_all_options, std::vector<std::string> &file_names, 
-    std::string &scheme_string,std::string &passwords, std::string &password_function)
+    std::string &scheme_string,std::string &passwords, std::string &password_function, std::string &hash_args)
 {
     this->matrix_all_options = matrix_all_options;
     this->file_names = file_names;
@@ -14,6 +14,7 @@ file_manager::file_manager(std::string path, std::vector< std::vector<std::strin
     this->passwords = passwords;
     this->password_function = password_function;
     this->dir_path = path;
+    this->hash_args =hash_args;
     validate_input();
     save_sum_of_works();
 }
@@ -179,7 +180,7 @@ int file_manager::create_new_work(file_object& file_obj, int worker_id)
     file_obj.set_password_function(this->password_function);
     file_obj.set_files_for_scheme(get_files_in_string());
     file_obj.set_worker_id(worker_id);
-
+    file_obj.set_arguments(this->hash_args);
     this->arr_of_works.push_back(file_obj);
     return 0;
 }
@@ -254,6 +255,9 @@ int file_manager::file_to_file_object(file_object& file_obj, std::string filenam
         file_obj.set_files_for_scheme(files);
         getline (myfile,line);
         file_obj.set_passwords(line);
+        getline (myfile,line);
+        file_obj.set_arguments(line);
+
         myfile.close();
     }
     else

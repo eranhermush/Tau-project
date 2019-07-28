@@ -127,7 +127,7 @@ bool helpful_functions::server_string_to_vectors(std::string& server_str, std::v
 		}
 		if (x == 1)
 		{
-			get_int_result = helpful_functions::get_next_int(server_str, index, 1, counter);
+			get_int_result = helpful_functions::get_next_int(server_str, index, d2, counter);
 			if (! get_int_result)
 			{
 				return false;

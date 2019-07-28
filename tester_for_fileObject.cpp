@@ -36,6 +36,9 @@ int main()
 	bool finish = false;
 	std::string path, dir_path = "a";
 
+	std::vector<std::string> str_vec;
+	std::vector<int> int_vec;
+	std::vector<float> float_vec;
 
 	std::cout << "Hello, please enter the parser string:" << endl;
 	cin >> parser_string;
@@ -57,24 +60,28 @@ int main()
 		cout << "Invalid input :( " << endl;
 		return 0;
 	}
-	std::string password_functions;
+	std::string password_functions, hash_args;
 	std::string passwords;
 
 	cout << "enter the passwords"  << endl;
 	cin >> passwords;
 	cout << "enter the password functions"  << endl;
 	cin >> password_functions;
+	cout << "enter the arguments"  << endl;
+	cin >> hash_args;
 	//print_matrix(parser.get_matrix());
 
 	// creates the manager
-	file_manager manager("a",parser.get_matrix(),files_vec,parser_string,passwords, password_functions);
+	file_manager manager("a",parser.get_matrix(),files_vec,parser_string,passwords, password_functions, hash_args);
 
 	int work_id = 0;
 	int retVal = 0;
+	bool str_vec_bool;
+
 	while (! finish)
 	{
 		std::cout << std::endl << "enter an index (choose what to do): " << std::endl << "1 - add a work to file " << std::endl << "2 - check the index section "
-				 << std::endl << "3 - check the files(read files in a dir) " << std::endl << "4 - check the method 'go over the files' " << std::endl << "5 - exit " << std::endl;
+				 << std::endl << "3 - check the files(read files in a dir) " << std::endl << "4 - check the method 'go over the files' " << std::endl << "5 - check string args "<< std::endl << "6 - exit " << std::endl;
 		cin >> index_test;
 
 
@@ -138,11 +145,30 @@ int main()
 		if (index_test == 4)
 		{
 			manager.go_over_files(to_print);
-		}		
-		if (index_test == 5){
+		}
+		if (index_test == 5)
+		{
+
+			str_vec_bool =  helpful_functions::server_string_to_vectors(hash_args, str_vec, int_vec, float_vec);
+			if (! str_vec_bool)
+			{
+				std::cout << "There was an error in server_string_to_vectors" << std::endl;
+			}
+			else
+			{
+				std::cout << "str vec: " << std::endl;
+				helpful_functions::printcoll(str_vec);
+				std::cout << "int vec: " << std::endl;
+				helpful_functions::printcoll(int_vec);
+				std::cout << "float vec: " << std::endl;
+				helpful_functions::printcoll(float_vec);
+
+			}
+		}				
+		if (index_test == 6){
 			finish = true;
 		}
-		if(index_test > 5 || index_test < 1){
+		if(index_test > 6 || index_test < 1){
 			std::cout << "error :( your number is incorrect " << std::endl;
 		}
 	}

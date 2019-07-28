@@ -8,6 +8,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <sstream>
+#include <iterator>
+#include <algorithm>
 
 class helpful_functions
 {
@@ -22,11 +24,28 @@ class helpful_functions
 	    * prints a vector
 	    */
 	    static void my_print(std::vector<std::string> &input);
+	    // credit: http://www.java2s.com/Tutorial/Cpp/0260__template/templatefunctiontoprintelementsofanSTLcontainer.htm
+		template <typename T>
+		static void printcoll (T const& coll)
+		{
+		    typename T::const_iterator pos;  // iterator to iterate over coll
+		    typename T::const_iterator end(coll.end());  // end position
+
+		    for (pos=coll.begin(); pos!=end; ++pos) {
+		        std::cout << *pos << ' ';
+		    }
+		    std::cout << std::endl;
+		}
+
+
+
+
+
+
 
 	    /*
 	    * This function gets the string of the arguments from the server, and parses it and splits it to vectors of different type.
 	    * The args (server string) string is as follows:
-		* (We seperate the string to element, each element is in a new sentence.) - maybe we dont need
 		* each element look like this:
 		* X,d1,d2,args
 		* Where X is the type: 0 = string, 1 = int, 2= float
