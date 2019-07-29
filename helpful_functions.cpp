@@ -35,7 +35,7 @@ bool helpful_functions::is_number(std::string& s)
     return !s.empty() && it == s.end();
 }
 
-
+//013444114987612103333333333
 bool helpful_functions::get_next_int(std::string &str, int start_index, int size, int &result)
 {
 	result = 0;
@@ -53,7 +53,9 @@ bool helpful_functions::get_next_int(std::string &str, int start_index, int size
 	{
 		return false;
 	}
+	
 	result = std::stoi(current_working);
+
 	return true;
 }
 bool helpful_functions::isFloat(std::string &s)
