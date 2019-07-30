@@ -152,6 +152,29 @@ public:
     * print_error indicates if we want to print to stdout the error
     */
     bool check_validate_of_file(std::string file_name, std::string full_file_name, file_object& file_obj, bool print_error);
+
+    /*
+    * This function is equivalent to the "push_back" function of the vectors.
+    * It differs in that it also saves the value that we want to add to a file, because we we want to save arr_of_works, arr_didnt_do to file, to restore the process.
+    *
+    * args:
+    *   is_arr_of_works: True-> arr_of_works, False ->arr_didnt_do
+    *   obj -> the object to add to the vector
+    */
+    void add_elemnt_to_vector(bool is_arr_of_works, file_object& obj);
+
+
+    /*
+    * This function is equivalent to the "push_back" function of the vectors.
+    * It differs in that it also saves the value that we want to add to a file, because we we want to save arr_of_works, arr_didnt_do to file, to restore the process.
+    *
+    * args:
+    *   is_arr_of_works: True-> arr_of_works, False ->arr_didnt_do
+    *   index -> the index to remove from the vector (-1 indicates that we want to do pop_back)
+    */
+    void remove_elemnt_from_vector(bool is_arr_of_works, int index);
+
+
 };
 
 
