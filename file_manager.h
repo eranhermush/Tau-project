@@ -25,7 +25,7 @@ class file_manager{
     int curr_id;
     int sum_of_works;
     int current_index_of_work, work_size;
-    std::string dir_path;
+    std::string dir_path, metadata_filename;
     std::string arr_of_works_file_name, arr_didnt_do_file_name;
 
 
@@ -163,7 +163,7 @@ public:
 
     /*
     * This function is equivalent to the "push_back" function of the vectors.
-    * It differs in that it also saves the value that we want to add to a file, because we we want to save arr_of_works, arr_didnt_do to file, to restore the process.
+    * It differs in that it also saves the value that we want to add to a file, because we we want to save arr_of_works, arr_didnt_do in file, to restore the process.
     *
     * args:
     *   is_arr_of_works: True-> arr_of_works, False ->arr_didnt_do
@@ -173,15 +173,17 @@ public:
 
 
     /*
-    * This function is equivalent to the "push_back" function of the vectors.
-    * It differs in that it also saves the value that we want to add to a file, because we we want to save arr_of_works, arr_didnt_do to file, to restore the process.
+    * This function is equivalent to the "erase" and "pop_back" function of the vectors.
+    * It differs in that it also removes the value (file) that we want to add from the directory, because we we want to save arr_of_works, arr_didnt_do in file, to restore the process.
     *
     * args:
     *   is_arr_of_works: True-> arr_of_works, False ->arr_didnt_do
     *   index -> the index to remove from the vector (-1 indicates that we want to do pop_back)
+    *   id = obj.get_id()
     */
-    void remove_elemnt_from_vector(bool is_arr_of_works, int index);
-
+    bool remove_elemnt_from_vector(bool is_arr_of_works, int index, int id);
+    bool update_current_index_of_work();
+    bool create_file_with_all_metadata();
 
 };
 

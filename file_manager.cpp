@@ -16,8 +16,9 @@ file_manager::file_manager(std::string path, std::vector< std::vector<std::strin
     this->dir_path = path;
     this->hash_args =hash_args;
 
-    this->arr_of_works_file_name = "arr_of_works_file_name";
-    this->arr_didnt_do_file_name = "arr_didnt_do_file_name";
+    this->arr_of_works_file_name = "arr_of_works_file";
+    this->arr_didnt_do_file_name = "arr_didnt_do_file";
+    this->metadata_filename = "metadata_file";
     validate_input();
     save_sum_of_works();
 }
@@ -451,4 +452,44 @@ bool file_manager::add_elemnt_to_vector(bool is_arr_of_works, file_object& obj)
     return true;
     //this->arr_of_works_file_name = "arr_of_works_file_name";
     //this->arr_didnt_do_file_name = "arr_didnt_do_file_name";
+}
+bool file_manager::remove_elemnt_from_vector(bool is_arr_of_works, int index, int id)
+{
+    std::string file_name = this->arr_of_works_file_name + "/" + std::to_string(id);
+    if (! is_arr_of_works)
+    {
+        file_name = this->arr_didnt_do_file_name + "/" + std::to_string(id);
+    }
+    if( remove(file_name.c_str()) != 0 )
+    {
+        perror("Error deleting file in remove_elemnt_from_vector");
+        return false;
+    }
+    if(index == -1)
+    {
+        if(is_arr_of_works)
+        {
+            this->arr_of_works.pop_back();
+        }
+        else
+        {
+            this->arr_didnt_do.pop_back();
+        }
+        return true;
+    }
+    else
+    {
+        if(is_arr_of_works)
+        {
+            this->arr_of_works.erase(this->arr_of_works.begin()+index);
+        }
+        else
+        {
+            this->arr_didnt_do.erase(this->arr_of_works.begin()+index);
+        }
+        return true;
+        
+    }
+    return true;
+
 }
