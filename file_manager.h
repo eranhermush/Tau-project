@@ -26,6 +26,7 @@ class file_manager{
     int sum_of_works;
     int current_index_of_work, work_size;
     std::string dir_path;
+    std::string arr_of_works_file_name, arr_didnt_do_file_name;
 
 
 
@@ -123,6 +124,13 @@ public:
     int write_work_to_file(file_object& file_obj);
 
     /*
+    * This function does the write_work_to_file, but it also gets the filenames
+    */
+    int write_work_to_file_with_filename(file_object& file_obj, std::string& dir_name, std::string file_name);
+
+
+
+    /*
     * This function gets a file name, and transforms it to file_obj instance
     * returns -1 if there was an error
     * Warning: This function doesnt change the arrays of this class
@@ -161,7 +169,7 @@ public:
     *   is_arr_of_works: True-> arr_of_works, False ->arr_didnt_do
     *   obj -> the object to add to the vector
     */
-    void add_elemnt_to_vector(bool is_arr_of_works, file_object& obj);
+    bool add_elemnt_to_vector(bool is_arr_of_works, file_object& obj);
 
 
     /*

@@ -15,6 +15,9 @@ file_manager::file_manager(std::string path, std::vector< std::vector<std::strin
     this->password_function = password_function;
     this->dir_path = path;
     this->hash_args =hash_args;
+
+    this->arr_of_works_file_name = "arr_of_works_file_name";
+    this->arr_didnt_do_file_name = "arr_didnt_do_file_name";
     validate_input();
     save_sum_of_works();
 }
@@ -187,11 +190,15 @@ int file_manager::create_new_work(file_object& file_obj, int worker_id)
 
 int file_manager::write_work_to_file(file_object& file_obj)
 {
+    int worker_id = file_obj.get_worker_id();
+    return write_work_to_file_with_filename(file_obj, dir_path, std::to_string(worker_id));
+}
+int file_manager::write_work_to_file_with_filename(file_object& file_obj, std::string& dir_name, std::string file_name)
+{
     std::ofstream myfile;
     FILE *fp;
     // write the data without the status (write status 2)
-    int worker_id = file_obj.get_worker_id();
-    std::string path =  dir_path + "/" + std::to_string(worker_id) + ".txt";
+    std::string path =  dir_name + "/" + file_name+ ".txt";
     //std::string path = std::to_string(worker_id) + ".txt";
     myfile.open(path,std::fstream::in | std::fstream::out | std::fstream::trunc);
     if (! (myfile.is_open()))
@@ -420,4 +427,28 @@ void file_manager::go_over_files( bool print_error)
     }
 }
 
-
+bool file_manager::add_elemnt_to_vector(bool is_arr_of_works, file_object& obj)
+{
+    std::string dir_name = this->arr_of_works_file_name;
+    int retVal = 0;
+    if (! is_arr_of_works)
+    {
+        dir_name = arr_didnt_do_file_name;
+    }
+    retVal =  write_work_to_file_with_filename(obj, dir_name, std::to_string(obj.get_id()));
+    if(retVal == -1)
+    {
+        return false;
+    }
+    if(is_arr_of_works)
+    {
+        this->arr_of_works.push_back(obj);
+    }
+    else
+    {
+        this->arr_didnt_do.push_back(obj);
+    }
+    return true;
+    //this->arr_of_works_file_name = "arr_of_works_file_name";
+    //this->arr_didnt_do_file_name = "arr_didnt_do_file_name";
+}
