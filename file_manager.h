@@ -182,7 +182,13 @@ public:
     *   id = obj.get_id()
     */
     bool remove_elemnt_from_vector(bool is_arr_of_works, int index, int id);
+    /*
+    * This function updates current index to the file
+    */
     bool update_current_index_of_work();
+    /*
+    * This function creates a file with the details about the model
+    */
     bool create_file_with_all_metadata();
 
 };
