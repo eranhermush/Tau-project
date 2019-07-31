@@ -46,8 +46,8 @@ Char_Pattern_Password_Generator::Char_Pattern_Password_Generator(const Char_Patt
 
 void Char_Pattern_Password_Generator::init(const std::string& rep_string, const std::vector<int>& rep_indices){
 	length = 0;
-	int x_count = 0;
-	int x_index = 0;
+	unsigned int x_count = 0;
+	unsigned int x_index = 0;
 
 	sources_index.reserve(rep_string.length());
 	char_sources.reserve(rep_string.length());
@@ -83,7 +83,9 @@ void Char_Pattern_Password_Generator::init(const std::string& rep_string, const 
 						break;
 					}
 				}
-				// if we failed to match x, then ignore it
+				// if we failed to match x, then ignore it (write it explicilty to avoid compilation warrings)
+				--length;
+				break;
 			default:
 				--length;
 		}
@@ -107,7 +109,7 @@ void Char_Pattern_Password_Generator::advance_password(){
 		return;
 	}
 
-	int sub_index;
+	unsigned int sub_index;
 	for(int i = length-1; i >= 0; --i){
 		sub_index = ++indices[i];
 		// if is a valid index, use it and break
