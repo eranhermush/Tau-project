@@ -223,6 +223,11 @@ public:
     *
     */    
     std::string get_string_of_metadate_params_changes();
+
+
+    bool write_data_to_file(std::string& dir, std::string& filename, std::string& data_to_file);
+
+
 };
 
 

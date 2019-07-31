@@ -493,3 +493,36 @@ bool file_manager::remove_elemnt_from_vector(bool is_arr_of_works, int index, in
     return true;
 
 }
+
+
+
+std::string file_manager::get_string_of_metadate_params()
+{
+    return this->scheme_string + "\n" + this->passwords + "\n" + this->password_function + "\n" + this->hash_args + "\n" + this->file_char + "\n" + 
+        std::to_string(this->sum_of_works) + '\n' + std::to_string(this->work_size) + '\n' + this->dir_path;
+}
+
+std::string file_manager::get_string_of_metadate_params_changes()
+{
+    return std::to_string(this->curr_id) + '\n' + std::to_string(this->current_index_of_work);
+}
+
+bool file_manager::write_data_to_file(std::string& dir, std::string& filename, std::string& data_to_file)
+{
+    std::ofstream myfile;
+    FILE *fp;
+    // write the data without the status (write status 2)
+    std::string path =  dir + "/" + filename + ".txt";
+    //std::string path = std::to_string(worker_id) + ".txt";
+    myfile.open(path,std::fstream::in | std::fstream::out | std::fstream::trunc);
+    if (! (myfile.is_open()))
+    {
+        std::cout << "Error opening file in write_work_to_file" << std::endl;
+        return false;
+    }
+    myfile << data_to_file;
+    myfile.flush();
+    myfile.close();
+
+    return true;
+}
