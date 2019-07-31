@@ -162,6 +162,15 @@ public:
     bool check_validate_of_file(std::string file_name, std::string full_file_name, file_object& file_obj, bool print_error);
 
     /*
+    **********************************************************
+    **********************************************************
+    ******************   Data to file   **********************
+    **********************************************************
+    **********************************************************
+    */
+
+
+    /*
     * This function is equivalent to the "push_back" function of the vectors.
     * It differs in that it also saves the value that we want to add to a file, because we we want to save arr_of_works, arr_didnt_do in file, to restore the process.
     *
@@ -190,7 +199,30 @@ public:
     * This function creates a file with the details about the model
     */
     bool create_file_with_all_metadata();
+    /*
+    * This function returns a string in the following format:
+    *
+    * scheme_string
+    * passwords
+    * password_function
+    * hash_args
+    * file_char
+    * sum_of_works
+    * work_size
+    * dir_path
+    *
+    * note that in the "real" functions (not index) we dont use the matrix, file names 
+    */
 
+    std::string get_string_of_metadate_params();
+    /*
+    * This function returns a string in the following format:
+    *
+    * curr_id
+    * current_index_of_work
+    *
+    */    
+    std::string get_string_of_metadate_params_changes();
 };
 
 
