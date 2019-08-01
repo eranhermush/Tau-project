@@ -141,7 +141,7 @@ std::unique_ptr<Preimage_Matcher> FFC_PWE_Sample_Matcher<KDF, HMAC>::clone() con
 template <class KDF ,class HMAC>
 void FFC_PWE_Sample_Matcher<KDF, HMAC>::sort_samples(){
 	// Pr[FFC_PWE > P] < 0.5 therefore, placing samples with a negative result first would cause faster diqualifications on average
-	std::stable_sort(FFC_PWE_Sample_Matcher<KDF, HMAC>::samples.begin(), FFC_PWE_Sample_Matcher<KDF, HMAC>::samples.end(),
+	std::stable_sort(PWE_Sample_Matcher<KDF, HMAC>::samples.begin(), PWE_Sample_Matcher<KDF, HMAC>::samples.end(),
 			[](const pwe_sample& lhs, const pwe_sample& rhs){ return lhs.result <= rhs.result;});
 }
 
