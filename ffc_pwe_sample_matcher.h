@@ -30,6 +30,8 @@
 template <class KDF ,class HMAC>
 class FFC_PWE_Sample_Matcher: public PWE_Sample_Matcher<KDF, HMAC>{
 	public:
+		~FFC_PWE_Sample_Matcher() =default;
+
 		/* Constructor
 			Uses a sample vector and group paramters */
 		FFC_PWE_Sample_Matcher(const std::vector<pwe_sample>& samps, const KDF& kdf_obj,
@@ -65,8 +67,6 @@ class FFC_PWE_Sample_Matcher: public PWE_Sample_Matcher<KDF, HMAC>{
 
 
 	protected:
-		KDF kdf;
-		HMAC hmac;
 		NTL::ZZ p;
 		NTL::ZZ g;
 		NTL::ZZ q;

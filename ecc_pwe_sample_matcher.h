@@ -23,6 +23,8 @@
 template <class KDF ,class HMAC>
 class ECC_PWE_Sample_Matcher: public PWE_Sample_Matcher<KDF, HMAC>{
 	public:
+		~ECC_PWE_Sample_Matcher() =default;
+
 		/* Constructor
 			Uses a sample vector and group paramters */
 		ECC_PWE_Sample_Matcher(const std::vector<pwe_sample>& samps, const KDF& kdf_obj,
@@ -56,8 +58,6 @@ class ECC_PWE_Sample_Matcher: public PWE_Sample_Matcher<KDF, HMAC>{
 
 
 	protected:
-		KDF kdf;
-		HMAC hmac;
 		NTL::ZZ p;
 		NTL::ZZ a;
 		NTL::ZZ b;
