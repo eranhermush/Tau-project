@@ -147,6 +147,7 @@ bool file_object::check_equal(file_object& obj)
 }
 void file_object::intialize()
 {
+	this->passwords_found_vector.clear();
 	this->start_index = -1;
 	this->end_index = -1;
 	this->status = -1;
@@ -170,4 +171,14 @@ void file_object::set_arguments(std::string &args)
 std::string file_object::get_arguments()
 {
 	return this->arguments_to_hash;
+}
+void file_object::add_password_found_vector(std::string &pass)
+{
+	this->passwords_found_vector.push_back(pass);
+	return;
+}
+
+std::vector<std::string> file_object::get_passwords_found_vector()
+{
+	return this->passwords_found_vector;
 }

@@ -270,7 +270,11 @@ bool file_manager::check_validate_of_file(std::string file_name, std::string ful
     {
         return false;
     }
-
+    // in this mode the file looks diferent, then we return here (the check equal will return false)
+    if (file_obj.get_status() == 6)
+    {
+        return true;
+    }
     // if the relevant file is not consistent with the real file
     if (! file_obj.check_equal(file_in_arr))
     {
@@ -284,6 +288,7 @@ void file_manager::go_over_files( bool print_error)
 {
 
     std::vector<std::string> file_names;
+    std::vector<std::string> passwords_founds;
     std::string file_name;
     file_object obj, new_obj;
     file_object file_in_arr;
@@ -333,19 +338,26 @@ void file_manager::go_over_files( bool print_error)
         }
         else
         {   
+            if(obj.get_status() == 6)
+            {
+                passwords_founds = obj.get_passwords_found_vector();
+                std::cout << "worker " << std::to_string(obj.get_worker_id) << " found passwords!!!!!" << std::endl;
+                helpful_functions::printcoll(passwords_founds);
+                password_function.clear();
+            }
             // if we finish a job, we remove it from the array
-            if(obj.get_status() == 4 ||  obj.get_status() == 2)
+            if(obj.get_status() == 4 ||  obj.get_status() == 2 || obj.get_status() == 6)
             {
                 for (int j = this->arr_of_works.size()-1; j >= 0 ; j--)
                 {
                     if(this->arr_of_works.at(j).get_worker_id() == file_name_int)
                     {
-                        this->arr_of_works.erase (this->arr_of_works.begin()+j);
+                        this->arr_of_works.erase(this->arr_of_works.begin()+j);
                     }
                 }
             }
             // if we want a new job - we make it here
-            if(obj.get_status() == 3 ||  obj.get_status() == 2)
+            if(obj.get_status() == 3 ||  obj.get_status() == 2 || obj.get_status() == 6)
             {
                 new_obj.intialize();
                 retVal = create_new_work(new_obj, file_name_int);

@@ -179,6 +179,7 @@ int helpful_functions::file_to_file_object(file_object& file_obj, std::string fi
     std::string files = "";
     std::ifstream myfile (filename);
     int status = 0;
+    int len = 0;
     /*
         std::string result = std::to_string(this->id) + '\n' + std::to_string(this->worker_id) + '\n' + this->scheme_msg+ '\n' + this->password_function + 
         '\n' + std::to_string(this->start_index) + '\n' + std::to_string(this->end_index)+ '\n' + this->files_for_scheme + '\n' + this->passwords;
@@ -195,26 +196,39 @@ int helpful_functions::file_to_file_object(file_object& file_obj, std::string fi
 
         file_obj.set_worker_id(std::stoi(line));
         getline (myfile,line);
-        file_obj.set_scheme_msg(line);
-        msg = line;
-        getline (myfile,line);
-        file_obj.set_password_function(line);
-        getline (myfile,line);
-        getline (myfile,line2);
 
-        file_obj.set_index(std::stoi(line),std::stoi(line2));
-
-        for (int i = 1; i <= std::count(msg.begin(), msg.end(),'f'); i++)
+        if( status != 6)
         {
-            getline (myfile,line);
-            files = files + line + '\n'; 
-        }
-        file_obj.set_files_for_scheme(files);
-        getline (myfile,line);
-        file_obj.set_passwords(line);
-        getline (myfile,line);
-        file_obj.set_arguments(line);
+	        file_obj.set_scheme_msg(line);
+	        msg = line;
+	        getline (myfile,line);
+	        file_obj.set_password_function(line);
+	        getline (myfile,line);
+	        getline (myfile,line2);
 
+	        file_obj.set_index(std::stoi(line),std::stoi(line2));
+
+	        for (int i = 1; i <= std::count(msg.begin(), msg.end(),'f'); i++)
+	        {
+	            getline (myfile,line);
+	            files = files + line + '\n'; 
+	        }
+	        file_obj.set_files_for_scheme(files);
+	        getline (myfile,line);
+	        file_obj.set_passwords(line);
+	        getline (myfile,line);
+	        file_obj.set_arguments(line);
+	    }
+	    else
+	    {
+	    	getline (myfile,line);
+	    	len = std::stoi(line);
+	    	for (int i = 0; i < len; ++i)
+	    	{
+	    		getline (myfile,line);
+	    		file_obj.add_password_found_vector(line);
+	    	}
+	    }
         myfile.close();
     }
     else

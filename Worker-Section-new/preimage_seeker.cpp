@@ -99,3 +99,8 @@ bool Preimage_Seeker::get_job(int status_start, bool to_write)
 	return true;
 
 }
+
+bool set_job(int status, std::string& passwords)
+{
+	
+}
