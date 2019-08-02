@@ -10,6 +10,7 @@
 #include <sstream>
 #include <iterator>
 #include <algorithm>
+#include "file_object.h"
 
 class helpful_functions
 {
@@ -31,7 +32,7 @@ class helpful_functions
 		    typename T::const_iterator pos;  // iterator to iterate over coll
 		    typename T::const_iterator end(coll.end());  // end position
 
-		    for (pos=coll.begin(); pos!=end; ++pos) {
+		    for (pos=coll.begin(); pos!=end; ++pos) {	
 		        std::cout << *pos << ' ';
 		    }
 		    std::cout << std::endl;
@@ -40,7 +41,13 @@ class helpful_functions
 
 
 
-
+	    /*
+	    * This function gets a file name, and transforms it to file_obj instance
+	    * returns -1 if there was an error
+	    * Warning: This function doesnt change the arrays of this class
+	    * we assume that the file is valid -> was written by "write_work_to_file"
+	    */
+	    static int file_to_file_object(file_object& file_obj, std::string filename, bool print_error);
 
 
 	    /*
@@ -75,6 +82,8 @@ class helpful_functions
 	    * it puts the number in the result varirable
 	    */
 	    static bool get_next_int(std::string &str, int start_index, int size, int& result);
+
+	    static bool write_data_to_file(std::string& dir, std::string& filename, std::string& data_to_file);
 
 };
 #endif

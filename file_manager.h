@@ -123,14 +123,6 @@ public:
     int write_work_to_file(file_object& file_obj);
 
     /*
-    * This function gets a file name, and transforms it to file_obj instance
-    * returns -1 if there was an error
-    * Warning: This function doesnt change the arrays of this class
-    * we assume that the file is valid -> was written by "write_work_to_file"
-    */
-    int file_to_file_object(file_object& file_obj, std::string filename, bool print_error);
-
-    /*
     * This function goes over all the files in the directory. For each file it does:
     * 1. Checks that the file is a valid file - i.e. it is in our protocol of writing to file.
     * 2. Checks that the workerid in the file == the filename

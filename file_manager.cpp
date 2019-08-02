@@ -216,60 +216,6 @@ int file_manager::write_work_to_file(file_object& file_obj)
     return 0;
 }
 
-int file_manager::file_to_file_object(file_object& file_obj, std::string filename, bool print_error)
-{
-    std::string line, line2;
-    std::string msg;
-    std::string files = "";
-    std::ifstream myfile (filename);
-    int status = 0;
-    /*
-        std::string result = std::to_string(this->id) + '\n' + std::to_string(this->worker_id) + '\n' + this->scheme_msg+ '\n' + this->password_function + 
-        '\n' + std::to_string(this->start_index) + '\n' + std::to_string(this->end_index)+ '\n' + this->files_for_scheme + '\n' + this->passwords;
-    */
-    if (myfile.is_open())
-    {
-        getline (myfile,line);
-        file_obj.set_status(std::stoi(line));
-        getline (myfile,line);
-
-        file_obj.set_id(std::stoi(line));
-        getline (myfile,line);
-
-        file_obj.set_worker_id(std::stoi(line));
-        getline (myfile,line);
-        file_obj.set_scheme_msg(line);
-        msg = line;
-        getline (myfile,line);
-        file_obj.set_password_function(line);
-        getline (myfile,line);
-        getline (myfile,line2);
-
-        file_obj.set_index(std::stoi(line),std::stoi(line2));
-
-        for (int i = 1; i <= std::count(msg.begin(), msg.end(),'f'); i++)
-        {
-            getline (myfile,line);
-            files = files + line + '\n'; 
-        }
-        file_obj.set_files_for_scheme(files);
-        getline (myfile,line);
-        file_obj.set_passwords(line);
-        getline (myfile,line);
-        file_obj.set_arguments(line);
-
-        myfile.close();
-    }
-    else
-    {
-        if (print_error)
-        {
-            std::cout << "Error my file is not open :( file name is " << filename << std::endl;
-        }
-        return -1;
-    }
-    return 0;   
-}
 
 bool file_manager::check_validate_of_file(std::string file_name, std::string full_file_name, file_object& file_obj, bool print_error)
 {
@@ -282,7 +228,7 @@ bool file_manager::check_validate_of_file(std::string file_name, std::string ful
         // we also validate here that the filen-name consist of integers, we make substr to avoid the ".txt"
         file_name_int = std::stoi(file_name.substr(0, file_name.length() -4)); 
 
-        retVal = file_to_file_object(file_obj, full_file_name, print_error);
+        retVal = helpful_functions::file_to_file_object(file_obj, full_file_name, print_error);
         if (retVal == -1){
             return false;
         }

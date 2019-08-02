@@ -150,3 +150,80 @@ bool helpful_functions::server_string_to_vectors(std::string& server_str, std::v
 	}
 	return true;
 }
+
+bool helpful_functions::write_data_to_file(std::string& dir, std::string& filename, std::string& data_to_file)
+{
+    std::ofstream myfile;
+    FILE *fp;
+    // write the data without the status (write status 2)
+    std::string path =  dir + "/" + filename + ".txt";
+    //std::string path = std::to_string(worker_id) + ".txt";
+    myfile.open(path,std::fstream::in | std::fstream::out | std::fstream::trunc);
+    if (! (myfile.is_open()))
+    {
+        std::cout << "Error opening file in write_work_to_file" << std::endl;
+        return false;
+    }
+    myfile << data_to_file;
+    myfile.flush();
+    myfile.close();
+
+    return true;
+}
+
+
+int helpful_functions::file_to_file_object(file_object& file_obj, std::string filename, bool print_error)
+{
+    std::string line, line2;
+    std::string msg;
+    std::string files = "";
+    std::ifstream myfile (filename);
+    int status = 0;
+    /*
+        std::string result = std::to_string(this->id) + '\n' + std::to_string(this->worker_id) + '\n' + this->scheme_msg+ '\n' + this->password_function + 
+        '\n' + std::to_string(this->start_index) + '\n' + std::to_string(this->end_index)+ '\n' + this->files_for_scheme + '\n' + this->passwords;
+    */
+    if (myfile.is_open())
+    {
+        getline (myfile,line);
+        status = std::stoi(line);
+        file_obj.set_status(status);
+        getline (myfile,line);
+
+        file_obj.set_id(std::stoi(line));
+        getline (myfile,line);
+
+        file_obj.set_worker_id(std::stoi(line));
+        getline (myfile,line);
+        file_obj.set_scheme_msg(line);
+        msg = line;
+        getline (myfile,line);
+        file_obj.set_password_function(line);
+        getline (myfile,line);
+        getline (myfile,line2);
+
+        file_obj.set_index(std::stoi(line),std::stoi(line2));
+
+        for (int i = 1; i <= std::count(msg.begin(), msg.end(),'f'); i++)
+        {
+            getline (myfile,line);
+            files = files + line + '\n'; 
+        }
+        file_obj.set_files_for_scheme(files);
+        getline (myfile,line);
+        file_obj.set_passwords(line);
+        getline (myfile,line);
+        file_obj.set_arguments(line);
+
+        myfile.close();
+    }
+    else
+    {
+        if (print_error)
+        {
+            std::cout << "Error my file is not open :( file name is " << filename << std::endl;
+        }
+        return -1;
+    }
+    return 0;   
+}
