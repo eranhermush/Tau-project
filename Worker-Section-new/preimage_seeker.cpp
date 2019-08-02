@@ -100,7 +100,7 @@ bool Preimage_Seeker::get_job(int status_start, bool to_write)
 
 }
 
-bool set_job(int status, std::string& passwords, int lines)
+bool Preimage_Seeker::set_job(int status, std::string& passwords, int lines)
 {
 	std::string file_data;
 	bool ret_val = false;
@@ -128,4 +128,9 @@ bool set_job(int status, std::string& passwords, int lines)
 	}
 	return false;
 
+}
+
+bool Preimage_Seeker::work()
+{
+	return true;
 }

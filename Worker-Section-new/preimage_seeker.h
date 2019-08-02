@@ -55,6 +55,14 @@ class Preimage_Seeker{
 		*/
 		bool set_job(int status, std::string& passwords, int lines);
 
+		/*
+		* This function should be called when there is a job i.e. when the file_obj is initialized with a new job
+		* this function makes the real work of the client - goes over all the passwords and checks them
+		* now, we support only the id function as a hash function :), it doesnt need any arguments (that are not the password)
+		* returns bool if there was an error in the work
+		*/
+		bool work();
+
 	private:
 		std::unique_ptr<Password_Generator> generator;
 		std::unique_ptr<Preimage_Matcher> matcher;
