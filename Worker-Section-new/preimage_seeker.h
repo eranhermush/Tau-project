@@ -48,10 +48,12 @@ class Preimage_Seeker{
 		*/
 		bool get_job(int status_start, bool to_write);
 		/*
-		* passwords is the passwords that we found. if there are no passords, it should be ""
+		* passwords is the passwords that we found. if there are no passords, lines should be 0, 
+		* 		(Warning): and if there are passwords, status must be 6, otherwise we will not write it to the file and return false!!!
+		* lines = how many line (= how many passwords) are in passwords
 		* all the other fiels are like the former functions
 		*/
-		bool set_job(int status, std::string& passwords);
+		bool set_job(int status, std::string& passwords, int lines);
 
 	private:
 		std::unique_ptr<Password_Generator> generator;

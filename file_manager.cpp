@@ -189,6 +189,7 @@ int file_manager::write_work_to_file(file_object& file_obj)
 {
     std::ofstream myfile;
     FILE *fp;
+    bool retVal = false;
     // write the data without the status (write status 2)
     int worker_id = file_obj.get_worker_id();
     std::string path =  dir_path + "/" + std::to_string(worker_id) + ".txt";
@@ -204,15 +205,10 @@ int file_manager::write_work_to_file(file_object& file_obj)
     myfile.flush();
     myfile.close();
     // write the data
-
-    fp = std::fopen(path.c_str(),"r+");
-    fseek(fp, 0, SEEK_SET);
-    if (fp == NULL) {
-        perror("Error fopen in write_work_to_file ");
+    retVal =  helpful_functions::change_status_of_file(path, 0);
+    if (! retVal) {
         return -1;
     }
-    fprintf(fp, "0");
-    std::fclose (fp);
     return 0;
 }
 

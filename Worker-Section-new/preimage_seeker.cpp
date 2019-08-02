@@ -100,7 +100,32 @@ bool Preimage_Seeker::get_job(int status_start, bool to_write)
 
 }
 
-bool set_job(int status, std::string& passwords)
+bool set_job(int status, std::string& passwords, int lines)
 {
-	
+	std::string file_data;
+	bool ret_val = false;
+	std::string path =  this->dir_path + "/" + std::to_string(this->id) + ".txt";
+
+	data = "";
+	if(status == 6 && lines != 0)
+	{
+		data = std::to_string(status) + "\n" + this->file_obj.get_id() + "\n" + this->id + "\n" + std::to_string(lines) + "\n" + passwords;		
+		ret_val =  helpful_functions::write_data_to_file(this->dir_path, std::to_string(this->id), "3"); // 3 indicates that we start a new worker
+		if (! ret_val)
+		{
+			return false;
+		}
+		return true;
+	}
+	if(status != 6)
+	{
+		ret_val = helpful_functions::change_status_of_file(path, status);
+		if (! ret_val)
+		{
+			return false;
+		}
+		return true;
+	}
+	return false;
+
 }

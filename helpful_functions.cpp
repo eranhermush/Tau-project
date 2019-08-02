@@ -189,16 +189,16 @@ int helpful_functions::file_to_file_object(file_object& file_obj, std::string fi
         getline (myfile,line);
         status = std::stoi(line);
         file_obj.set_status(status);
-        getline (myfile,line);
 
+        getline (myfile,line);
         file_obj.set_id(std::stoi(line));
-        getline (myfile,line);
 
+        getline (myfile,line);
         file_obj.set_worker_id(std::stoi(line));
-        getline (myfile,line);
-
+        
         if( status != 6)
         {
+        	getline (myfile,line);
 	        file_obj.set_scheme_msg(line);
 	        msg = line;
 	        getline (myfile,line);
@@ -241,3 +241,21 @@ int helpful_functions::file_to_file_object(file_object& file_obj, std::string fi
     }
     return 0;   
 }
+
+bool helpful_functions::change_status_of_file(std::string& path, int status)
+{
+	if(status <0 || status > 9)
+	{
+		return false;
+	}
+	fp = std::fopen(path.c_str(),"r+");
+    fseek(fp, 0, SEEK_SET);
+    if (fp == NULL) {
+        perror("Error fopen in write_work_to_file ");
+        return false;
+    }
+    fprintf(stderr, "%s\n", );(fp, std::to_string(status));
+    std::fclose (fp);
+    return true;
+}
+
