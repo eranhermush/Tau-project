@@ -1,29 +1,31 @@
 #include "file_manager.h"
 
-file_manager::file_manager(std::string path, parser_main &parser, std::vector<std::string> &file_names, 
-    std::string &passwords, std::string &password_function, std::string &hash_args)
-{
-    this->our_parser = parser;
-    //this->matrix_all_options = matrix_all_options;
+file_manager::file_manager(const std::string path, parser_main &parser, std::vector<std::string> &file_names, std::string &passwords, std::string &password_function, std::string &hash_args):
+    our_parser(parser),
+    file_names(file_names),
+    compress_scheme_string(parser.get_str_compress()),
+    file_char('f'),
+    curr_id(1),
+    sum_of_works(0),
+    current_index_of_work(0),
+    work_size(30),
+    passwords(passwords),
+    password_function(password_function),
+    dir_path(path),
+    hash_args(hash_args)
 
-    this->file_names = file_names;
-    this->compress_scheme_string = parser.get_str_compress();
-    this->file_char = 'f';
-    this->curr_id = 1;
-    this->sum_of_works = 0;
-    this->current_index_of_work = 0;
-    this->work_size = 30;
-    this->passwords = passwords;
-    this->password_function = password_function;
-    this->dir_path = path;
-    this->hash_args =hash_args;
+{
+    /*
+    :our_parser(parser),file_names(file_names),compress_scheme_string(our_parser.get_str_compress()), file_char('f'), curr_id(1), sum_of_works(0), current_index_of_work(0), work_size(30), passwords(passwords),
+        password_function(password_function), dir_path(path), hash_args(hash_args)
+*/
     validate_input();
     save_sum_of_works();
 }
 std::string file_manager::get_files_in_string()
 {
     std::string result = "";
-    for (int i = 0; i<this->file_names.size();i++)
+    for (int i = 0; i< this->file_names.size();i++)
     {
         result += this->file_names[i];
     }
@@ -175,7 +177,7 @@ int file_manager::create_new_work(file_object& file_obj, int worker_id)
     file_obj.set_id(get_id_to_file());
     file_obj.set_status(0);
     //file_obj.set_scheme_msg(this->scheme_string);
-    file_obj.set_scheme_msg(this->parser.get_str_original());
+    file_obj.set_scheme_msg(this->our_parser.get_str_original());
     file_obj.set_passwords(this->passwords);
     file_obj.set_password_function(this->password_function);
     file_obj.set_files_for_scheme(get_files_in_string());
@@ -337,7 +339,7 @@ void file_manager::go_over_files( bool print_error)
             if(obj.get_status() == 6)
             {
                 passwords_founds = obj.get_passwords_found_vector();
-                std::cout << "worker " << std::to_string(obj.get_worker_id) << " found passwords!!!!!" << std::endl;
+                std::cout << "worker " << std::to_string(obj.get_worker_id()) << " found passwords!!!!!" << std::endl;
                 helpful_functions::printcoll(passwords_founds);
                 password_function.clear();
             }

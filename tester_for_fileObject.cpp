@@ -99,7 +99,7 @@ int main()
 				std::cout << "error in write_work_to_file " << std::endl;
 			}
 			//std::cout << "finish" << std::endl;
-			retVal = manager.file_to_file_object(a, path, to_print);
+			retVal = helpful_functions::file_to_file_object(a, path, to_print);
 			if (retVal == -1){
 				std::cout << "error in file_to_file_object " << std::endl;
 			}
@@ -116,7 +116,8 @@ int main()
 			*/
 		    std::vector<int> index_vec; 
 		  	int user_input = 0;
-		  	cout << "enter the indexes: " << parser_string.length() << endl;
+		  	std::cout << "your scheme is " << parser.get_str_original() << " and the compress is " << parser.get_str_compress() << std::endl;
+		  	std::cout << "enter the indexes: " << parser_string.length() << std::endl;
 
 		    for (int i = 1; i <= parser_string.length(); i++)
 		    {
@@ -124,9 +125,9 @@ int main()
 		        index_vec.push_back(user_input); 
 		    }
 			int index = manager.vector_indexes_to_index(index_vec);
-			cout << "the index is: " << index << endl;
+			std::cout << "the index is: " << index << std::endl;
 			std::vector<int> v = manager.index_to_vector_indexes(index);
-			cout << "the vector is ";
+			std::cout << "the vector is ";
 			for (int i = 0; i < v.size(); i++) {
 				std::cout << v.at(i) << ' ';
 			}

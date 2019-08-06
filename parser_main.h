@@ -9,7 +9,8 @@
  * it also checks the string
  */
 
-class parser_main {
+class parser_main
+ {
     std::string str_regular_expression;
     int param_size;
     std::vector< std::vector<std::string> > matrix_all_options;

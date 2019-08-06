@@ -27,7 +27,7 @@ std::vector<std::string> parser_main::from_known_char_to_options_list(char c, in
             result = std::vector<std::string>({"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"});
             break;
         case 'p' :
-            result = std::vector<std::string>({'!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~'});
+            result = std::vector<std::string>({"!", "#", "$",  "&", "(", ")", "*", "+", ",", "-", ".", "/", ":", ";", "<", "=", ">", "?", "@", "[", "]", "^", "_", "`", "{", "|", "}", "~"});
             break;
         case 'd':
             result = std::vector<std::string>({"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"});
@@ -65,15 +65,15 @@ void parser_main::update_compress_scheme_str()
     this->str_compress = "";
     bool is_char = false;
     int element_size = 0;
-    for (int i = 0; i < this.str_regular_expression.length(); i++)
+    for (int i = 0; i < this->str_regular_expression.length(); i++)
     {
-        if (this->str_regular_expression.at(i) != 'f')
+        if (this->str_regular_expression[i] != 'f')
         {
-            element_size = element_size + this.matrix_all_options.at(i).size();
+            element_size = element_size + this->matrix_all_options.at(i).size();
             if(! is_char)
             {
                 is_char = true;
-                this->str_compress = this->str_compress + 'C';        
+                this->str_compress = this->str_compress + "C";        
             }
         }
         else
@@ -83,7 +83,7 @@ void parser_main::update_compress_scheme_str()
                 this->str_compress_size.push_back(element_size);
             }
             is_char = false;
-            this->str_compress = this->str_compress + 'f';
+            this->str_compress = this->str_compress + "f";
             element_size = 0;
 
             // we dont get the file size from here

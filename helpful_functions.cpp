@@ -244,6 +244,7 @@ int helpful_functions::file_to_file_object(file_object& file_obj, std::string fi
 
 bool helpful_functions::change_status_of_file(std::string& path, int status)
 {
+	FILE* fp;
 	if(status <0 || status > 9)
 	{
 		return false;
@@ -254,7 +255,7 @@ bool helpful_functions::change_status_of_file(std::string& path, int status)
         perror("Error fopen in write_work_to_file ");
         return false;
     }
-    fprintf(stderr, "%s\n", );(fp, std::to_string(status));
+    fprintf(fp, std::to_string(status).c_str());
     std::fclose (fp);
     return true;
 }

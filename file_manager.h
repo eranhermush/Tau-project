@@ -47,7 +47,7 @@ public:
 	 * @param matrix_all_options- the matrix from the parser with all the options
      * @param file_names        - the names of our files (with repetitions) that we use in the scheme
 	 */
-    file_manager(std::string path, std::vector< std::vector<std::string> > &matrix_all_options, std::vector<std::string> &file_names, std::string &scheme_string, std::string &passwords, std::string &password_function, std::string &hash_args);
+    file_manager(const std::string path, parser_main &parser, std::vector<std::string> &file_names, std::string &passwords, std::string &password_function, std::string &hash_args);
     /*
         This function validates that the input is valid:
             The size of the string == the size of the matrix

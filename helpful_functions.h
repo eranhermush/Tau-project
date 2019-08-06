@@ -10,6 +10,7 @@
 #include <sstream>
 #include <iterator>
 #include <algorithm>
+#include <fstream>
 #include "file_object.h"
 
 class helpful_functions
