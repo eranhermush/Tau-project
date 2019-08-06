@@ -79,4 +79,3 @@ int another_functions::recv_chars(int fd, const char* message, int len){
     }
     return 0;
 }
-
