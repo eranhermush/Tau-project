@@ -117,9 +117,9 @@ int main()
 		    std::vector<int> index_vec; 
 		  	int user_input = 0;
 		  	std::cout << "your scheme is " << parser.get_str_original() << " and the compress is " << parser.get_str_compress() << std::endl;
-		  	std::cout << "enter the indexes: " << parser_string.length() << std::endl;
+		  	std::cout << "enter the indexes: " << parser.get_str_compress().length() << std::endl;
 
-		    for (int i = 1; i <= parser_string.length(); i++)
+		    for (int i = 1; i <= parser.get_str_compress().length(); i++)
 		    {
 		  		cin >> user_input;
 		        index_vec.push_back(user_input); 
