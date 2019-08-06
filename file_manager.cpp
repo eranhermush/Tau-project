@@ -1,11 +1,13 @@
 #include "file_manager.h"
 
-file_manager::file_manager(std::string path, std::vector< std::vector<std::string> > &matrix_all_options, std::vector<std::string> &file_names, 
-    std::string &scheme_string,std::string &passwords, std::string &password_function, std::string &hash_args)
+file_manager::file_manager(std::string path, parser_main &parser, std::vector<std::string> &file_names, 
+    std::string &passwords, std::string &password_function, std::string &hash_args)
 {
-    this->matrix_all_options = matrix_all_options;
+    this->our_parser = parser;
+    //this->matrix_all_options = matrix_all_options;
+
     this->file_names = file_names;
-    this->scheme_string = scheme_string;
+    this->compress_scheme_string = parser.get_str_compress();
     this->file_char = 'f';
     this->curr_id = 1;
     this->sum_of_works = 0;
@@ -30,15 +32,11 @@ std::string file_manager::get_files_in_string()
 }
 bool file_manager::validate_input()
 {
-    if(this->scheme_string.length() <=0)
+    if(this->compress_scheme_string.length() <=0)
     {
         throw std::invalid_argument("received an empty string");
     }
-    if(this->scheme_string.length() != this->matrix_all_options.size())
-    {
-        throw std::invalid_argument("received different sizes for the matrix and the string");
-    }
-    if(std::count(this->scheme_string.begin(), this->scheme_string.end(), this->file_char) != this->file_names.size())
+    if(std::count(this->compress_scheme_string.begin(), this->compress_scheme_string.end(), this->file_char) != this->file_names.size())
     {
         throw std::invalid_argument("received different sizes for the file names and the number of files in the scheme");
     }
@@ -46,13 +44,13 @@ bool file_manager::validate_input()
 }
 void file_manager::save_sum_of_works()
 {
-    if (this->scheme_string.length() <= 0)
+    if (this->compress_scheme_string.length() <= 0)
     {
         this->sum_of_works = 0;
         return;
     }
     int result = 1;
-    for (int i = 0; i<this->scheme_string.length();i++)
+    for (int i = 0; i<this->compress_scheme_string.length();i++)
     {
         result *= size_of_object_in_scheme(i);
     }
@@ -89,16 +87,17 @@ int file_manager::vector_indexes_to_index(std::vector<int> &vec)
 
 int file_manager::size_of_object_in_scheme(int index)
 {
-    if(index <0 || index >= this->scheme_string.length()){
+    if(index <0 || index >= this->compress_scheme_string.length()){
         throw std::invalid_argument("unexpected index");
     }
-    if(this->scheme_string.at(index) != file_char){
-        return this->matrix_all_options[index].size();
+    if(this->compress_scheme_string.at(index) != file_char){
+        return this->our_parser.get_str_compress_size_at(index);
+        //return this->matrix_all_options[index].size();
     }
     int file_index = 0;
     for (int i = 0; i <= index; ++i)
     {
-        if (this->scheme_string.at(i) == this->file_char)
+        if (this->compress_scheme_string.at(i) == this->file_char)
         {
             file_index++;
         }
@@ -123,13 +122,13 @@ std::vector<int> file_manager::index_to_vector_indexes(int index){
     std::vector<int> result; 
 
     // fill the array with 0 this->scheme_string.length() times 
-    result.assign(this->scheme_string.length(), 0); 
+    result.assign(this->compress_scheme_string.length(), 0); 
     int sum = 1;
-    for (int i = 0; i<this->scheme_string.length();i++){
+    for (int i = 0; i<this->compress_scheme_string.length();i++){
         sum *= size_of_object_in_scheme(i);
     }
 
-    for (int i = this->scheme_string.length()-1; i >= 0; i--)
+    for (int i = this->compress_scheme_string.length()-1; i >= 0; i--)
     {
         sum = sum / size_of_object_in_scheme(i);
         result[i] = (int) index/sum;
@@ -175,7 +174,8 @@ int file_manager::create_new_work(file_object& file_obj, int worker_id)
 
     file_obj.set_id(get_id_to_file());
     file_obj.set_status(0);
-    file_obj.set_scheme_msg(this->scheme_string);
+    //file_obj.set_scheme_msg(this->scheme_string);
+    file_obj.set_scheme_msg(this->parser.get_str_original());
     file_obj.set_passwords(this->passwords);
     file_obj.set_password_function(this->password_function);
     file_obj.set_files_for_scheme(get_files_in_string());

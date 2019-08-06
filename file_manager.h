@@ -10,6 +10,8 @@
 #include <stdio.h>
 #include "file_object.h"
 #include "helpful_functions.h"
+#include "parser_main.h"
+
 /*
  * This class is a server class, it reads here the files and updates them
  */
@@ -18,15 +20,15 @@ class file_manager{
 
     std::vector<file_object> arr_of_works;
     std::vector<file_object> arr_didnt_do;
-    std::vector< std::vector<std::string> > matrix_all_options;
+    //std::vector< std::vector<std::string> > matrix_all_options;
     std::vector<std::string> file_names;
-    std::string scheme_string, passwords, password_function, hash_args;
+    std::string compress_scheme_string, passwords, password_function, hash_args;
     char file_char; // char of a file in the string scheme
     int curr_id;
     int sum_of_works;
     int current_index_of_work, work_size;
     std::string dir_path;
-
+    parser_main our_parser;
 
 
 

@@ -96,11 +96,23 @@ void parser_main::update_compress_scheme_str()
     }
 }
 
-    std::vector<int> parser_main::get_str_compress_size()
-    {
-        return this->str_compress_size;
-    }
-    std::string parser_main::get_str_compress()
-    {
-        return this->str_compress;
-    }
+std::vector<int> parser_main::get_str_compress_size()
+{
+    return this->str_compress_size;
+}
+std::string parser_main::get_str_compress()
+{
+    return this->str_compress;
+}
+int parser_main::get_full_matrix_length()
+{
+    return this->matrix_all_options.size();
+}
+int parser_main::get_str_compress_size_at(int index)
+{
+    return this->str_compress_size.at(index);
+}
+std::string parser_main::get_str_original()
+{
+    return this->str_regular_expression;
+}   

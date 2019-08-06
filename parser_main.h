@@ -1,4 +1,3 @@
-
 #ifndef TAU_PROJECT_PARSER_MAIN_H
 #define TAU_PROJECT_PARSER_MAIN_H
 #include <iostream>
@@ -60,8 +59,11 @@ public:
     * some getters 
     */
     std::vector<int> get_str_compress_size();
+    int get_str_compress_size_at(int index);
     std::string get_str_compress();
+    std::string get_str_original();
 
+    int get_full_matrix_length();
 
 };
 
