@@ -1,6 +1,6 @@
 #include "file_manager.h"
 
-file_manager::file_manager(const std::string path, parser_main &parser, std::vector<std::string> &file_names, std::string &passwords, std::string &password_function, std::string &hash_args):
+file_manager::file_manager(const std::string& path, parser_main &parser, std::vector<std::string> &file_names, std::string &passwords, std::string &password_function, std::string &hash_args):
     our_parser(parser),
     file_names(file_names),
     compress_scheme_string(parser.get_str_compress()),
