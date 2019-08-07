@@ -88,7 +88,7 @@ class helpful_functions
 	    */
 	    static bool get_next_int(std::string &str, int start_index, int size, int& result);
 
-	    static bool write_data_to_file(std::string& dir, std::string& filename, std::string& data_to_file);
+	    static bool write_data_to_file(std::string& dir, std::string filename, const std::string& data_to_file);
 	    /*
 	    * This function changes the first line of the file to the desired status
 	    * if the status is not a one digit (between 0 to 9) we return false and not put it in the file

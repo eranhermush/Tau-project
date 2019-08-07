@@ -163,7 +163,7 @@ bool helpful_functions::server_string_to_vectors(std::string& server_str, std::v
 	return true;
 }
 
-bool helpful_functions::write_data_to_file(std::string& dir, std::string& filename, std::string& data_to_file)
+bool helpful_functions::write_data_to_file(std::string& dir, std::string filename, const std::string& data_to_file)
 {
     std::ofstream myfile;
     FILE *fp;

@@ -9,6 +9,8 @@
 #include "nested_password_generator.h"
 #include "char_password_generator.h"
 #include "file_password_generator.h"
+#include "hash_matcher.h"
+#include "Id_Hash.h"
 #include <string>
 #include <vector>
 
@@ -43,7 +45,7 @@ public:
 	* lines = how many line (= how many passwords) are in passwords
 	* all the other fields are like the former functions
 	*/
-	bool set_job(int status, std::string& passwords, int lines);
+	bool set_job(int status, const std::string& passwords, int lines);
 
 	/*
 	* This function should be called when there is a job i.e. when the file_obj is initialized with a new job

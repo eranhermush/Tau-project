@@ -9,6 +9,7 @@ client::client(int id, std::string& dir_path, int sleep)
 bool client::start()
 {
 	bool ret_val = false;
+
 	ret_val =  helpful_functions::write_data_to_file(this->dir_path, std::to_string(this->id), "3"); // 3 indicates that we start a new worker
 	if (! ret_val)
 	{
@@ -67,16 +68,16 @@ bool client::get_job(int status_start, bool to_write)
 
 }
 
-bool client::set_job(int status, std::string& passwords, int lines)
+bool client::set_job(int status, const std::string& passwords, int lines)
 {
 	std::string file_data;
 	bool ret_val = false;
 	std::string path =  this->dir_path + "/" + std::to_string(this->id) + ".txt";
 
-	data = "";
+	std::string data = "";
 	if(status == 6 && lines != 0)
 	{
-		data = std::to_string(status) + "\n" + this->file_obj.get_id() + "\n" + this->id + "\n" + std::to_string(lines) + "\n" + passwords;		
+		data = std::to_string(status) + "\n" + std::to_string(this->file_obj.get_id()) + "\n" + std::to_string(this->id) + "\n" + std::to_string(lines) + "\n" + passwords;		
 		ret_val =  helpful_functions::write_data_to_file(this->dir_path, std::to_string(this->id), "3"); // 3 indicates that we start a new worker
 		if (! ret_val)
 		{
@@ -103,20 +104,22 @@ bool client::work()
 	std::string pass_str;
 	std::vector<std::unique_ptr<Password_Generator>> generators;
 	initialize_generators(generators);
+	std::vector<std::string> seek_all_results;
+
 	Nested_Password_Generator ngen(generators);
 	if(this->file_obj.get_password_function() == "id")
 	{
 		Hash_Matcher<Id_Hash> hm1(Id_Hash(), this->file_obj.get_passwords());
-		Preimage_Matcher match = hm1;
+		Preimage_Seeker seeker_for_passwords(ngen, hm1);
+		seek_all_results = seeker_for_passwords.seek_all();
+		helpful_functions::printcoll(seek_all_results);
+
 	}
 	else
 	{
 		return false;
 	}
-	Preimage_Seeker seeker_for_passwords(ngen, match);
-	std::vector<std::string> seek_all_results;
-	seek_all_results = seeker_for_passwords.seek_all();
-	helpful_functions::printcoll(seek_all_results);
+
 	if(seek_all_results.size() == 0)
 	{
 		retVal =  set_job(2,"",0);
@@ -135,7 +138,8 @@ bool client::work()
 }
 void client::initialize_generators(std::vector<std::unique_ptr<Password_Generator>>& generators)
 {
-	parser.intialize(this->file_obj.get_scheme_msg());
+	std::string msg = this->file_obj.get_scheme_msg();
+	parser.intialize(msg);
 	convertor.intialize(this->file_obj);
 	std::vector<int> start_vector, finish_vector;
 	start_vector = convertor.index_to_vector_indexes(this->file_obj.get_start_index());
@@ -149,12 +153,12 @@ void client::initialize_generators(std::vector<std::unique_ptr<Password_Generato
 	{
 		if(this->parser.get_str_compress().at(i) == 'f')
 		{
-			Pfile_gen = File_Password_Generator( helpful_functions::index_of_file_object_to_fileindex(this->file_obj.get_scheme_msg(), i), start_vector.at(i), finish_vector.at(i));
+			Pfile_gen = File_Password_Generator( helpful_functions::index_of_file_object_to_fileindex(msg, i), start_vector.at(i), finish_vector.at(i));
 			*TempGen = Pfile_gen;
 		}
 		else
 		{
-			Cfile_gen = Char_Pattern_Password_Generator( this->file_obj.get_scheme_msg().substr(i, this->parser.get_str_before_compress_size_at(i)), start_vector.at(i), finish_vector.at(i));
+			Cfile_gen = Char_Pattern_Password_Generator( msg.substr(i, this->parser.get_str_before_compress_size_at(i)), start_vector.at(i), finish_vector.at(i));
 			*TempGen = Cfile_gen;			
 		}
 		generators.push_back(std::move(TempGen));
