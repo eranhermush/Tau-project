@@ -71,11 +71,18 @@ void parser_main::update_compress_scheme_str()
     this->str_compress = "";
     bool is_char = false;
     int element_size = 0;
+    int block_size = 0;
+
+    this->str_compress_size.clear();
+    this->str_before_compress_size.clear();
+
     for (int i = 0; i < this->str_regular_expression.length(); i++)
     {
         if (this->str_regular_expression[i] != 'f')
         {
+            block_size++;
             element_size = element_size + this->matrix_all_options.at(i).size();
+
             if(! is_char)
             {
                 is_char = true;
@@ -87,18 +94,22 @@ void parser_main::update_compress_scheme_str()
             if (element_size != 0)
             {
                 this->str_compress_size.push_back(element_size);
+                this->str_before_compress_size.push_back(block_size);
             }
             is_char = false;
             this->str_compress = this->str_compress + "f";
             element_size = 0;
+            block_size = 0;
 
             // we dont get the file size from here
             this->str_compress_size.push_back(-1);
+            this->str_before_compress_size.push_back(0);
         }
     }
     if (element_size != 0)
     {
         this->str_compress_size.push_back(element_size);
+        this->str_before_compress_size.push_back(block_size);
     }
 }
 
@@ -122,3 +133,7 @@ std::string parser_main::get_str_original()
 {
     return this->str_regular_expression;
 }   
+int parser_main::get_str_before_compress_size_at(int index)
+{
+    return this->str_before_compress_size.at(index);
+}

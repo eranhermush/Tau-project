@@ -27,7 +27,6 @@ void file_object::set_scheme_msg(std::string scheme_msg)
 {
 	this->scheme_msg = scheme_msg;
 }
-
 void file_object::set_passwords(std::string passwords)
 {
 	this->passwords = passwords;
@@ -36,7 +35,6 @@ void file_object::set_password_function(std::string password_function)
 {
     this->password_function = password_function;
 }
-
 void file_object::set_files_for_scheme(std::string files_for_scheme)
 {
 	this->files_for_scheme = files_for_scheme;
@@ -69,7 +67,6 @@ int file_object::get_worker_id()
 {
 	return this->worker_id;
 }
-
 std::string file_object::to_string()
 {
     std::string result = "id: " + std::to_string(this->id) + '\n' + "worker id: " + std::to_string(this->worker_id) + 
@@ -102,7 +99,6 @@ std::string file_object::get_files_for_scheme()
 {
 	return this->files_for_scheme;
 }
-
 bool file_object::check_equal(file_object& obj)
 {
 
@@ -177,7 +173,6 @@ void file_object::add_password_found_vector(std::string &pass)
 	this->passwords_found_vector.push_back(pass);
 	return;
 }
-
 std::vector<std::string> file_object::get_passwords_found_vector()
 {
 	return this->passwords_found_vector;

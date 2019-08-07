@@ -19,6 +19,18 @@ void helpful_functions::read_directory(std::string& name,  std::vector<std::stri
     }
     closedir(dirp);
 }
+int helpful_functions::index_of_file_object_to_fileindex(std::string& str, int index)
+{
+	int realIndex = 0;
+	for (int i = 0; i < index && i < str.length(); ++i)
+	{
+		if(str[i] == 'f')
+		{
+			realIndex++;
+		}
+	}
+	return realIndex;
+}
 
 void helpful_functions::my_print(std::vector<std::string> &input)
 {

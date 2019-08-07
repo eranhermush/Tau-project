@@ -18,6 +18,9 @@ class parser_main
     // the compression mode
     // it saves the size of the compress item, i.e. for str = "cCdfdcd", str_compress_size = Cfc and str_compress_size = 62, -1, 36
     std::vector<int> str_compress_size;
+
+    // it saves the size of the compress item before compress, i.e. for str = "cCdfdcdcc", str_compress_size = Cfc and str_before_compress_size = 3,1,5
+    std::vector<int> str_before_compress_size;
     std::string str_compress;
 
 public:
@@ -67,6 +70,8 @@ public:
     */
     std::vector<int> get_str_compress_size();
     int get_str_compress_size_at(int index);
+    int get_str_before_compress_size_at(int index);
+
     std::string get_str_compress();
     std::string get_str_original();
 

@@ -108,11 +108,24 @@ void initialize_generators()
 	std::vector<int> start_vector, finish_vector;
 	start_vector = convertor.index_to_vector_indexes(this->file_obj.get_start_index());
 	finish_vector = convertor.index_to_vector_indexes(this->file_obj.get_end_index());
-	File_Password_Generator file_gen("", 0, 0);
-	Char_Pattern_Password_Generator file_gen("", 0, 0);
+	File_Password_Generator Pfile_gen("", 0, 0);
+	Char_Pattern_Password_Generator Cfile_gen("", 0, 0);
 
+	std::unique_ptr<Password_Generator> TempGen;
+	std::vector<std::unique_ptr<Password_Generator>> generators;
 	for (int i = 0; i < this->parser.get_str_compress().length(); ++i)
 	{
-		
+		if(this->parser.get_str_compress().at(i) == 'f')
+		{
+			Pfile_gen = File_Password_Generator( helpful_functions::index_of_file_object_to_fileindex(this->file_obj.get_scheme_msg(), i), start_vector.at(i), finish_vector.at(i));
+			*TempGen = Pfile_gen;
+		}
+		else
+		{
+			Cfile_gen = Char_Pattern_Password_Generator( this->file_obj.get_scheme_msg().substr(i, this->parser.get_str_before_compress_size_at(i)), start_vector.at(i), finish_vector.at(i));
+			*TempGen = Cfile_gen;			
+		}
+		generators.push_back(std::move(TempGen));
 	}
+	
 }

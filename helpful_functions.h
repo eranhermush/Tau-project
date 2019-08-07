@@ -40,8 +40,12 @@ class helpful_functions
 		}
 
 
-
-
+		/*
+		* This function takse a scheme string and an index of file instance ('f') and returns the index of this instance in the files
+		* for example, if the string is "ccfcfcfcf", and the index if 4 (str[4] = 'f') the function will return 1 (since this is the second 'f')
+		* we assume that the input is valid
+		*/
+		static int index_of_file_object_to_fileindex(std::string& str, int index);
 	    /*
 	    * This function gets a file name, and transforms it to file_obj instance
 	    * returns -1 if there was an error
