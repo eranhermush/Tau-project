@@ -53,9 +53,9 @@ public:
 	*/
 	bool work();
 	/*
-	* this function is called when we have a job, it intializes all the password generators and the matcher object in accordance with the file
+	* this function is called when we have a job, it intializes all the password generators in accordance with the file
 	*/
-	void initialize_generators();
+	void initialize_generators(std::vector<std::unique_ptr<Password_Generator>>& generators);
 };
 
 

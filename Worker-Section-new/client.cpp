@@ -99,9 +99,25 @@ bool client::set_job(int status, std::string& passwords, int lines)
 
 bool client::work()
 {
+	std::vector<std::unique_ptr<Password_Generator>> generators;
+	initialize_generators(generators);
+	Nested_Password_Generator ngen(generators);
+	if(this->file_obj.get_password_function() == "id")
+	{
+		Hash_Matcher<Id_Hash> hm1(Id_Hash(), this->file_obj.get_passwords());
+		Preimage_Matcher match = hm1;
+	}
+	else
+	{
+		return false;
+	}
+	Preimage_Seeker seeker_for_passwords(ngen, match);
+	std::vector<std::string> seek_all_result;
+	seek_all_result = seeker_for_passwords.seek_all();
+	helpful_functions::printcoll(seek_all_result);
 	return true;
 }
-void initialize_generators()
+void initialize_generators(std::vector<std::unique_ptr<Password_Generator>>& generators)
 {
 	parser.intialize(this->file_obj.get_scheme_msg());
 	convertor.intialize(this->file_obj);
@@ -112,7 +128,7 @@ void initialize_generators()
 	Char_Pattern_Password_Generator Cfile_gen("", 0, 0);
 
 	std::unique_ptr<Password_Generator> TempGen;
-	std::vector<std::unique_ptr<Password_Generator>> generators;
+	generators.clear();
 	for (int i = 0; i < this->parser.get_str_compress().length(); ++i)
 	{
 		if(this->parser.get_str_compress().at(i) == 'f')
@@ -127,5 +143,4 @@ void initialize_generators()
 		}
 		generators.push_back(std::move(TempGen));
 	}
-	
 }
