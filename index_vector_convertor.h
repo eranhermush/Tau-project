@@ -1,11 +1,13 @@
 #ifndef INDEX_TO_VECTOR_H
 #define INDEX_TO_VECTOR_H
 #include <iostream>
-#include <string>
 #include <cstring>
-#include <vector>
+#include <stdexcept>
 #include <unistd.h>
 #include <stdlib.h> 
+#include <algorithm>
+#include <fstream>
+#include <stdio.h>
 #include "parser_main.h"
 #include "file_object.h"
 

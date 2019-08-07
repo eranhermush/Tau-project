@@ -115,7 +115,30 @@ int main()
 			This is the tester for the indexes section
 			*/
 		    std::vector<int> index_vec; 
+		    std::string result = "";
+		    for (int i = 0; i< files_vec.size();i++)
+		    {
+		        if (i != 0)
+		        {
+		            result = result + "#";
+		        }
+		        result += files_vec[i];
+		    }
+
+		    index_vector_convertor index_vec_con;
 		  	int user_input = 0;
+		  	file_object f;
+		  	f.intialize();
+		    f.set_status(0);
+		    //file_obj.set_scheme_msg(this->scheme_string);
+		    f.set_scheme_msg(parser.get_str_original());
+		    f.set_passwords(passwords);
+		    f.set_password_function(password_functions);
+		    f.set_files_for_scheme(result);
+     		index_vec_con.intialize(f);
+
+
+
 		  	std::cout << "your scheme is " << parser.get_str_original() << " and the compress is " << parser.get_str_compress() << std::endl;
 		  	std::cout << "enter the indexes: " << parser.get_str_compress().length() << std::endl;
 
@@ -124,9 +147,9 @@ int main()
 		  		cin >> user_input;
 		        index_vec.push_back(user_input); 
 		    }
-			int index = manager.vector_indexes_to_index(index_vec);
+			int index = index_vec_con.vector_indexes_to_index(index_vec);
 			std::cout << "the index is: " << index << std::endl;
-			std::vector<int> v = manager.index_to_vector_indexes(index);
+			std::vector<int> v = index_vec_con.index_to_vector_indexes(index);
 			std::cout << "the vector is ";
 			for (int i = 0; i < v.size(); i++) {
 				std::cout << v.at(i) << ' ';

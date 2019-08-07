@@ -98,7 +98,6 @@ void file_manager::update_file_object_no_index(file_object& f)
     f.set_passwords(this->passwords);
     f.set_password_function(this->password_function);
     f.set_files_for_scheme(get_files_in_string());
-    f.set_worker_id(worker_id);
     f.set_arguments(this->hash_args);
 }
 

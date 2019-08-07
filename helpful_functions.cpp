@@ -267,7 +267,7 @@ bool helpful_functions::change_status_of_file(std::string& path, int status)
         perror("Error fopen in write_work_to_file ");
         return false;
     }
-    fprintf(fp, std::to_string(status).c_str());
+    fprintf(fp, "%s", std::to_string(status).c_str());
     std::fclose (fp);
     return true;
 }

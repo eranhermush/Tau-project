@@ -10,7 +10,8 @@ index_vector_convertor::index_vector_convertor(char file_char)
 void index_vector_convertor::intialize(file_object& fileobj)
 {
 	this->fileobj = fileobj;
-	parser.intialize(fileobj.get_scheme_msg());
+    std::string msg = fileobj.get_scheme_msg();
+	this->parser.intialize(msg);
 }
 
 std::vector<int> index_vector_convertor::index_to_vector_indexes(int index){

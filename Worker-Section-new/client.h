@@ -1,11 +1,11 @@
 #ifndef TAU_PROJECT_CLIENT_H
 #define TAU_PROJECT_CLIENT_H
 #include "password_generator.h"
-#include "file_object.h"
-#include "helpful_functions.h"
+#include "../file_object.h"
+#include "../helpful_functions.h"
 #include "preimage_seeker.h"
-#include "parser_main.h"
-#include "index_vector_convertor.h"
+#include "../parser_main.h"
+#include "../index_vector_convertor.h"
 #include "nested_password_generator.h"
 #include "char_password_generator.h"
 #include "file_password_generator.h"
@@ -23,7 +23,7 @@ class client
 	index_vector_convertor convertor;
 public:
 
-	client::client(int id, std::string& dir_path, int sleep = 1000);
+	client(int id, std::string& dir_path, int sleep = 1000);
 	/*
 	* This function gets a job - it creates the client file and waits for the first job
 	* This function returns false iff there was an error with the file operations
