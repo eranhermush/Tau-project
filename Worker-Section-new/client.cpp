@@ -138,6 +138,8 @@ bool client::work()
 }
 void client::initialize_generators(std::vector<std::unique_ptr<Password_Generator>>& generators)
 {
+	return;
+	/*
 	std::string msg = this->file_obj.get_scheme_msg();
 	parser.intialize(msg);
 	convertor.intialize(this->file_obj);
@@ -171,6 +173,7 @@ void client::initialize_generators(std::vector<std::unique_ptr<Password_Generato
 		}
 		generators.push_back(std::move(TempGen));
 	}
+	*/
 }
 std::string client::vector_passwords_to_sring_passwords(std::vector<std::string> &v)
 {
