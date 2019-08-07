@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include "parser_main.h"
 #include "file_object.h"
-
+#include "helpful_functions.h"
 
 
 class index_vector_convertor{
@@ -41,9 +41,7 @@ public:
     *    This function returns how many lines are in a file
     */
     int get_number_of_lines_in_file(std::string filename);
-    // split string 
-    // credit: https://stackoverflow.com/questions/5888022/split-string-by-single-spaces
-    size_t split(const std::string &txt, std::vector<std::string> &strs, char ch);
+
 };
 
 

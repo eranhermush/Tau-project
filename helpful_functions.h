@@ -39,7 +39,9 @@ class helpful_functions
 		    std::cout << std::endl;
 		}
 
-
+	    // split string 
+	    // credit: https://stackoverflow.com/questions/5888022/split-string-by-single-spaces
+	    static size_t split(const std::string &txt, std::vector<std::string> &strs, char ch);
 		/*
 		* This function takse a scheme string and an index of file instance ('f') and returns the index of this instance in the files
 		* for example, if the string is "ccfcfcfcf", and the index if 4 (str[4] = 'f') the function will return 1 (since this is the second 'f')

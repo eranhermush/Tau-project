@@ -149,17 +149,25 @@ void client::initialize_generators(std::vector<std::unique_ptr<Password_Generato
 
 	std::unique_ptr<Password_Generator> TempGen;
 	generators.clear();
+	std::vector<std::string> strs;
+    helpful_functions::split(this->file_obj.get_files_for_scheme(), strs, '#');
+    int index;
 	for (int i = 0; i < this->parser.get_str_compress().length(); ++i)
 	{
 		if(this->parser.get_str_compress().at(i) == 'f')
 		{
-			Pfile_gen = File_Password_Generator( helpful_functions::index_of_file_object_to_fileindex(msg, i), start_vector.at(i), finish_vector.at(i));
-			*TempGen = Pfile_gen;
+			index = helpful_functions::index_of_file_object_to_fileindex(msg, i);
+			//Pfile_gen = File_Password_Generator( strs.at(index), start_vector.at(i), finish_vector.at(i));
+			//*TempGen = Pfile_gen;
+			generators.push_back(File_Password_Generator( strs.at(index), start_vector.at(i), finish_vector.at(i)));
+
 		}
 		else
 		{
-			Cfile_gen = Char_Pattern_Password_Generator( msg.substr(i, this->parser.get_str_before_compress_size_at(i)), start_vector.at(i), finish_vector.at(i));
-			*TempGen = Cfile_gen;			
+			//Cfile_gen = Char_Pattern_Password_Generator( msg.substr(i, this->parser.get_str_before_compress_size_at(i)), start_vector.at(i), finish_vector.at(i));
+			//*TempGen = Cfile_gen;
+			generators.push_back(Char_Pattern_Password_Generator( msg.substr(i, this->parser.get_str_before_compress_size_at(i)), start_vector.at(i), finish_vector.at(i)));
+			
 		}
 		generators.push_back(std::move(TempGen));
 	}

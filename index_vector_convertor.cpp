@@ -67,7 +67,7 @@ int index_vector_convertor::size_of_object_in_scheme(int index)
     // we start to count from 0, and file_index counts how many files were(the len)
     file_index--;
     std::vector<std::string> strs;
-    split(this->fileobj.get_files_for_scheme(), strs, '#');
+    helpful_functions::split(this->fileobj.get_files_for_scheme(), strs, '#');
     return get_number_of_lines_in_file(strs[file_index]);
 }
 
@@ -83,22 +83,3 @@ int index_vector_convertor::get_number_of_lines_in_file(std::string filename)
     return number_of_lines;
 }
 
-size_t index_vector_convertor::split(const std::string &txt, std::vector<std::string> &strs, char ch)
-{
-    size_t pos = txt.find( ch );
-    size_t initialPos = 0;
-    strs.clear();
-
-    // Decompose statement
-    while( pos != std::string::npos ) {
-        strs.push_back( txt.substr( initialPos, pos - initialPos ) );
-        initialPos = pos + 1;
-
-        pos = txt.find( ch, initialPos );
-    }
-
-    // Add the last one
-    strs.push_back( txt.substr( initialPos, std::min( pos, txt.size() ) - initialPos + 1 ) );
-
-    return strs.size();
-}
