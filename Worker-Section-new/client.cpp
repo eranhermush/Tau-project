@@ -99,6 +99,8 @@ bool client::set_job(int status, std::string& passwords, int lines)
 
 bool client::work()
 {
+	bool retVal = false;
+	std::string pass_str;
 	std::vector<std::unique_ptr<Password_Generator>> generators;
 	initialize_generators(generators);
 	Nested_Password_Generator ngen(generators);
@@ -112,12 +114,26 @@ bool client::work()
 		return false;
 	}
 	Preimage_Seeker seeker_for_passwords(ngen, match);
-	std::vector<std::string> seek_all_result;
-	seek_all_result = seeker_for_passwords.seek_all();
-	helpful_functions::printcoll(seek_all_result);
+	std::vector<std::string> seek_all_results;
+	seek_all_results = seeker_for_passwords.seek_all();
+	helpful_functions::printcoll(seek_all_results);
+	if(seek_all_results.size() == 0)
+	{
+		retVal =  set_job(2,"",0);
+	}
+	else
+	{
+		pass_str = vector_passwords_to_sring_passwords(seek_all_results);
+		retVal =  set_job(6,pass_str,seek_all_results.size());
+	}
+	if (! retVal)
+	{
+		std::cout << "error in set job " << std::endl;
+		return false;
+	}
 	return true;
 }
-void initialize_generators(std::vector<std::unique_ptr<Password_Generator>>& generators)
+void client::initialize_generators(std::vector<std::unique_ptr<Password_Generator>>& generators)
 {
 	parser.intialize(this->file_obj.get_scheme_msg());
 	convertor.intialize(this->file_obj);
@@ -142,5 +158,36 @@ void initialize_generators(std::vector<std::unique_ptr<Password_Generator>>& gen
 			*TempGen = Cfile_gen;			
 		}
 		generators.push_back(std::move(TempGen));
+	}
+}
+std::string client::vector_passwords_to_sring_passwords(std::vector<std::string> &v)
+{
+	std::string result = "";
+	for (int i = 0; i < v.size(); ++i)
+	{
+		if (i != 0)
+		{
+			result = result + "\n";
+		}
+		result = result + v.at(i);
+	}
+	return result;
+}
+
+void client::main()
+{
+	bool retVal = false;
+	start();
+	retVal = get_job(1, false);
+	if (! retVal)
+	{
+		std::cout << "error in getting the first job" << std::endl;
+		return;
+	}
+	retVal = work();
+	if (! retVal)
+	{
+		std::cout << "error in working " << std::endl;
+		return;
 	}
 }

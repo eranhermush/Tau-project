@@ -23,7 +23,7 @@ class client
 	index_vector_convertor convertor;
 public:
 
-	client::client(int id, std::string& dir_path, int sleep);
+	client::client(int id, std::string& dir_path, int sleep = 1000);
 	/*
 	* This function gets a job - it creates the client file and waits for the first job
 	* This function returns false iff there was an error with the file operations
@@ -41,7 +41,7 @@ public:
 	* passwords is the passwords that we found. if there are no passords, lines should be 0, 
 	* 		(Warning): and if there are passwords, status must be 6, otherwise we will not write it to the file and return false!!!
 	* lines = how many line (= how many passwords) are in passwords
-	* all the other fiels are like the former functions
+	* all the other fields are like the former functions
 	*/
 	bool set_job(int status, std::string& passwords, int lines);
 
@@ -56,6 +56,8 @@ public:
 	* this function is called when we have a job, it intializes all the password generators in accordance with the file
 	*/
 	void initialize_generators(std::vector<std::unique_ptr<Password_Generator>>& generators);
+	std::string vector_passwords_to_sring_passwords(std::vector<std::string> &v);
+	void main();
 };
 
 
