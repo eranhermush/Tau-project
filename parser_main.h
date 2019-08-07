@@ -22,11 +22,13 @@ class parser_main
 
 public:
 
+    parser_main();
     /**
      * constructor
      * @param str- the regular expression string
      */
-    parser_main(std::string str);
+
+    parser_main(std::string& str);
 
     /**
     * convert regular expression char to its array of values
@@ -36,6 +38,10 @@ public:
     */
     std::vector<std::string> from_known_char_to_options_list(char c, int* error_indicator);  
 
+    /*
+    * This function intializes the parser
+    */
+    void intialize(std::string& str);
     /**
     *    convert the parser string to the parser matrix
     *    assusme that the parser_main object is intialized

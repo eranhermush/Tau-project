@@ -4,6 +4,7 @@
 #include "file_object.h"
 #include "helpful_functions.h"
 #include "preimage_seeker.h"
+#include "parser_main.h"
 
 #include <string>
 #include <vector>
@@ -12,6 +13,8 @@
 class client
 {
 	file_object file_obj; // this file will save our current job;
+	parser_main parser;
+
 	int id, microseconds_sleep;
 	std::string dir_path;
 public:

@@ -19,6 +19,9 @@ file_manager::file_manager(const std::string& path, parser_main &parser, std::ve
     :our_parser(parser),file_names(file_names),compress_scheme_string(our_parser.get_str_compress()), file_char('f'), curr_id(1), sum_of_works(0), current_index_of_work(0), work_size(30), passwords(passwords),
         password_function(password_function), dir_path(path), hash_args(hash_args)
 */
+    this->fileobj.intialize();
+    update_file_object_no_index(this->fileobj);
+    index_vec_con.intialize(this->fileobj);
     validate_input();
     save_sum_of_works();
 }
@@ -27,6 +30,10 @@ std::string file_manager::get_files_in_string()
     std::string result = "";
     for (int i = 0; i< this->file_names.size();i++)
     {
+        if (i != 0)
+        {
+            result = result + "#";
+        }
         result += this->file_names[i];
     }
     return result;
@@ -54,7 +61,7 @@ void file_manager::save_sum_of_works()
     int result = 1;
     for (int i = 0; i<this->compress_scheme_string.length();i++)
     {
-        result *= size_of_object_in_scheme(i);
+        result *= index_vec_con.size_of_object_in_scheme(i);
     }
     this->sum_of_works = result;
 }
@@ -66,77 +73,6 @@ void file_manager::set_work_size(int size)
 int file_manager::get_sum_of_works()
 {
     return this->sum_of_works;
-}
-/*
-**********************************************************
-**********************************************************
-***************   This is the index Section **************
-**********************************************************
-**********************************************************
-*/
-int file_manager::vector_indexes_to_index(std::vector<int> &vec)
-{
-    int result = 0;
-    int sum = 1;
-    for (int i = 0; i<vec.size();i++)
-    {
-        result += sum*vec[i];
-        sum *= size_of_object_in_scheme(i);
-    }
-    return result;
-}
-
-
-int file_manager::size_of_object_in_scheme(int index)
-{
-    if(index <0 || index >= this->compress_scheme_string.length()){
-        throw std::invalid_argument("unexpected index");
-    }
-    if(this->compress_scheme_string.at(index) != file_char){
-        return this->our_parser.get_str_compress_size_at(index);
-        //return this->matrix_all_options[index].size();
-    }
-    int file_index = 0;
-    for (int i = 0; i <= index; ++i)
-    {
-        if (this->compress_scheme_string.at(i) == this->file_char)
-        {
-            file_index++;
-        }
-    }
-    // we start to count from 0, and file_index counts how many files were(the len)
-    file_index--;
-    return get_number_of_lines_in_file(this->file_names[file_index]);
-}
-int file_manager::get_number_of_lines_in_file(std::string filename)
-{
-    int number_of_lines = 0;
-    std::string line;
-    std::ifstream myfile;
-    myfile.open(filename);
-
-    while (std::getline(myfile, line))
-        ++number_of_lines;
-    return number_of_lines;
-}
-
-std::vector<int> file_manager::index_to_vector_indexes(int index){
-    std::vector<int> result; 
-
-    // fill the array with 0 this->scheme_string.length() times 
-    result.assign(this->compress_scheme_string.length(), 0); 
-    int sum = 1;
-    for (int i = 0; i<this->compress_scheme_string.length();i++){
-        sum *= size_of_object_in_scheme(i);
-    }
-
-    for (int i = this->compress_scheme_string.length()-1; i >= 0; i--)
-    {
-        sum = sum / size_of_object_in_scheme(i);
-        result[i] = (int) index/sum;
-        index -= result[i]*sum;
-    }
-    return result;
 }
 
 
@@ -153,6 +89,17 @@ int file_manager::get_id_to_file()
 {
     this->curr_id++;
     return this->curr_id-1;
+}
+void file_manager::update_file_object_no_index(file_object& f)
+{
+    f.set_status(0);
+    //file_obj.set_scheme_msg(this->scheme_string);
+    f.set_scheme_msg(this->our_parser.get_str_original());
+    f.set_passwords(this->passwords);
+    f.set_password_function(this->password_function);
+    f.set_files_for_scheme(get_files_in_string());
+    f.set_worker_id(worker_id);
+    f.set_arguments(this->hash_args);
 }
 
 int file_manager::create_new_work(file_object& file_obj, int worker_id)
@@ -175,14 +122,7 @@ int file_manager::create_new_work(file_object& file_obj, int worker_id)
     }
 
     file_obj.set_id(get_id_to_file());
-    file_obj.set_status(0);
-    //file_obj.set_scheme_msg(this->scheme_string);
-    file_obj.set_scheme_msg(this->our_parser.get_str_original());
-    file_obj.set_passwords(this->passwords);
-    file_obj.set_password_function(this->password_function);
-    file_obj.set_files_for_scheme(get_files_in_string());
-    file_obj.set_worker_id(worker_id);
-    file_obj.set_arguments(this->hash_args);
+    update_file_object_no_index(file_obj);
     this->arr_of_works.push_back(file_obj);
     return 0;
 }

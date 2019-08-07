@@ -103,5 +103,5 @@ bool client::work()
 }
 void initialize_generators()
 {
-	
+	parser.intialize(this->file_obj.get_scheme_msg());
 }

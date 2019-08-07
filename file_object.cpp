@@ -96,11 +96,11 @@ std::string file_object::get_passwords()
 }
 std::string file_object::get_password_function()
 {
-	return this->files_for_scheme;
+	return this->password_function;
 }
 std::string file_object::get_files_for_scheme()
 {
-	return this->password_function;
+	return this->files_for_scheme;
 }
 
 bool file_object::check_equal(file_object& obj)

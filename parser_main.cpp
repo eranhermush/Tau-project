@@ -1,6 +1,13 @@
 #include "parser_main.h"
 
-parser_main::parser_main(std::string str)
+
+
+parser_main::parser_main(){}
+parser_main::parser_main(std::string& str)
+{
+    intialize(str);
+}
+void parser_main::intialize(std::string& str)
 {
     this->str_regular_expression = str;
     this->param_size = str.length();
@@ -12,7 +19,6 @@ parser_main::parser_main(std::string str)
     }
     update_compress_scheme_str();
 }
-
 std::vector<std::string> parser_main::from_known_char_to_options_list(char c, int* error_indicator)
 {
     std::vector<std::string> result;

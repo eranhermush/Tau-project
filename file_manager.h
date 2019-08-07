@@ -11,7 +11,7 @@
 #include "file_object.h"
 #include "helpful_functions.h"
 #include "parser_main.h"
-
+#include "index_vector_convertor.h"
 /*
  * This class is a server class, it reads here the files and updates them
  */
@@ -30,6 +30,8 @@ class file_manager{
     std::string dir_path;
     parser_main our_parser;
 
+    index_vector_convertor index_vec_con;
+    file_object fileobj;
 
 
 public:
@@ -69,32 +71,6 @@ public:
     //bool generate_new_work_to_file();
     //bool check_file_need_to_update();
 
-    /*
-    **********************************************************
-    **********************************************************
-    ***************   This is the index Section **************
-    **********************************************************
-    **********************************************************
-    */
-
-
-    /*
-    * This function gets a general index, and splits it to a vector of indexes, index to every category in the scheme.
-    */
-    std::vector<int> index_to_vector_indexes(int index);
-    /*
-    * This function gets a vector of indexes, index to every category in the scheme and returns a general index that represents them.
-    */
-    int vector_indexes_to_index(std::vector<int> &vec);
-    /*
-    * This function gets an index in the scheme and returns the size of the object that this letter represents. e.g. the size of the file.
-    */
-    int size_of_object_in_scheme(int index);
-
-    /*
-    *    This function returns how many lines are in a file
-    */
-    int get_number_of_lines_in_file(std::string filename);
 
 
     /*
@@ -109,6 +85,8 @@ public:
     * This function generates a new id for a file
     */
     int get_id_to_file();
+
+    void update_file_object_no_index(file_object& f);
 
     /*
     * This function creates a new work, and puts it in the file object that it gets.
