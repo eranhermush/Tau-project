@@ -5,7 +5,10 @@
 #include "helpful_functions.h"
 #include "preimage_seeker.h"
 #include "parser_main.h"
-
+#include "index_vector_convertor.h"
+#include "nested_password_generator.h"
+#include "char_password_generator.h"
+#include "file_password_generator.h"
 #include <string>
 #include <vector>
 
@@ -17,6 +20,7 @@ class client
 
 	int id, microseconds_sleep;
 	std::string dir_path;
+	index_vector_convertor convertor;
 public:
 
 	client::client(int id, std::string& dir_path, int sleep);

@@ -104,4 +104,15 @@ bool client::work()
 void initialize_generators()
 {
 	parser.intialize(this->file_obj.get_scheme_msg());
+	convertor.intialize(this->file_obj);
+	std::vector<int> start_vector, finish_vector;
+	start_vector = convertor.index_to_vector_indexes(this->file_obj.get_start_index());
+	finish_vector = convertor.index_to_vector_indexes(this->file_obj.get_end_index());
+	File_Password_Generator file_gen("", 0, 0);
+	Char_Pattern_Password_Generator file_gen("", 0, 0);
+
+	for (int i = 0; i < this->parser.get_str_compress().length(); ++i)
+	{
+		
+	}
 }
