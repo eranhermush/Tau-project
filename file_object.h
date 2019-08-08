@@ -18,20 +18,20 @@
  * The file includes:
     id:                         The message id (the id of this specific data) - real number
     status:                     The message status: 
-                                    0: doesnt start to work on that
+                                    0: doesn't start to work on that
                                     1: in process
                                     2: done
                                     3: Start worker
                                     4: Finish Work (and done this work)
                                     5: There are no messages any more (a message from server to client instead of a new work) 
                                     6: a worker message - I found passwords!!!!!
-                                             at this mode the file will be differnet: status, id, worker_id, how many passwords I found (int), all the passwords(a password in a line) :)  
+                                             at this mode the file will be different: status, id, worker_id, how many passwords I found (int), all the passwords(a password in a line) :)  
                                     7: I write now to the file, ignore it 
                                      
     scheme_msg:                 The scheme string, like "ccCd"
     start_index and end index:  Represents the indexes of the password to go over them, in the original ordering
     files_for_scheme:           If the scheme includes files, the file names will be here (or db identify), in order 
-    password_function:          The specific password fuction that we want to go over, we assume that there is a file in the worker that has a function(encryption) with that name
+    password_function:          The specific password function that we want to go over, we assume that there is a file in the worker that has a function(encryption) with that name
     passwords:                  The passwords that we want to find
     worker_id:                  The worker id
     arguments:                  Arguments to the hash functions, see server_string_to_vectors in helpful_functions.h to more details
@@ -79,13 +79,13 @@ public:
     std::string to_string();
 
     // we checks here if the files are equal
-    // Warning: this function doesnt compare the status tag
+    // Warning: this function doesn't compare the status tag
     bool check_equal(file_object& obj);
 
-    // intialize the object to default values 
+    // initialize the object to default values 
     void intialize();
 
-    // intialize the object to error values  (-1/"" to all, expect status, which is 5)   
+    // initialize the object to error values  (-1/"" to all, expect status, which is 5)   
     void intialize_to_error();
 
 };
