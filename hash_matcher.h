@@ -17,6 +17,8 @@
 template<class H>
 class Hash_Matcher: public Preimage_Matcher{
 	public:
+		virtual ~Hash_Matcher() =default;
+
 		/* Constructor
 			target_image is the default value to match with*/
 		Hash_Matcher(const H& hash_object, const std::string& target_image);
