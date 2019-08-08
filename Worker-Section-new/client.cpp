@@ -53,6 +53,7 @@ bool client::get_job(int status_start, bool to_write)
 	{
 		usleep(this->microseconds_sleep);
 		retVal = helpful_functions::file_to_file_object(fileob, path, true);
+		
 
 		if (retVal == -1){
 			std::cout << "error in file_to_file_object in get_job" << std::endl;
@@ -94,7 +95,9 @@ bool client::set_job(int status, const std::string& passwords, int lines)
 	}
 	if(status != 6)
 	{
+
 		ret_val = helpful_functions::change_status_of_file(path, status);
+
 		if (! ret_val)
 		{
 			std::cout << "error in change_status_of_file in set_job" << std::endl;
@@ -109,6 +112,7 @@ bool client::set_job(int status, const std::string& passwords, int lines)
 bool client::work()
 {
 	bool retVal = false;
+
 	std::string msg = this->file_obj.get_scheme_msg();
 	std::string pass_str;
 	std::vector<std::unique_ptr<Password_Generator>> generators;
@@ -128,6 +132,7 @@ bool client::work()
 	else
 	{
 		std::cout << "error in id name in work" << std::endl;
+		std::cout << this->file_obj.to_string() << std::endl;
 		return false;
 	}
 	if(seek_all_results.size() == 0)
@@ -202,6 +207,7 @@ std::string client::vector_passwords_to_sring_passwords(std::vector<std::string>
 void client::main()
 {
 	bool retVal = false, finish = false;
+	std::string path =  this->dir_path + "/" + std::to_string(this->id) + ".txt";
 	start();
 	retVal = get_job(1, false);
 	if (! retVal)
@@ -227,7 +233,12 @@ void client::main()
 		}	
 		if (this->file_obj.get_status() == 5)
 		{
+			std::cout << "finisih!!!" << std::endl;
 			finish = true;
 		}	
+	}
+	if( remove(path.c_str()) != 0 )
+	{
+		perror( "Error deleting file in main" );
 	}
 }

@@ -69,7 +69,7 @@ int file_object::get_worker_id()
 }
 std::string file_object::to_string()
 {
-    std::string result = "id: " + std::to_string(this->id) + '\n' + "worker id: " + std::to_string(this->worker_id) + 
+    std::string result = "status: " + std::to_string(this->status) + '\n' +"id: " + std::to_string(this->id) + '\n' + "worker id: " + std::to_string(this->worker_id) + 
     	'\n' + "scheme msg " + this->scheme_msg+ '\n' + "password functions : " + this->password_function + 
         '\n' + "start index " + std::to_string(this->start_index) + '\n' + "end index " + std::to_string(this->end_index)+ 
         '\n' + "files" + this->files_for_scheme + '\n' + "passwords " + this->passwords + '\n' + "arguments to hash:  " + this->arguments_to_hash;
@@ -154,8 +154,13 @@ void file_object::intialize()
 }
 void file_object::intialize_to_error()
 {
-	intialize();
+	this->passwords_found_vector.clear();
 	this->status = 5;
+	this->scheme_msg = "";
+	this->password_function = "";
+	this->passwords = "";
+	this->files_for_scheme = "";
+	this->arguments_to_hash = "";
 }
 void file_object::set_arguments(std::string &args)
 {

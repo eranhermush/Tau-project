@@ -17,7 +17,7 @@ int main()
 	std::cin >> id;
 
 	std::string a = "a";
-	client c(id, a,1000000);
+	client c(id, a,100000);
 	c.main();
 
     return 0;

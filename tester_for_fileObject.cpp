@@ -81,7 +81,8 @@ int main()
 	while (! finish)
 	{
 		std::cout << std::endl << "enter an index (choose what to do): " << std::endl << "1 - add a work to file " << std::endl << "2 - check the index section "
-				 << std::endl << "3 - check the files(read files in a dir) " << std::endl << "4 - check the method 'go over the files' " << std::endl << "5 - check string args "<< std::endl << "6 - exit " << std::endl;
+				 << std::endl << "3 - check the files(read files in a dir) " << std::endl << "4 - check the method 'go over the files' "
+				  << std::endl << "5 - check string args "<< std::endl << "6 -work " << std::endl << "7 - exit " << std::endl;
 		cin >> index_test;
 
 
@@ -188,11 +189,20 @@ int main()
 				helpful_functions::printcoll(float_vec);
 
 			}
-		}				
-		if (index_test == 6){
+		}	
+		if (index_test == 6)
+		{
+			bool finish_loop = false;
+			while (! finish_loop)
+			{
+				manager.go_over_files(to_print);
+				finish_loop = manager.finish_job();
+			}
+		}			
+		if (index_test == 7){
 			finish = true;
 		}
-		if(index_test > 6 || index_test < 1){
+		if(index_test > 7 || index_test < 1){
 			std::cout << "error :( your number is incorrect " << std::endl;
 		}
 	}

@@ -8,7 +8,7 @@ file_manager::file_manager(const std::string& path, parser_main &parser, std::ve
     curr_id(1),
     sum_of_works(0),
     current_index_of_work(0),
-    work_size(30),
+    work_size(300),
     passwords(passwords),
     password_function(password_function),
     dir_path(path),
@@ -104,8 +104,10 @@ void file_manager::update_file_object_no_index(file_object& f)
 int file_manager::create_new_work(file_object& file_obj, int worker_id)
 {
     file_object file_obj_former;
-    if (this->current_index_of_work >= this->sum_of_works)
+    std::cout << this->current_index_of_work << " " << this->sum_of_works <<std::endl;
+    if (this->current_index_of_work >= this->sum_of_works-1)
     {
+        std::cout << "here" << std::endl;
         return -1;
     }
     if (arr_didnt_do.empty())
@@ -142,11 +144,19 @@ int file_manager::write_work_to_file(file_object& file_obj)
         std::cout << "Error opening file in write_work_to_file" << std::endl;
         return -1;
     }
+    if (file_obj.get_status() == 5)
+    {
+        myfile << file_obj.get_message_to_write_in_file();
+        myfile.flush();
+        myfile.close();
+        return 0;
+    }
     myfile << "1\n";
     myfile << file_obj.get_message_to_write_in_file_without_status();
     myfile.flush();
     myfile.close();
     // write the data
+
     retVal =  helpful_functions::change_status_of_file(path, 0);
     if (! retVal) {
         return -1;
@@ -175,7 +185,7 @@ bool file_manager::check_validate_of_file(std::string file_name, std::string ful
     catch ( ...)
     {
 
-        if (file_obj.get_status() == 3)
+        if (file_obj.get_status() == 3 || file_obj.get_status() == 5)
         {
             return true;
         }
@@ -224,6 +234,17 @@ bool file_manager::check_validate_of_file(std::string file_name, std::string ful
     }
     return true;
 }
+
+
+bool file_manager::finish_job()
+{
+    if (arr_didnt_do.size() >0 || arr_of_works.size() > 0)
+    {
+        return false;
+    }
+    return this->current_index_of_work >= this->sum_of_works-1;
+}
+
 
 // Todo: add print_erorr to all functions
 void file_manager::go_over_files( bool print_error)
@@ -307,9 +328,10 @@ void file_manager::go_over_files( bool print_error)
                 if(retVal == -1){
                     new_obj.intialize_to_error();
                 }
-                    std::cout << new_obj.to_string() <<std::endl;
+                //std::cout << new_obj.to_string() <<std::endl;
 
                 retVal = write_work_to_file(new_obj);
+
                 if(retVal == -1)
                 {
                     if(print_error)

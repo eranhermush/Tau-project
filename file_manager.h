@@ -71,7 +71,10 @@ public:
     //bool generate_new_work_to_file();
     //bool check_file_need_to_update();
 
-
+    /*
+    * This function checks if we have more jobs and more things to do
+    */
+    bool finish_job();
 
     /*
     **********************************************************
