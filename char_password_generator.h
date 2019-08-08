@@ -4,6 +4,7 @@
 #include <vector>
 #include <functional>
 #include <iostream>
+#include <cstdint>
 #include "password_generator.h"
 
 static std::vector<char> DATA_LOWERCASE({'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'});
@@ -35,7 +36,7 @@ class Char_Pattern_Password_Generator: public Password_Generator{
 		/* rep_string is the pattern string consisting only of 'c'\'C'\'d'\'p' 
 			first is the index of the first password to be loaded
 			last is the index of the last unique password to be produced */
-		Char_Pattern_Password_Generator(const std::string& rep_string, int first, int last);
+		Char_Pattern_Password_Generator(const std::string& rep_string, uint64_t first, uint64_t last);
 
 		/* rep_string is the pattern string consisting of 'c'\'C'\'d'\'p'\'x'
 			data is a vector containing characters to be matched for the 'x' symbols
@@ -47,7 +48,7 @@ class Char_Pattern_Password_Generator: public Password_Generator{
 			For example: calling with ("xddxx",{0,1,0},{{'#'}, {'0','2','4','6','8'}}, 0, 499) would
 						construct a generator for even 3-digit numbers between two '#' */
 		Char_Pattern_Password_Generator(const std::string& rep_string, const std::vector<int>& rep_indices,
-											 const std::vector<std::vector<char>>& data, int first, int last);
+											 const std::vector<std::vector<char>>& data, uint64_t first, uint64_t last);
 
 		/* Copy constructor - also copies the current password and state */
 		Char_Pattern_Password_Generator(const Char_Pattern_Password_Generator& generator);
@@ -59,7 +60,7 @@ class Char_Pattern_Password_Generator: public Password_Generator{
 		void advance_password();
 
 		/* Sets the current password to be the one at position (position should be in the range)*/
-		void set_password(int position);
+		void set_password(uint64_t position);
 
 		/* Returns whether the generator has more passwords in its range */
 		bool has_next() const;
@@ -67,28 +68,36 @@ class Char_Pattern_Password_Generator: public Password_Generator{
 		/* Reverts to the first password */
 		void reset();
 
+		/* Expands the password range to the widest possible of the generator
+			Does not change the current password */
+		void expand_to_max_range();
+
 		/* Returns whether the generator produces passwords of fixed length */
 		bool has_fixed_length() const{
 			return true;
 		}
 
-		int get_first_position() const{
+		uint64_t get_first_position() const{
 			return first;
 		}
 
-		int get_last_position() const{
+		uint64_t get_last_position() const{
 			return last;
 		}
 
-		int get_range_length() const{
-			return last - first;
+		uint64_t get_range_length() const{
+			return last - first + 1;
+		}
+
+		uint64_t get_curr_position() const{
+			return curr_position;
 		}
 
 	private:
 		int length;
-		int first;
-		int last;
-		int curr_position;
+		uint64_t first;
+		uint64_t last;
+		uint64_t curr_position;
 		std::vector<int> indices;
 		std::vector<std::reference_wrapper<std::vector<char>>> char_sources;
 		std::vector<int> sources_index; /* stores the index of the source for each characther, used for copying (negative values imply the static data) */

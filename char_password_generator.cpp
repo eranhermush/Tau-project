@@ -1,12 +1,12 @@
 #include "char_password_generator.h"
 
-Char_Pattern_Password_Generator::Char_Pattern_Password_Generator(const std::string& rep_string, int first, int last)
+Char_Pattern_Password_Generator::Char_Pattern_Password_Generator(const std::string& rep_string, uint64_t first, uint64_t last)
 	:first(first), last(last){
 		init(rep_string, std::vector<int>());
 }
 
 Char_Pattern_Password_Generator::Char_Pattern_Password_Generator(const std::string& rep_string, const std::vector<int>& rep_indices,
- const std::vector<std::vector<char>>& data, int first, int last) 
+ const std::vector<std::vector<char>>& data, uint64_t first, uint64_t last) 
 :first(first), last(last), additional_data(data){
 	init(rep_string, rep_indices);
 }
@@ -126,7 +126,12 @@ void Char_Pattern_Password_Generator::advance_password(){
 	++curr_position;
 }
 
-void Char_Pattern_Password_Generator::set_password(int position){
+void Char_Pattern_Password_Generator::set_password(uint64_t position){
+	if(position < first || position > last){
+		return;
+	}
+	curr_position = position;
+	is_over_flag = false;
 	int sub_length = 0, sub_index = 0;
 	// match each charcter from right (Least Significant) to left (Most Significant)
 	for(int i = length-1; i >= 0; --i){
@@ -136,11 +141,23 @@ void Char_Pattern_Password_Generator::set_password(int position){
 		curr_password[i] = char_sources[i].get()[sub_index];
 		position /= sub_length;
 	}
-	curr_position = position;
 }
 
 bool Char_Pattern_Password_Generator::has_next() const{
 	return curr_position < last;
+}
+
+void Char_Pattern_Password_Generator::expand_to_max_range(){
+	uint64_t last_possible = 1;
+	for(int i = 0; i < length; ++i){
+		last_possible *= char_sources[i].get().size();
+	}
+	last_possible--;
+	first = 0;
+	last = last_possible;
+	if(curr_position < last){
+		is_over_flag = false;
+	}
 }
 
 void Char_Pattern_Password_Generator::reset(){
