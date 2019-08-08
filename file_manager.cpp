@@ -168,6 +168,7 @@ bool file_manager::check_validate_of_file(std::string file_name, std::string ful
 
         retVal = helpful_functions::file_to_file_object(file_obj, full_file_name, print_error);
         if (retVal == -1){
+            std::cout << "file_to_file_object RETURNS -1 check_validate_of_file " << std::endl;
             return false;
         }
     }
@@ -193,6 +194,7 @@ bool file_manager::check_validate_of_file(std::string file_name, std::string ful
     // checks the worker id 
     if  (file_obj.get_worker_id() != file_name_int) 
     {
+       std::cout << "get_worker_id differ then filename check_validate_of_file " << std::endl;
         return false;
     }
     for (int i = 0; i < this->arr_of_works.size(); i++) {
@@ -206,6 +208,7 @@ bool file_manager::check_validate_of_file(std::string file_name, std::string ful
     // there is not a relevant file in the arr
     if (! find)
     {
+       std::cout << "find = false in check_validate_of_file " << std::endl;
         return false;
     }
     // in this mode the file looks diferent, then we return here (the check equal will return false)
@@ -216,6 +219,7 @@ bool file_manager::check_validate_of_file(std::string file_name, std::string ful
     // if the relevant file is not consistent with the real file
     if (! file_obj.check_equal(file_in_arr))
     {
+        std::cout << "not equal in check_validate_of_file " << std::endl;
         return false;
     }
     return true;

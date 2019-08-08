@@ -15,12 +15,14 @@ bool client::start()
 		std::cout << "error in write_data_to_file in start" << std::endl;
 		return false;
 	}
+	/*
 	ret_val = get_job(3, false);
 	if (! ret_val)
 	{
 		std::cout << "error in get_job in start" << std::endl;
 		return false;
 	}
+	*/
 	return true;
 }
 
@@ -51,6 +53,7 @@ bool client::get_job(int status_start, bool to_write)
 	{
 		usleep(this->microseconds_sleep);
 		retVal = helpful_functions::file_to_file_object(fileob, path, true);
+
 		if (retVal == -1){
 			std::cout << "error in file_to_file_object in get_job" << std::endl;
             return false;
@@ -60,6 +63,7 @@ bool client::get_job(int status_start, bool to_write)
         // there are no more works, or gets a work
 	    if (fileob.get_status() == 5 || fileob.get_status() == 0) 
 	    {
+	    	std::cout << "find a job" << std::endl;
 	    	this->file_obj = fileob;
 	    	finish = true;
 	        return true;
@@ -110,9 +114,9 @@ bool client::work()
 	std::vector<std::unique_ptr<Password_Generator>> generators;
 	initialize_generators(generators);
 	std::vector<std::string> seek_all_results;
-
+	std::cout << "in work 0 " << std::endl;
 	//Nested_Password_Generator ngen(generators);
-	Char_Pattern_Password_Generator ngen (msg.substr(0, this->parser.get_str_before_compress_size_at(0)), this->file_obj.get_start_index(), this->file_obj.get_end_index());
+	Char_Pattern_Password_Generator ngen (msg, this->file_obj.get_start_index(), this->file_obj.get_end_index());
 	if(this->file_obj.get_password_function() == "id")
 	{
 		Hash_Matcher<Id_Hash> hm1(Id_Hash(), this->file_obj.get_passwords());
@@ -126,7 +130,6 @@ bool client::work()
 		std::cout << "error in id name in work" << std::endl;
 		return false;
 	}
-
 	if(seek_all_results.size() == 0)
 	{
 		retVal =  set_job(2,"",0);
@@ -209,6 +212,8 @@ void client::main()
 	while (! finish)
 	{
 		retVal = work();
+		std::cout << "finish working " << std::endl;
+
 		if (! retVal)
 		{
 			std::cout << "error in working " << std::endl;
