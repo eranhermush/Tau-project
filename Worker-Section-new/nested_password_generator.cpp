@@ -217,9 +217,7 @@ void Nested_Password_Generator::update_password_suffix(int beginning_index){
 
 void Nested_Password_Generator::reset(){
 	// zero all coordinates
-	curr_pos_vector = start_pos_vector;
-	// build the passwords
-	init_password();
+	set_password(start_pos_vector);
 }
 
 void Nested_Password_Generator::expand_to_max_range(){
