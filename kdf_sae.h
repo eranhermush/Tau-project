@@ -2,6 +2,7 @@
 #define TAU_PROJECT_KDF_SAE_H
 
 #include <string>
+#include <climits>
 
 /* 
 	An implementation of the KDF used in the WPA3-SAE to be used in
@@ -23,73 +24,102 @@ template <class HMAC>
 class KDF_SAE{
 	public:
 		/* Default Constructor */
-		KDF_SAE() =default;
+		KDF_SAE(){
+			digest_buffer.resize(hmac.DigestSize());
+		}
 
 		/* Constructor */
-		KDF_SAE(const HMAC& hmac_object): hmac(hmac_object) {}
+		KDF_SAE(const HMAC& hmac_object): hmac(hmac_object) {
+			digest_buffer.resize(hmac.DigestSize());
+		}
 
 		/* Copy Constructor */
-		KDF_SAE(const KDF_SAE<HMAC>& kdf): hmac(kdf.hmac) {}
+		KDF_SAE(const KDF_SAE<HMAC>& kdf): hmac(kdf.hmac), digest_buffer(kdf.digest_buffer) {}
 
-		/* Key derivation function
+		/* Key derivation function in IEEE Std 802.11-2012 11.6.1.7.2
 			Returns a key of bit_length bits (bit_length < 2^16)
-			is bit_length is not multiple of 8, the remaining bits in the last byte are 0 */
+
+			If bit_length is not multiple of 8, the leading bits in the first byte are 0 */
 		std::string derive_key(const std::string& kdf_key, const std::string& label, const std::string& context, unsigned int bit_length);
+
+		/* Key derivation function in IEEE Std 802.11-2012 11.6.1.7.2
+			Place a key of bit_length bits (bit_length < 2^16) in result_buffer
+			result_buffer should be large enough to contain bit_length_bits
+
+			If bit_length is not multiple of 8, the leading bits in the first byte are 0 */
+		void derive_key_to_buffer(const std::string& kdf_key, const std::string& label, const std::string& context, unsigned int bit_length,
+			unsigned char* result_buffer);
 
 	private:
 		HMAC hmac;
+		std::string digest_buffer;
 };
 
 template <class HMAC>
 std::string KDF_SAE<HMAC>::derive_key(const std::string& kdf_key, const std::string& label, const std::string& context, unsigned int bit_length){
-	// byte_length = ceiling(bit_length / 8)
-	unsigned int byte_length = (bit_length + 7) / 8;
-	unsigned int digest_size = hmac.DigestSize();
-	// #interations = ceiling(bit_length / digest_bit_length)
-	unsigned int iterations = (bit_length + digest_size * sizeof(char) * 8 - 1) / (digest_size * sizeof(char) * 8);
 	std::string derived;
-	std::string digest;
-	digest.resize(digest_size);
+	unsigned int result_length = (bit_length + CHAR_BIT - 1) / CHAR_BIT;
+	derived.resize(result_length, 0);
+	derive_key_to_buffer(kdf_key, label, context, bit_length, (unsigned char*) &derived[0]);
+	return derived;
+}
+
+
+
+template <class HMAC>
+void KDF_SAE<HMAC>::derive_key_to_buffer(const std::string& kdf_key, const std::string& label, const std::string& context, unsigned int bit_length, unsigned char* result_buffer){
+	// result_length = ceiling(bit_length / sizeof char in bits)
+	unsigned int result_length = (bit_length + CHAR_BIT - 1) / CHAR_BIT;
+	unsigned int digest_size = hmac.DigestSize(); // in bytes
+	// #interations = ceiling(bit_length / digest_bit_length)
+	unsigned int iterations = (bit_length + digest_size * CHAR_BIT - 1) / (digest_size * CHAR_BIT);
 
 	hmac.SetKey((const unsigned char*) kdf_key.data(), kdf_key.size());
 
-	std::string message_suffix(label);
-	message_suffix.append(context, 0, context.size());
+	std::string message;
+	message.reserve(2 + label.size() + context.size() + 2);
+	message.append(2, 0);
+	message.append(label, 0, label.size());
+	message.append(context, 0, context.size());
 	// push bit_length as a Little-Endian 2-byte short 
-	message_suffix.push_back(bit_length % 256);
-	message_suffix.push_back((bit_length / 256) % 256);
+	message.push_back(bit_length % 256);
+	message.push_back((bit_length / 256) % 256);
 
-	unsigned int message_size = 2 + message_suffix.size();
+	unsigned int result_offset = 0;
 	for(unsigned int i = 1; i <= iterations; ++i){
 		// derived <- derived || HMAC(kdf_key, i || label || context || bit_length)
-		std::string message;
-		message.reserve(message_size);
-		// push bit_length as a Little-Endian 2-byte shor
-		message.push_back(i % 256);
-		message.push_back((i / 256) % 256);
-		message.append(message_suffix, 0, message_suffix.size());
+		// first 2 bits are bit_length as a Little-Endian 2-byte shor
+		message[0] = (i % 256);
+		message[1] = ((i / 256) % 256);
+		
+		unsigned char* digest_start = (unsigned char*) &digest_buffer[0];
+		hmac.CalculateDigest(digest_start, (const unsigned char*) message.data(), message.size());
 
-		hmac.CalculateDigest((unsigned char*) &digest[0], (const unsigned char*) message.data(), message.size());
+		unsigned int copy_length = ((result_length - result_offset) > digest_size) ? digest_size : (result_length - result_offset);
+		std::copy(digest_start, digest_start + copy_length, result_buffer + result_offset);
 
-		derived.append(digest, 0, digest_size);
+		result_offset += copy_length;
 	}
 	// return the only the first bit_length bits
 	// as specified in IEEE Std 802.11-2012 11.6.1.7.2
-	derived = derived.substr(0, byte_length);
-	if(bit_length % 8 != 0){
+	if(bit_length % CHAR_BIT != 0){
 		// the derived key is viewed as a Big-Endian,
-		// therefore, if the bit_length % 8 != 0
+		// therefore, if there are extra bits
 		//			then bitwise-right-shift the string by 8 - bit_length % 8 (with 0 extend)
+		unsigned int extra = bit_length % CHAR_BIT;
+		unsigned int shift = CHAR_BIT - extra;
 		unsigned char temp = 0;
 		unsigned char last_char = 0;
-		for(unsigned int i = 0; i < derived.size(); ++i){
-			temp = (unsigned char) derived[i];
-			last_char <<= (bit_length % 8);
-			derived[i] = (temp >> (8 - (bit_length % 8))) | last_char;
+		for(unsigned int i = 0; i < result_length; ++i){
+			temp = result_buffer[i];
+			last_char <<= extra;
+			result_buffer[i] = (temp >> shift) | last_char;
 			last_char = temp;
 		}
 	}
-	return derived;
 }
+
+
+
 
 #endif

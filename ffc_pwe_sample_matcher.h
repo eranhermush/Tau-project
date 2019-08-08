@@ -67,7 +67,6 @@ class FFC_PWE_Sample_Matcher: public PWE_Sample_Matcher<KDF, HMAC>{
 
 
 	protected:
-		NTL::ZZ p;
 		NTL::ZZ g;
 		NTL::ZZ q;
 		bool negligible = true;
@@ -88,8 +87,8 @@ class FFC_PWE_Sample_Matcher: public PWE_Sample_Matcher<KDF, HMAC>{
 template <class KDF ,class HMAC>
 FFC_PWE_Sample_Matcher<KDF, HMAC>::FFC_PWE_Sample_Matcher(const std::vector<pwe_sample>& samps, const KDF& kdf_obj,
 	const HMAC& hmac_obj, const NTL::ZZ& prime, const NTL::ZZ& subgroup_gen, const NTL::ZZ& subgroup_order, bool prob_negligible)
-	: PWE_Sample_Matcher<KDF ,HMAC>(samps, kdf_obj, hmac_obj), p(prime),
-	g(subgroup_gen), q(subgroup_order), negligible(prob_negligible){
+	: PWE_Sample_Matcher<KDF ,HMAC>(samps, kdf_obj, hmac_obj, prime), g(subgroup_gen),
+	q(subgroup_order), negligible(prob_negligible){
 
 		sort_samples();
 	}
@@ -107,7 +106,7 @@ FFC_PWE_Sample_Matcher<KDF, HMAC>::FFC_PWE_Sample_Matcher(const std::vector<std:
 	const std::vector<std::string>& target_macs, const std::vector<unsigned char>& counters, const std::vector<char>& results,
 	const KDF& kdf_obj,	const HMAC& hmac_obj, const NTL::ZZ& prime, const NTL::ZZ& subgroup_gen,
 	const NTL::ZZ& subgroup_order, bool prob_negligible)
-	: PWE_Sample_Matcher<KDF ,HMAC>(spoofed_macs, target_macs, counters, results, kdf_obj, hmac_obj), p(prime),
+	: PWE_Sample_Matcher<KDF ,HMAC>(spoofed_macs, target_macs, counters, results, kdf_obj, hmac_obj, prime),
 	g(subgroup_gen), q(subgroup_order), negligible(prob_negligible){
 
 		sort_samples();
@@ -124,7 +123,7 @@ FFC_PWE_Sample_Matcher<KDF, HMAC>::FFC_PWE_Sample_Matcher(const std::vector<std:
 
 template <class KDF ,class HMAC>
 FFC_PWE_Sample_Matcher<KDF, HMAC>::FFC_PWE_Sample_Matcher(const FFC_PWE_Sample_Matcher& ffc_matcher)
-	: PWE_Sample_Matcher<KDF ,HMAC>(ffc_matcher.samples, ffc_matcher.kdf, ffc_matcher.hmac), p(ffc_matcher.p),
+	: PWE_Sample_Matcher<KDF ,HMAC>(ffc_matcher.samples, ffc_matcher.kdf, ffc_matcher.hmac, ffc_matcher.p),
 	g(ffc_matcher.g), q(ffc_matcher.q), negligible(ffc_matcher.negligible) {}
 
 
@@ -151,10 +150,9 @@ void FFC_PWE_Sample_Matcher<KDF, HMAC>::sort_samples(){
 template <class KDF ,class HMAC>
 bool FFC_PWE_Sample_Matcher<KDF, HMAC>::simulate_test(const std::string& password, const pwe_sample& sample){
 
-	NTL::ZZ ffc_pwe = PWE_Sample_Matcher<KDF, HMAC>::derive_element(PWE_Sample_Matcher<KDF, HMAC>::kdf,
-												PWE_Sample_Matcher<KDF, HMAC>::hmac, p, password, sample);
+	NTL::ZZ ffc_pwe = PWE_Sample_Matcher<KDF, HMAC>::derive_element(password, sample);
 	bool result;
-	if(ffc_pwe >= p){
+	if(ffc_pwe >= PWE_Sample_Matcher<KDF, HMAC>::p){
 		result = false;
 	}
 	else{
@@ -165,7 +163,7 @@ bool FFC_PWE_Sample_Matcher<KDF, HMAC>::simulate_test(const std::string& passwor
 		}
 		else{
 			// check that the element is a q-th power
-			NTL::ZZ ffc_final_pwe = NTL::PowerMod(ffc_pwe, (p-1)/q, p);
+			NTL::ZZ ffc_final_pwe = NTL::PowerMod(ffc_pwe, (PWE_Sample_Matcher<KDF, HMAC>::p-1)/q, PWE_Sample_Matcher<KDF, HMAC>::p);
 			result = (ffc_final_pwe != 1);
 		}
 	}

@@ -58,7 +58,6 @@ class ECC_PWE_Sample_Matcher: public PWE_Sample_Matcher<KDF, HMAC>{
 
 
 	protected:
-		NTL::ZZ p;
 		NTL::ZZ a;
 		NTL::ZZ b;
 
@@ -72,7 +71,7 @@ class ECC_PWE_Sample_Matcher: public PWE_Sample_Matcher<KDF, HMAC>{
 template <class KDF ,class HMAC>
 ECC_PWE_Sample_Matcher<KDF, HMAC>::ECC_PWE_Sample_Matcher(const std::vector<pwe_sample>& samps, const KDF& kdf_obj,
 	const HMAC& hmac_obj, const NTL::ZZ& prime, const NTL::ZZ& a_coeff, const NTL::ZZ& b_coeff)
-	: PWE_Sample_Matcher<KDF, HMAC>(samps, kdf_obj, hmac_obj), p(prime), a(a_coeff), b(b_coeff) {} 
+	: PWE_Sample_Matcher<KDF, HMAC>(samps, kdf_obj, hmac_obj, prime), a(a_coeff), b(b_coeff) {} 
 
 
 template <class KDF ,class HMAC>
@@ -86,8 +85,8 @@ template <class KDF ,class HMAC>
 ECC_PWE_Sample_Matcher<KDF, HMAC>::ECC_PWE_Sample_Matcher(const std::vector<std::string>& spoofed_macs,
 	const std::vector<std::string>& target_macs, const std::vector<unsigned char>& counters, const std::vector<char>& results,
 	const KDF& kdf_obj,	const HMAC& hmac_obj, const NTL::ZZ& prime,  const NTL::ZZ& a_coeff, const NTL::ZZ& b_coeff)
-	: PWE_Sample_Matcher<KDF, HMAC>(spoofed_macs, target_macs, counters, results, kdf_obj, hmac_obj),
-	p(prime), a(a_coeff), b(b_coeff) {}
+	: PWE_Sample_Matcher<KDF, HMAC>(spoofed_macs, target_macs, counters, results, kdf_obj, hmac_obj, prime),
+	a(a_coeff), b(b_coeff) {}
 
 
 template <class KDF ,class HMAC>
@@ -100,8 +99,8 @@ ECC_PWE_Sample_Matcher<KDF, HMAC>::ECC_PWE_Sample_Matcher(const std::vector<std:
 
 template <class KDF ,class HMAC>
 ECC_PWE_Sample_Matcher<KDF, HMAC>::ECC_PWE_Sample_Matcher(const ECC_PWE_Sample_Matcher& ecc_matcher)
-	: PWE_Sample_Matcher<KDF, HMAC>(ecc_matcher.samples, ecc_matcher.kdf, ecc_matcher.hmac),
-	p(ecc_matcher.p), a(ecc_matcher.a), b(ecc_matcher.b) {}
+	: PWE_Sample_Matcher<KDF, HMAC>(ecc_matcher.samples, ecc_matcher.kdf, ecc_matcher.hmac, ecc_matcher.p),
+	a(ecc_matcher.a), b(ecc_matcher.b) {}
 
 /* */
 
@@ -110,21 +109,23 @@ std::unique_ptr<Preimage_Matcher> ECC_PWE_Sample_Matcher<KDF, HMAC>::clone() con
 	return std::unique_ptr<Preimage_Matcher>(new ECC_PWE_Sample_Matcher<KDF, HMAC>(*this));
 }
 
+/* ECC test */
 
 template <class KDF ,class HMAC>
 bool ECC_PWE_Sample_Matcher<KDF, HMAC>::simulate_test(const std::string& password, const pwe_sample& sample){
 
-	NTL::ZZ ecc_pwe = PWE_Sample_Matcher<KDF, HMAC>::derive_element(PWE_Sample_Matcher<KDF, HMAC>::kdf,
-												PWE_Sample_Matcher<KDF, HMAC>::hmac, p, password, sample);
+	NTL::ZZ ecc_pwe = PWE_Sample_Matcher<KDF, HMAC>::derive_element(password, sample);
 	bool result;
-	if(ecc_pwe >= p){
+	if(ecc_pwe >= PWE_Sample_Matcher<KDF, HMAC>::p){
 		result = false;
 	}
 	else{
 		// y_sqr_pwe = ecc_pwe^3 + a*ecc_pwe + b (mod p)
-		NTL::ZZ y_sqr_pwe = NTL::AddMod(NTL::PowerMod(ecc_pwe, 3, p), NTL::AddMod(NTL::MulMod(a, ecc_pwe, p), b, p), p);
+		NTL::ZZ y_sqr_pwe = NTL::AddMod(NTL::PowerMod(ecc_pwe, 3, PWE_Sample_Matcher<KDF, HMAC>::p),
+								NTL::AddMod(NTL::MulMod(a, ecc_pwe, PWE_Sample_Matcher<KDF, HMAC>::p),b, PWE_Sample_Matcher<KDF, HMAC>::p),
+								PWE_Sample_Matcher<KDF, HMAC>::p);
 		// result = (is y_sqr_pwe a QR?)
-		result = (NTL::Jacobi(y_sqr_pwe, p) == 1);
+		result = (NTL::Jacobi(y_sqr_pwe, PWE_Sample_Matcher<KDF, HMAC>::p) == 1);
 	}
 	// return whether the result mathces the sample result
 	return (result == (bool) sample.result);
