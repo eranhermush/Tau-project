@@ -101,12 +101,14 @@ bool client::set_job(int status, const std::string& passwords, int lines)
 bool client::work()
 {
 	bool retVal = false;
+	std::string msg = this->file_obj.get_scheme_msg();
 	std::string pass_str;
 	std::vector<std::unique_ptr<Password_Generator>> generators;
 	initialize_generators(generators);
 	std::vector<std::string> seek_all_results;
 
-	Nested_Password_Generator ngen(generators);
+	//Nested_Password_Generator ngen(generators);
+	Char_Pattern_Password_Generator ngen (msg.substr(0, this->parser.get_str_before_compress_size_at(0)), this->file_obj.get_start_index(), this->file_obj.get_end_index());
 	if(this->file_obj.get_password_function() == "id")
 	{
 		Hash_Matcher<Id_Hash> hm1(Id_Hash(), this->file_obj.get_passwords());
@@ -131,7 +133,7 @@ bool client::work()
 	}
 	if (! retVal)
 	{
-		std::cout << "error in set job " << std::endl;
+		std::cout << "error in set job 1" << std::endl;
 		return false;
 	}
 	return true;
@@ -191,7 +193,7 @@ std::string client::vector_passwords_to_sring_passwords(std::vector<std::string>
 
 void client::main()
 {
-	bool retVal = false;
+	bool retVal = false, finish = false;
 	start();
 	retVal = get_job(1, false);
 	if (! retVal)
@@ -199,10 +201,23 @@ void client::main()
 		std::cout << "error in getting the first job" << std::endl;
 		return;
 	}
-	retVal = work();
-	if (! retVal)
+	while (! finish)
 	{
-		std::cout << "error in working " << std::endl;
-		return;
+		retVal = work();
+		if (! retVal)
+		{
+			std::cout << "error in working " << std::endl;
+			return;
+		}
+		retVal = get_job(1, false);
+		if (! retVal)
+		{
+			std::cout << "error in getting the job" << std::endl;
+			return;
+		}	
+		if (this->file_obj.get_status() == 5)
+		{
+			finish = true;
+		}	
 	}
 }
