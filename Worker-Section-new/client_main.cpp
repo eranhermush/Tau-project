@@ -19,7 +19,6 @@ int main()
 	std::string a = "a";
 	client c(id, a,10000);
 	c.main();
-
     return 0;
 
 }
