@@ -1,6 +1,6 @@
 #include "client.h"
 
-client::client(int id, std::string& dir_path, int sleep)
+client::client(int id, std::string& dir_path, int sleep) // initialization list
 {
 	this->id = id;
 	this->dir_path = dir_path;
@@ -8,6 +8,7 @@ client::client(int id, std::string& dir_path, int sleep)
 }
 bool client::start()
 {
+	// Why don\t you use a DEFINE for 3, not readable
 	bool ret_val = false;
 	ret_val =  helpful_functions::write_data_to_file(this->dir_path, std::to_string(this->id), "3\n1\n" + std::to_string(this->id) ); // 3 indicates that we start a new worker
 	if (! ret_val)
@@ -265,6 +266,7 @@ void client::main()
 	bool retVal = false, finish = false;
 	std::string path =  this->dir_path + "/" + std::to_string(this->id) + ".txt";
 	start();
+	
 	retVal = get_job(1, false);
 	if (! retVal)
 	{

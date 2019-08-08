@@ -106,10 +106,14 @@ void file_manager::update_file_object_no_index(file_object& f)
 int file_manager::create_new_work(file_object& file_obj, int worker_id)
 {
     file_object file_obj_former;
+    if(this->current_index_of_work % 9000 < 100)
+    {
+        std::cout << "current index of work is " << current_index_of_work << " result is " <<this->sum_of_works <<  std::endl;
+    }
     //std::cout << this->current_index_of_work << " " << this->sum_of_works <<std::endl;
     if (this->current_index_of_work >= this->sum_of_works-1)
     {
-        std::cout << "here" << std::endl;
+        std::cout << "here this->current_index_of_work >= this->sum_of_works-1" << std::endl;
         return -1;
     }
     if (arr_didnt_do.empty())
@@ -157,19 +161,19 @@ int file_manager::write_work_to_file(file_object& file_obj)
         return false;
     }
 
-    if (file_obj.get_status() == 5)
-    {
-        myfile << file_obj.get_message_to_write_in_file();
-        myfile.flush();
-        myfile.close();
-        return 0;
-    }
+
     myfile << file_obj.get_message_to_write_in_file_without_status();
     myfile.flush();
     myfile.close();
     // write the data
-
-    retVal =  helpful_functions::change_status_of_file(path, 0);
+    if (file_obj.get_status() == 5)
+    {
+        retVal =  helpful_functions::change_status_of_file(path, 5);
+    }
+    else
+    {
+        retVal =  helpful_functions::change_status_of_file(path, 0);
+    }
     if (! retVal) {
         return -1;
     }
@@ -271,6 +275,10 @@ bool file_manager::finish_job()
     if (arr_didnt_do.size() >0 || arr_of_works.size() > 0)
     {
         return false;
+    }
+    if (this->current_index_of_work >= this->sum_of_works-1)
+    {
+        std::cout << "server finish its job" << std::endl;
     }
     return this->current_index_of_work >= this->sum_of_works-1;
 }
