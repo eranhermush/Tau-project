@@ -207,7 +207,11 @@ int helpful_functions::file_to_file_object(file_object& file_obj, std::string fi
 
         getline (myfile,line);
         file_obj.set_worker_id(std::stoi(line));
-        
+        if(status == 3)
+        {
+        	myfile.close();
+        	return 0;
+        }        
         if( status != 6)
         {
         	getline (myfile,line);

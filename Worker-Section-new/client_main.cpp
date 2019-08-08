@@ -13,8 +13,9 @@ int main()
 
 
 	int id;
-	std::cout << "Hello, please enter theid:" << std::endl;
+	std::cout << "Hello, please enter the id:" << std::endl;
 	std::cin >> id;
+
 	std::string a = "a";
 	client c(id, a);
 	c.main();

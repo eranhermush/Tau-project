@@ -9,15 +9,16 @@ client::client(int id, std::string& dir_path, int sleep)
 bool client::start()
 {
 	bool ret_val = false;
-
-	ret_val =  helpful_functions::write_data_to_file(this->dir_path, std::to_string(this->id), "3"); // 3 indicates that we start a new worker
+	ret_val =  helpful_functions::write_data_to_file(this->dir_path, std::to_string(this->id), "3\n1\n" + std::to_string(this->id) ); // 3 indicates that we start a new worker
 	if (! ret_val)
 	{
+		std::cout << "error in write_data_to_file in start" << std::endl;
 		return false;
 	}
 	ret_val = get_job(3, false);
 	if (! ret_val)
 	{
+		std::cout << "error in get_job in start" << std::endl;
 		return false;
 	}
 	return true;
@@ -31,12 +32,12 @@ bool client::get_job(int status_start, bool to_write)
 	int retVal = 0;
 	std::string path =  this->dir_path + "/" + std::to_string(this->id) + ".txt";
 
-
 	if(to_write)
 	{
-		ret_val =  helpful_functions::write_data_to_file(this->dir_path, std::to_string(this->id), std::to_string(status_start)); 
+		ret_val =  helpful_functions::change_status_of_file(path , status_start); 
 		if (! ret_val)
 		{
+			std::cout << "error in write_data_to_file in get_job" << std::endl;
 			return false;
 		}		
 	}
@@ -51,6 +52,7 @@ bool client::get_job(int status_start, bool to_write)
 		usleep(this->microseconds_sleep);
 		retVal = helpful_functions::file_to_file_object(fileob, path, true);
 		if (retVal == -1){
+			std::cout << "error in file_to_file_object in get_job" << std::endl;
             return false;
         }
         // we need status 
@@ -78,9 +80,10 @@ bool client::set_job(int status, const std::string& passwords, int lines)
 	if(status == 6 && lines != 0)
 	{
 		data = std::to_string(status) + "\n" + std::to_string(this->file_obj.get_id()) + "\n" + std::to_string(this->id) + "\n" + std::to_string(lines) + "\n" + passwords;		
-		ret_val =  helpful_functions::write_data_to_file(this->dir_path, std::to_string(this->id), "3"); // 3 indicates that we start a new worker
+		ret_val =  helpful_functions::write_data_to_file(this->dir_path, std::to_string(this->id), data); 
 		if (! ret_val)
 		{
+			std::cout << "error in write_data_to_file in set_job" << std::endl;
 			return false;
 		}
 		return true;
@@ -90,6 +93,7 @@ bool client::set_job(int status, const std::string& passwords, int lines)
 		ret_val = helpful_functions::change_status_of_file(path, status);
 		if (! ret_val)
 		{
+			std::cout << "error in change_status_of_file in set_job" << std::endl;
 			return false;
 		}
 		return true;
@@ -119,6 +123,7 @@ bool client::work()
 	}
 	else
 	{
+		std::cout << "error in id name in work" << std::endl;
 		return false;
 	}
 

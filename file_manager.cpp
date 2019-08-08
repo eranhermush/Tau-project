@@ -133,6 +133,7 @@ int file_manager::write_work_to_file(file_object& file_obj)
     bool retVal = false;
     // write the data without the status (write status 2)
     int worker_id = file_obj.get_worker_id();
+
     std::string path =  dir_path + "/" + std::to_string(worker_id) + ".txt";
     //std::string path = std::to_string(worker_id) + ".txt";
     myfile.open(path,std::fstream::in | std::fstream::out | std::fstream::trunc);
@@ -297,10 +298,13 @@ void file_manager::go_over_files( bool print_error)
             if(obj.get_status() == 3 ||  obj.get_status() == 2 || obj.get_status() == 6)
             {
                 new_obj.intialize();
+                new_obj.set_worker_id(obj.get_worker_id());
                 retVal = create_new_work(new_obj, file_name_int);
                 if(retVal == -1){
                     new_obj.intialize_to_error();
                 }
+                    std::cout << new_obj.to_string() <<std::endl;
+
                 retVal = write_work_to_file(new_obj);
                 if(retVal == -1)
                 {
