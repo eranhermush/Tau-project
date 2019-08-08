@@ -196,6 +196,7 @@ int helpful_functions::file_to_file_object(file_object& file_obj, std::string fi
         std::string result = std::to_string(this->id) + '\n' + std::to_string(this->worker_id) + '\n' + this->scheme_msg+ '\n' + this->password_function + 
         '\n' + std::to_string(this->start_index) + '\n' + std::to_string(this->end_index)+ '\n' + this->files_for_scheme + '\n' + this->passwords;
     */
+
     if (myfile.is_open())
     {
         getline (myfile,line);
@@ -211,7 +212,9 @@ int helpful_functions::file_to_file_object(file_object& file_obj, std::string fi
         {
         	myfile.close();
         	return 0;
-        }        
+        } 
+
+        //std::cout << "status = " << status << " " << file_obj.get_worker_id() << " " << file_obj.get_id() << std::endl;       
         if( status != 6)
         {
         	getline (myfile,line);
@@ -238,6 +241,8 @@ int helpful_functions::file_to_file_object(file_object& file_obj, std::string fi
 	    else
 	    {
 	    	getline (myfile,line);
+	    	//std::cout << "line = " << line << std::endl;       
+
 	    	len = std::stoi(line);
 	    	for (int i = 0; i < len; ++i)
 	    	{

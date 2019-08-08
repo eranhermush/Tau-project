@@ -71,6 +71,33 @@ int index_vector_convertor::size_of_object_in_scheme(int index)
     return get_number_of_lines_in_file(strs[file_index]);
 }
 
+
+
+int index_vector_convertor::size_of_object_in_scheme_org(int index)
+{
+    if(index < 0 || index >= this->parser.get_str_original().length() ){
+        throw std::invalid_argument("unexpected index");
+    }
+    if(this->parser.get_str_original().at(index) != file_char){
+        return this->parser.get_matrix()[index].size();
+    }
+    int file_index = 0;
+    for (int i = 0; i <= index; ++i)
+    {
+        if (this->parser.get_str_compress().at(i) == this->file_char)
+        {
+            file_index++;
+        }
+    }
+    // we start to count from 0, and file_index counts how many files were(the len)
+    file_index--;
+    std::vector<std::string> strs;
+    helpful_functions::split(this->fileobj.get_files_for_scheme(), strs, '#');
+    return get_number_of_lines_in_file(strs[file_index]);
+}
+
+
+
 int index_vector_convertor::get_number_of_lines_in_file(std::string filename)
 {
     int number_of_lines = 0;

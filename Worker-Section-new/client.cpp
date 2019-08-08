@@ -64,7 +64,7 @@ bool client::get_job(int status_start, bool to_write)
         // there are no more works, or gets a work
 	    if (fileob.get_status() == 5 || fileob.get_status() == 0) 
 	    {
-	    	std::cout << "find a job" << std::endl;
+	    	//std::cout << "find a job" << std::endl;
 	    	this->file_obj = fileob;
 	    	finish = true;
 	        return true;
@@ -84,13 +84,28 @@ bool client::set_job(int status, const std::string& passwords, int lines)
 	std::string data = "";
 	if(status == 6 && lines != 0)
 	{
-		data = std::to_string(status) + "\n" + std::to_string(this->file_obj.get_id()) + "\n" + std::to_string(this->id) + "\n" + std::to_string(lines) + "\n" + passwords;		
+		ret_val = helpful_functions::change_status_of_file(path, 7);
+		if (! ret_val)
+		{
+			std::cout << "error in change_status_of_file1 in set_job" << std::endl;
+			return false;
+		}
+		data = std::to_string(7) + "\n" + std::to_string(this->file_obj.get_id()) + "\n" + std::to_string(this->id) + "\n" + std::to_string(lines) + "\n" + passwords;		
 		ret_val =  helpful_functions::write_data_to_file(this->dir_path, std::to_string(this->id), data); 
+		//std::cout << data << std::endl;
 		if (! ret_val)
 		{
 			std::cout << "error in write_data_to_file in set_job" << std::endl;
 			return false;
 		}
+		
+		ret_val = helpful_functions::change_status_of_file(path, 6);
+		if (! ret_val)
+		{
+			std::cout << "error in change_status_of_file1 in set_job" << std::endl;
+			return false;
+		}
+		
 		return true;
 	}
 	if(status != 6)
@@ -118,7 +133,6 @@ bool client::work()
 	std::vector<std::unique_ptr<Password_Generator>> generators;
 	initialize_generators(generators);
 	std::vector<std::string> seek_all_results;
-	std::cout << "in work 0 " << std::endl;
 	//Nested_Password_Generator ngen(generators);
 	Char_Pattern_Password_Generator ngen (msg, this->file_obj.get_start_index(), this->file_obj.get_end_index());
 	if(this->file_obj.get_password_function() == "id")
@@ -218,8 +232,6 @@ void client::main()
 	while (! finish)
 	{
 		retVal = work();
-		std::cout << "finish working " << std::endl;
-
 		if (! retVal)
 		{
 			std::cout << "error in working " << std::endl;

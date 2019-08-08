@@ -41,7 +41,7 @@ public:
     *    This function returns how many lines are in a file
     */
     int get_number_of_lines_in_file(std::string filename);
-
+    int size_of_object_in_scheme_org(int index);
 };
 
 

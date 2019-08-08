@@ -59,11 +59,12 @@ void file_manager::save_sum_of_works()
         return;
     }
     int result = 1;
-    for (int i = 0; i<this->compress_scheme_string.length();i++)
+    for (int i = 0; i< this->our_parser.get_str_original().length();i++)
     {
-        result *= index_vec_con.size_of_object_in_scheme(i);
+        result *= index_vec_con.size_of_object_in_scheme_org(i);
     }
     this->sum_of_works = result;
+    std::cout << "Result = " << result << std::endl;
 }
 
 void file_manager::set_work_size(int size)
@@ -185,7 +186,7 @@ bool file_manager::check_validate_of_file(std::string file_name, std::string ful
     catch ( ...)
     {
 
-        if (file_obj.get_status() == 3 || file_obj.get_status() == 5)
+        if (file_obj.get_status() == 3 || file_obj.get_status() == 5 || file_obj.get_status() == 7)
         {
             return true;
         }

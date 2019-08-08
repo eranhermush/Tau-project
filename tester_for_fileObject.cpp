@@ -5,6 +5,7 @@
 #include <bits/stdc++.h>
 #include "parser_main.h"
 #include <string>
+#include <unistd.h>
 
 #include "worker_manager.h"
 #include "file_manager.h"
@@ -195,6 +196,7 @@ int main()
 			bool finish_loop = false;
 			while (! finish_loop)
 			{
+				usleep(1000);
 				manager.go_over_files(to_print);
 				finish_loop = manager.finish_job();
 			}
