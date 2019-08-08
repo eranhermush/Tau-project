@@ -171,6 +171,7 @@ bool helpful_functions::write_data_to_file(std::string& dir, std::string filenam
     std::string path =  dir + "/" + filename + ".txt";
     //std::string path = std::to_string(worker_id) + ".txt";
     myfile.open(path, std::fstream::out | std::fstream::trunc);
+    
     if (! (myfile.is_open()))
     {
         std::cout << "Error opening file in write_work_to_file" << std::endl;

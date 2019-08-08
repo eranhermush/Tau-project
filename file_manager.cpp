@@ -100,12 +100,13 @@ void file_manager::update_file_object_no_index(file_object& f)
     f.set_password_function(this->password_function);
     f.set_files_for_scheme(get_files_in_string());
     f.set_arguments(this->hash_args);
+    //std::cout << f.to_string() <<std::endl<<"f: " << this->password_function<<std::endl;
 }
 
 int file_manager::create_new_work(file_object& file_obj, int worker_id)
 {
     file_object file_obj_former;
-    std::cout << this->current_index_of_work << " " << this->sum_of_works <<std::endl;
+    //std::cout << this->current_index_of_work << " " << this->sum_of_works <<std::endl;
     if (this->current_index_of_work >= this->sum_of_works-1)
     {
         std::cout << "here" << std::endl;
@@ -131,20 +132,31 @@ int file_manager::create_new_work(file_object& file_obj, int worker_id)
 
 int file_manager::write_work_to_file(file_object& file_obj)
 {
-    std::ofstream myfile;
-    FILE *fp;
+
     bool retVal = false;
     // write the data without the status (write status 2)
     int worker_id = file_obj.get_worker_id();
 
     std::string path =  dir_path + "/" + std::to_string(worker_id) + ".txt";
+    retVal =  helpful_functions::change_status_of_file(path, 1);
+    if (! retVal) {
+        return -1;
+    }
+
+    std::ofstream myfile;
+    // write the data without the status (write status 2)
     //std::string path = std::to_string(worker_id) + ".txt";
-    myfile.open(path,std::fstream::in | std::fstream::out | std::fstream::trunc);
+
+    truncate(path.c_str(),2);
+
+    myfile.open(path, std::fstream::out | std::fstream::app);
+    
     if (! (myfile.is_open()))
     {
         std::cout << "Error opening file in write_work_to_file" << std::endl;
-        return -1;
+        return false;
     }
+
     if (file_obj.get_status() == 5)
     {
         myfile << file_obj.get_message_to_write_in_file();
@@ -152,7 +164,6 @@ int file_manager::write_work_to_file(file_object& file_obj)
         myfile.close();
         return 0;
     }
-    myfile << "1\n";
     myfile << file_obj.get_message_to_write_in_file_without_status();
     myfile.flush();
     myfile.close();
@@ -326,7 +337,7 @@ void file_manager::go_over_files( bool print_error)
                 passwords_founds = obj.get_passwords_found_vector();
                 std::cout << "worker " << std::to_string(obj.get_worker_id()) << " found passwords!!!!!" << std::endl;
                 helpful_functions::printcoll(passwords_founds);
-                password_function.clear();
+                //password_function.clear();
             }
             // if we finish a job, we remove it from the array
             if(obj.get_status() == 4 ||  obj.get_status() == 2 || obj.get_status() == 6)

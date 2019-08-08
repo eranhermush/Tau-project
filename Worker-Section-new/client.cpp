@@ -52,8 +52,22 @@ bool client::get_job(int status_start, bool to_write)
 	while (! finish)
 	{
 		usleep(this->microseconds_sleep);
-		retVal = helpful_functions::file_to_file_object(fileob, path, true);
+		//std::cout << "1| " <<std::endl;
+		try
+		{
+			retVal = helpful_functions::file_to_file_object(fileob, path, true);
+		}
 		
+		catch ( std::exception& e)
+    	{
+    		if(fileob.get_status() != 1)
+    		{
+	            std::cout << "An exception occurred on open file in validate. Exception Nr. "  << e.what() << " " << file_obj.get_status() << '\n';
+	            std::cout << fileob.to_string() << std::endl;
+		        return false;
+		    }
+    	}
+		//std::cout << "2| " <<std::endl;
 
 		if (retVal == -1){
 			std::cout << "error in file_to_file_object in get_job" << std::endl;
@@ -78,7 +92,6 @@ bool client::get_job(int status_start, bool to_write)
 static bool write_data_to_file2(std::string& dir, std::string filename, const std::string& data_to_file)
 {
     std::ofstream myfile;
-    FILE *fp;
     // write the data without the status (write status 2)
     std::string path =  dir + "/" + filename + ".txt";
     //std::string path = std::to_string(worker_id) + ".txt";
@@ -152,7 +165,6 @@ bool client::set_job(int status, const std::string& passwords, int lines)
 bool client::work()
 {
 	bool retVal = false;
-
 	std::string msg = this->file_obj.get_scheme_msg();
 	std::string pass_str;
 	std::vector<std::unique_ptr<Password_Generator>> generators;
@@ -165,7 +177,12 @@ bool client::work()
 		Hash_Matcher<Id_Hash> hm1(Id_Hash(), this->file_obj.get_passwords());
 		Preimage_Seeker seeker_for_passwords(ngen, hm1);
 		seek_all_results = seeker_for_passwords.seek_all();
-		helpful_functions::printcoll(seek_all_results);
+		if(seek_all_results.size() != 0)
+		{
+			std::cout << "here" <<file_obj.get_start_index() << std::endl;
+			helpful_functions::printcoll(seek_all_results);
+		}
+		
 
 	}
 	else

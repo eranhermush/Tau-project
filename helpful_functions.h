@@ -12,7 +12,6 @@
 #include <algorithm>
 #include <fstream>
 
-#include <unistd.h>
 
 #include "file_object.h"
 

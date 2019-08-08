@@ -27,7 +27,7 @@
                                     6: a worker message - I found passwords!!!!!
                                              at this mode the file will be differnet: status, id, worker_id, how many passwords I found (int), all the passwords(a password in a line) :)  
                                     7: I write now to the file, ignore it 
-                                    
+                                     
     scheme_msg:                 The scheme string, like "ccCd"
     start_index and end index:  Represents the indexes of the password to go over them, in the original ordering
     files_for_scheme:           If the scheme includes files, the file names will be here (or db identify), in order 
