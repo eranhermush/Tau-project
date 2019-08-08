@@ -196,7 +196,7 @@ int main()
 			bool finish_loop = false;
 			while (! finish_loop)
 			{
-				usleep(1000);
+				usleep(100);
 				manager.go_over_files(to_print);
 				finish_loop = manager.finish_job();
 			}

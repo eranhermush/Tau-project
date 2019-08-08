@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <fstream>
 #include <stdio.h>
+#include <exception>
 #include "file_object.h"
 #include "helpful_functions.h"
 #include "parser_main.h"

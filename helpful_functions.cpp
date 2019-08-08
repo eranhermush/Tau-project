@@ -170,7 +170,7 @@ bool helpful_functions::write_data_to_file(std::string& dir, std::string filenam
     // write the data without the status (write status 2)
     std::string path =  dir + "/" + filename + ".txt";
     //std::string path = std::to_string(worker_id) + ".txt";
-    myfile.open(path,std::fstream::in | std::fstream::out | std::fstream::trunc);
+    myfile.open(path, std::fstream::out | std::fstream::trunc);
     if (! (myfile.is_open()))
     {
         std::cout << "Error opening file in write_work_to_file" << std::endl;
@@ -200,7 +200,9 @@ int helpful_functions::file_to_file_object(file_object& file_obj, std::string fi
     if (myfile.is_open())
     {
         getline (myfile,line);
+        //std::cout << "before " << line << std::endl;
         status = std::stoi(line);
+        //std::cout << "after " << line << std::endl;
         file_obj.set_status(status);
 
         getline (myfile,line);

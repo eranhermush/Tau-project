@@ -75,6 +75,30 @@ bool client::get_job(int status_start, bool to_write)
 
 }
 
+static bool write_data_to_file2(std::string& dir, std::string filename, const std::string& data_to_file)
+{
+    std::ofstream myfile;
+    FILE *fp;
+    // write the data without the status (write status 2)
+    std::string path =  dir + "/" + filename + ".txt";
+    //std::string path = std::to_string(worker_id) + ".txt";
+
+ 	truncate(path.c_str(),2);
+
+    myfile.open(path, std::fstream::out | std::fstream::app);
+    
+    if (! (myfile.is_open()))
+    {
+        std::cout << "Error opening file in write_work_to_file" << std::endl;
+        return false;
+    }
+    myfile << data_to_file;
+    myfile.flush();
+    myfile.close();
+
+    return true;
+}
+
 bool client::set_job(int status, const std::string& passwords, int lines)
 {
 	std::string file_data;
@@ -90,8 +114,9 @@ bool client::set_job(int status, const std::string& passwords, int lines)
 			std::cout << "error in change_status_of_file1 in set_job" << std::endl;
 			return false;
 		}
-		data = std::to_string(7) + "\n" + std::to_string(this->file_obj.get_id()) + "\n" + std::to_string(this->id) + "\n" + std::to_string(lines) + "\n" + passwords;		
-		ret_val =  helpful_functions::write_data_to_file(this->dir_path, std::to_string(this->id), data); 
+		data = std::to_string(this->file_obj.get_id()) + "\n" + std::to_string(this->id) + "\n" + std::to_string(lines) + "\n" + passwords;	
+ 		
+		ret_val =  write_data_to_file2(this->dir_path, std::to_string(this->id), data); 
 		//std::cout << data << std::endl;
 		if (! ret_val)
 		{

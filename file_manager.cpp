@@ -172,10 +172,27 @@ bool file_manager::check_validate_of_file(std::string file_name, std::string ful
     int retVal = 0;
     bool find = false;
     int file_name_int = 0;
+
+
+
     try
     {
         // we also validate here that the filen-name consist of integers, we make substr to avoid the ".txt"
         file_name_int = std::stoi(file_name.substr(0, file_name.length() -4)); 
+    }
+    catch ( std::exception& e)
+    {
+
+        if (print_error)
+        {
+            std::cout << "An exception with stoi of file names "  << e.what()  << '\n';
+        }
+        return false;
+    }
+
+
+    try
+    {
 
         retVal = helpful_functions::file_to_file_object(file_obj, full_file_name, print_error);
         if (retVal == -1){
@@ -183,16 +200,17 @@ bool file_manager::check_validate_of_file(std::string file_name, std::string ful
             return false;
         }
     }
-    catch ( ...)
+    catch ( std::exception& e)
     {
 
-        if (file_obj.get_status() == 3 || file_obj.get_status() == 5 || file_obj.get_status() == 7)
+        if (file_obj.get_status() == 3 || file_obj.get_status() == 5 || file_obj.get_status() == 7 || file_obj.get_status() == 0)
         {
             return true;
         }
         if (print_error)
         {
-            std::cout << "An exception occurred on open file in validate. Exception Nr. "   <<'\n';
+            std::cout << "An exception occurred on open file in validate. Exception Nr. "  << e.what() << " " << file_obj.get_status() << '\n';
+            std::cout << file_obj.to_string() << std::endl;
         }
         return false;
     }
@@ -283,6 +301,7 @@ void file_manager::go_over_files( bool print_error)
             // removes the files
             std::cout << "remove a file, val not true " << std::endl;
             if( remove(file_name.c_str()) != 0 )
+            //if( false )
             {
                 if (print_error){
                     perror( "Error deleting file" );
