@@ -45,14 +45,16 @@ class PWE_Sample_Matcher: public Preimage_Matcher{
 
 		/* Constructor 
 			Uses a samples vector */
-		PWE_Sample_Matcher(const std::vector<pwe_sample>& samps, const KDF& kdf_obj, const HMAC& hmac_obj);
+		PWE_Sample_Matcher(const std::vector<pwe_sample>& samps, const KDF& kdf_obj, const HMAC& hmac_obj, const NTL::ZZ& prime);
 
 		/* Constructor 
 			Uses a samples parameters */
 		PWE_Sample_Matcher(const std::vector<std::string>& spoofed_macs, const std::vector<std::string>& target_macs,
-			const std::vector<unsigned char>& counters, const std::vector<char>& results, const KDF& kdf_obj, const HMAC& hmac_obj);
+			const std::vector<unsigned char>& counters, const std::vector<char>& results, const KDF& kdf_obj, const HMAC& hmac_obj, const NTL::ZZ& prime);
 
-		static NTL::ZZ derive_element(KDF& kdf_obj, HMAC& hmac_obj, const NTL::ZZ& prime, const std::string& password, const pwe_sample& sample);
+		/* Derives a number from password and the parameters in sample
+		 	according to the algoriths in IEEE Std 802.11-2012 11.3.4 */
+		NTL::ZZ derive_element(const std::string& password, const pwe_sample& sample);
 
 		/* tests a password with a single sample */
 		virtual bool simulate_test(const std::string& password, const pwe_sample& sample) =0;
@@ -66,26 +68,38 @@ class PWE_Sample_Matcher: public Preimage_Matcher{
 		std::vector<pwe_sample> samples;
 		KDF kdf;
 		HMAC hmac;
+		NTL::ZZ p;
+		std::string p_bytes; // in Big-Endian
+		std::string kdf_buffer;
+		std::string kdf_key_buffer;
 };
 
 template <class KDF ,class HMAC>
 const std::string PWE_Sample_Matcher<KDF ,HMAC>::SAE_label = "SAE Hunting and Pecking";
 
 template <class KDF ,class HMAC>
-PWE_Sample_Matcher<KDF ,HMAC>::PWE_Sample_Matcher(const std::vector<pwe_sample>& samps, const KDF& kdf_obj, const HMAC& hmac_obj)
-	: samples(samps), kdf(kdf_obj), hmac(hmac_obj) {}
+PWE_Sample_Matcher<KDF ,HMAC>::PWE_Sample_Matcher(const std::vector<pwe_sample>& samps, const KDF& kdf_obj, const HMAC& hmac_obj, const NTL::ZZ& prime)
+	: samples(samps), kdf(kdf_obj), hmac(hmac_obj), p(prime){
+		// save the prime's Big-Endian representation
+		p_bytes.resize(NTL::NumBytes(p));
+		NTL::BytesFromZZ((unsigned char*) &p_bytes[0], p, NTL::NumBytes(p));
+		// NTL encodes as Little-Endian, but the algorithm encodes the prime as Big-Endian
+		std::reverse(p_bytes.begin(), p_bytes.end());
+		// reserve buffers for HMAC and KDF
+		kdf_key_buffer.resize(hmac.DigestSize());
+		kdf_buffer.resize(NTL::NumBytes(p));
+
+	}
 
 
 template <class KDF ,class HMAC>
 PWE_Sample_Matcher<KDF ,HMAC>::PWE_Sample_Matcher(const std::vector<std::string>& spoofed_macs, const std::vector<std::string>& target_macs,
-	const std::vector<unsigned char>& counters, const std::vector<char>& results, const KDF& kdf_obj, const HMAC& hmac_obj)
-	: samples(pwe_sample::create_sample_vector(spoofed_macs, target_macs, counters, results)), kdf(kdf_obj), hmac(hmac_obj) {}
+	const std::vector<unsigned char>& counters, const std::vector<char>& results, const KDF& kdf_obj, const HMAC& hmac_obj, const NTL::ZZ& prime)
+	: PWE_Sample_Matcher<KDF ,HMAC>::PWE_Sample_Matcher(pwe_sample::create_sample_vector(spoofed_macs, target_macs, counters, results), kdf_obj, hmac_obj, prime) {}
 
 
 template <class KDF ,class HMAC>
-NTL::ZZ PWE_Sample_Matcher<KDF ,HMAC>::derive_element(KDF& kdf_obj, HMAC& hmac_obj, const NTL::ZZ& prime,
-	const std::string& password, const pwe_sample& sample){
-
+NTL::ZZ PWE_Sample_Matcher<KDF ,HMAC>::derive_element(const std::string& password, const pwe_sample& sample){
 	// calculate HMAC key from MAC address [max||min]
 	unsigned char hmac_key[12];
 	if(std::lexicographical_compare(sample.mac1, sample.mac1 + 6, sample.mac2, sample.mac2 + 6)){
@@ -97,29 +111,21 @@ NTL::ZZ PWE_Sample_Matcher<KDF ,HMAC>::derive_element(KDF& kdf_obj, HMAC& hmac_o
 		std::copy(sample.mac1, sample.mac1 + 6, hmac_key);
 		std::copy(sample.mac2, sample.mac2 + 6, hmac_key + 6);
 	}
-	hmac_obj.SetKey(hmac_key, sizeof(hmac_key));
+	hmac.SetKey(hmac_key, sizeof(hmac_key));
 
 	// Calculate KDF key by HMAC-ing the password and counter [HMAC(hmac_key, password||counter)]
 	std::string hmac_message(password);
 	hmac_message.push_back(sample.counter);
-	std::string kdf_key;
-	kdf_key.resize(hmac_obj.DigestSize());
-	hmac_obj.CalculateDigest((unsigned char*) &kdf_key[0], (const unsigned char*) hmac_message.data(), hmac_message.size());
+	hmac.CalculateDigest((unsigned char*) &kdf_key_buffer[0], (const unsigned char*) hmac_message.data(), hmac_message.size());
 
-	// Derive bytes-key from the kdf_key, the label and the prime [KDF(kdf_key, label, BigEndianBytes(prime), BitLength(prime))]
-	unsigned int bits = (unsigned int) NTL::NumBits(prime); // for all normal uses, bits should be a multiple of 8
-	unsigned int bytes = (unsigned int) NTL::NumBytes(prime);
-	std::string prime_bytes;
-	prime_bytes.resize(bytes);
-	NTL::BytesFromZZ((unsigned char*) &prime_bytes[0], prime, bytes);
-	// NTL encodes as Little-Endian, but the algorithm encodes the prime as Big-Endian
-	std::reverse(prime_bytes.begin(), prime_bytes.end());
-	std::string derived(kdf_obj.derive_key(kdf_key, PWE_Sample_Matcher<KDF ,HMAC>::SAE_label, prime_bytes, bits));
+	// Derive the final key from the kdf_key, the label and the prime [KDF(kdf_key, label, BigEndianBytes(p), BitLength(p))]
+	unsigned int bits = (unsigned int) NTL::NumBits(p);
+	kdf.derive_key_to_buffer(kdf_key_buffer, PWE_Sample_Matcher<KDF ,HMAC>::SAE_label, p_bytes, bits, (unsigned char*) &kdf_buffer[0]);
 
-	// Derive a big integer from the bytes-key [BigEndianNumber(derived)]
+	// Derive a big integer from the bytes-key [BigEndianNumber(kdf_buffer)]
 	// NTL decodes bytes as Little-Endian, but the algorithm decodes the derived bytes as Big-Endian
-	std::reverse(derived.begin(), derived.end());
-	return NTL::ZZFromBytes((const unsigned char*) derived.data(), derived.size());
+	std::reverse(kdf_buffer.begin(), kdf_buffer.end());
+	return NTL::ZZFromBytes((const unsigned char*) kdf_buffer.data(), kdf_buffer.size());
 
 }
 
