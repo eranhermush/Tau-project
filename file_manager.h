@@ -8,8 +8,11 @@
 #include <algorithm>
 #include <fstream>
 #include <stdio.h>
+#include <exception>
 #include "file_object.h"
 #include "helpful_functions.h"
+#include "parser_main.h"
+#include "index_vector_convertor.h"
 /*
  * This class is a server class, it reads here the files and updates them
  */
@@ -18,16 +21,18 @@ class file_manager{
 
     std::vector<file_object> arr_of_works;
     std::vector<file_object> arr_didnt_do;
-    std::vector< std::vector<std::string> > matrix_all_options;
+    //std::vector< std::vector<std::string> > matrix_all_options;
     std::vector<std::string> file_names;
-    std::string scheme_string, passwords, password_function, hash_args;
+    std::string compress_scheme_string, passwords, password_function, hash_args;
     char file_char; // char of a file in the string scheme
     int curr_id;
     int sum_of_works;
     int current_index_of_work, work_size;
     std::string dir_path;
+    parser_main our_parser;
 
-
+    index_vector_convertor index_vec_con;
+    file_object fileobj;
 
 
 public:
@@ -45,7 +50,7 @@ public:
 	 * @param matrix_all_options- the matrix from the parser with all the options
      * @param file_names        - the names of our files (with repetitions) that we use in the scheme
 	 */
-    file_manager(std::string path, std::vector< std::vector<std::string> > &matrix_all_options, std::vector<std::string> &file_names, std::string &scheme_string, std::string &passwords, std::string &password_function, std::string &hash_args);
+    file_manager(const std::string& path, parser_main &parser, std::vector<std::string> &file_names, std::string &passwords, std::string &password_function, std::string &hash_args);
     /*
         This function validates that the input is valid:
             The size of the string == the size of the matrix
@@ -68,32 +73,9 @@ public:
     //bool check_file_need_to_update();
 
     /*
-    **********************************************************
-    **********************************************************
-    ***************   This is the index Section **************
-    **********************************************************
-    **********************************************************
+    * This function checks if we have more jobs and more things to do
     */
-
-
-    /*
-    * This function gets a general index, and splits it to a vector of indexes, index to every category in the scheme.
-    */
-    std::vector<int> index_to_vector_indexes(int index);
-    /*
-    * This function gets a vector of indexes, index to every category in the scheme and returns a general index that represents them.
-    */
-    int vector_indexes_to_index(std::vector<int> &vec);
-    /*
-    * This function gets an index in the scheme and returns the size of the object that this letter represents. e.g. the size of the file.
-    */
-    int size_of_object_in_scheme(int index);
-
-    /*
-    *    This function returns how many lines are in a file
-    */
-    int get_number_of_lines_in_file(std::string filename);
-
+    bool finish_job();
 
     /*
     **********************************************************
@@ -108,6 +90,8 @@ public:
     */
     int get_id_to_file();
 
+    void update_file_object_no_index(file_object& f);
+
     /*
     * This function creates a new work, and puts it in the file object that it gets.
     * it also adds the work to the arr of the class
@@ -121,14 +105,6 @@ public:
     *  ****** This file changes the array of the working files ***********
     */
     int write_work_to_file(file_object& file_obj);
-
-    /*
-    * This function gets a file name, and transforms it to file_obj instance
-    * returns -1 if there was an error
-    * Warning: This function doesnt change the arrays of this class
-    * we assume that the file is valid -> was written by "write_work_to_file"
-    */
-    int file_to_file_object(file_object& file_obj, std::string filename, bool print_error);
 
     /*
     * This function goes over all the files in the directory. For each file it does:

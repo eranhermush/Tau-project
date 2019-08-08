@@ -10,6 +10,10 @@
 #include <sstream>
 #include <iterator>
 #include <algorithm>
+#include <fstream>
+
+
+#include "file_object.h"
 
 class helpful_functions
 {
@@ -31,16 +35,28 @@ class helpful_functions
 		    typename T::const_iterator pos;  // iterator to iterate over coll
 		    typename T::const_iterator end(coll.end());  // end position
 
-		    for (pos=coll.begin(); pos!=end; ++pos) {
+		    for (pos=coll.begin(); pos!=end; ++pos) {	
 		        std::cout << *pos << ' ';
 		    }
 		    std::cout << std::endl;
 		}
 
-
-
-
-
+	    // split string 
+	    // credit: https://stackoverflow.com/questions/5888022/split-string-by-single-spaces
+	    static size_t split(const std::string &txt, std::vector<std::string> &strs, char ch);
+		/*
+		* This function takse a scheme string and an index of file instance ('f') and returns the index of this instance in the files
+		* for example, if the string is "ccfcfcfcf", and the index if 4 (str[4] = 'f') the function will return 1 (since this is the second 'f')
+		* we assume that the input is valid
+		*/
+		static int index_of_file_object_to_fileindex(std::string& str, int index);
+	    /*
+	    * This function gets a file name, and transforms it to file_obj instance
+	    * returns -1 if there was an error
+	    * Warning: This function doesnt change the arrays of this class
+	    * we assume that the file is valid -> was written by "write_work_to_file"
+	    */
+	    static int file_to_file_object(file_object& file_obj, std::string filename, bool print_error);
 
 
 	    /*
@@ -76,5 +92,12 @@ class helpful_functions
 	    */
 	    static bool get_next_int(std::string &str, int start_index, int size, int& result);
 
+	    static bool write_data_to_file(std::string& dir, std::string filename, const std::string& data_to_file);
+	    /*
+	    * This function changes the first line of the file to the desired status
+	    * if the status is not a one digit (between 0 to 9) we return false and not put it in the file
+	    * we also return false if there was a problem in one of the file operations
+	    */
+	    static bool change_status_of_file(std::string& path, int status);
 };
 #endif

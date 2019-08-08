@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <cstring>
+#include <vector>
 
 #include <unistd.h>
 #include <stdlib.h> 
@@ -22,7 +23,11 @@
                                     2: done
                                     3: Start worker
                                     4: Finish Work (and done this work)
-                                    5: There are no messages any more (a message from server to client instead of a new work)               
+                                    5: There are no messages any more (a message from server to client instead of a new work) 
+                                    6: a worker message - I found passwords!!!!!
+                                             at this mode the file will be differnet: status, id, worker_id, how many passwords I found (int), all the passwords(a password in a line) :)  
+                                    7: I write now to the file, ignore it 
+                                     
     scheme_msg:                 The scheme string, like "ccCd"
     start_index and end index:  Represents the indexes of the password to go over them, in the original ordering
     files_for_scheme:           If the scheme includes files, the file names will be here (or db identify), in order 
@@ -37,6 +42,7 @@ class file_object{
 
     int start_index, end_index, status, id, worker_id;
     std::string scheme_msg, passwords, files_for_scheme, password_function, arguments_to_hash;
+    std::vector<std::string> passwords_found_vector;
 
 
 
@@ -51,7 +57,9 @@ public:
     void set_files_for_scheme(std::string files_for_scheme);
     void set_worker_id(int id);
     void set_arguments(std::string &args);
+    void add_password_found_vector(std::string &pass);
 
+    std::vector<std::string> get_passwords_found_vector();
     int get_worker_id();
     int get_start_index();
     int get_end_index();

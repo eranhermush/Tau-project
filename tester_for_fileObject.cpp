@@ -5,6 +5,7 @@
 #include <bits/stdc++.h>
 #include "parser_main.h"
 #include <string>
+#include <unistd.h>
 
 #include "worker_manager.h"
 #include "file_manager.h"
@@ -72,7 +73,7 @@ int main()
 	//print_matrix(parser.get_matrix());
 
 	// creates the manager
-	file_manager manager("a",parser.get_matrix(),files_vec,parser_string,passwords, password_functions, hash_args);
+	file_manager manager(dir_path, parser, files_vec, passwords, password_functions, hash_args);
 
 	int work_id = 0;
 	int retVal = 0;
@@ -81,7 +82,8 @@ int main()
 	while (! finish)
 	{
 		std::cout << std::endl << "enter an index (choose what to do): " << std::endl << "1 - add a work to file " << std::endl << "2 - check the index section "
-				 << std::endl << "3 - check the files(read files in a dir) " << std::endl << "4 - check the method 'go over the files' " << std::endl << "5 - check string args "<< std::endl << "6 - exit " << std::endl;
+				 << std::endl << "3 - check the files(read files in a dir) " << std::endl << "4 - check the method 'go over the files' "
+				  << std::endl << "5 - check string args "<< std::endl << "6 -work " << std::endl << "7 - exit " << std::endl;
 		cin >> index_test;
 
 
@@ -99,7 +101,7 @@ int main()
 				std::cout << "error in write_work_to_file " << std::endl;
 			}
 			//std::cout << "finish" << std::endl;
-			retVal = manager.file_to_file_object(a, path, to_print);
+			retVal = helpful_functions::file_to_file_object(a, path, to_print);
 			if (retVal == -1){
 				std::cout << "error in file_to_file_object " << std::endl;
 			}
@@ -115,18 +117,42 @@ int main()
 			This is the tester for the indexes section
 			*/
 		    std::vector<int> index_vec; 
-		  	int user_input = 0;
-		  	cout << "enter the indexes: " << parser_string.length() << endl;
+		    std::string result = "";
+		    for (int i = 0; i< files_vec.size();i++)
+		    {
+		        if (i != 0)
+		        {
+		            result = result + "#";
+		        }
+		        result += files_vec[i];
+		    }
 
-		    for (int i = 1; i <= parser_string.length(); i++)
+		    index_vector_convertor index_vec_con;
+		  	int user_input = 0;
+		  	file_object f;
+		  	f.intialize();
+		    f.set_status(0);
+		    //file_obj.set_scheme_msg(this->scheme_string);
+		    f.set_scheme_msg(parser.get_str_original());
+		    f.set_passwords(passwords);
+		    f.set_password_function(password_functions);
+		    f.set_files_for_scheme(result);
+     		index_vec_con.intialize(f);
+
+
+
+		  	std::cout << "your scheme is " << parser.get_str_original() << " and the compress is " << parser.get_str_compress() << std::endl;
+		  	std::cout << "enter the indexes: " << parser.get_str_compress().length() << std::endl;
+
+		    for (int i = 1; i <= parser.get_str_compress().length(); i++)
 		    {
 		  		cin >> user_input;
 		        index_vec.push_back(user_input); 
 		    }
-			int index = manager.vector_indexes_to_index(index_vec);
-			cout << "the index is: " << index << endl;
-			std::vector<int> v = manager.index_to_vector_indexes(index);
-			cout << "the vector is ";
+			int index = index_vec_con.vector_indexes_to_index(index_vec);
+			std::cout << "the index is: " << index << std::endl;
+			std::vector<int> v = index_vec_con.index_to_vector_indexes(index);
+			std::cout << "the vector is ";
 			for (int i = 0; i < v.size(); i++) {
 				std::cout << v.at(i) << ' ';
 			}
@@ -164,11 +190,21 @@ int main()
 				helpful_functions::printcoll(float_vec);
 
 			}
-		}				
-		if (index_test == 6){
+		}	
+		if (index_test == 6)
+		{
+			bool finish_loop = false;
+			while (! finish_loop)
+			{
+				usleep(100);
+				manager.go_over_files(to_print);
+				finish_loop = manager.finish_job();
+			}
+		}			
+		if (index_test == 7){
 			finish = true;
 		}
-		if(index_test > 6 || index_test < 1){
+		if(index_test > 7 || index_test < 1){
 			std::cout << "error :( your number is incorrect " << std::endl;
 		}
 	}

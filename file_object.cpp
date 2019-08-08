@@ -27,7 +27,6 @@ void file_object::set_scheme_msg(std::string scheme_msg)
 {
 	this->scheme_msg = scheme_msg;
 }
-
 void file_object::set_passwords(std::string passwords)
 {
 	this->passwords = passwords;
@@ -36,7 +35,6 @@ void file_object::set_password_function(std::string password_function)
 {
     this->password_function = password_function;
 }
-
 void file_object::set_files_for_scheme(std::string files_for_scheme)
 {
 	this->files_for_scheme = files_for_scheme;
@@ -69,10 +67,9 @@ int file_object::get_worker_id()
 {
 	return this->worker_id;
 }
-
 std::string file_object::to_string()
 {
-    std::string result = "id: " + std::to_string(this->id) + '\n' + "worker id: " + std::to_string(this->worker_id) + 
+    std::string result = "status: " + std::to_string(this->status) + '\n' +"id: " + std::to_string(this->id) + '\n' + "worker id: " + std::to_string(this->worker_id) + 
     	'\n' + "scheme msg " + this->scheme_msg+ '\n' + "password functions : " + this->password_function + 
         '\n' + "start index " + std::to_string(this->start_index) + '\n' + "end index " + std::to_string(this->end_index)+ 
         '\n' + "files" + this->files_for_scheme + '\n' + "passwords " + this->passwords + '\n' + "arguments to hash:  " + this->arguments_to_hash;
@@ -96,13 +93,12 @@ std::string file_object::get_passwords()
 }
 std::string file_object::get_password_function()
 {
-	return this->files_for_scheme;
+	return this->password_function;
 }
 std::string file_object::get_files_for_scheme()
 {
-	return this->password_function;
+	return this->files_for_scheme;
 }
-
 bool file_object::check_equal(file_object& obj)
 {
 
@@ -119,26 +115,23 @@ bool file_object::check_equal(file_object& obj)
 	if (this->id != obj.get_id()){
 		return false;
 	}
-
     if  (!(this->scheme_msg == obj.get_scheme_msg() )) 
     {
         return false;
     }  
-
     if  (!(this->passwords  == obj.get_passwords() ))
     {
         return false;
     }   
-
-    if  (!(this->files_for_scheme == obj.get_password_function() ))
+    if  (!(this->password_function == obj.get_password_function() ))
     {
         return false;
     }
 
-    if  (!(this->password_function == obj.get_files_for_scheme() ))
+    if  (!(this->files_for_scheme == obj.get_files_for_scheme() ))
     {
         return false;
-    }   
+    } 
     if  (!(this->arguments_to_hash == obj.get_arguments() ))
     {
         return false;
@@ -147,6 +140,7 @@ bool file_object::check_equal(file_object& obj)
 }
 void file_object::intialize()
 {
+	this->passwords_found_vector.clear();
 	this->start_index = -1;
 	this->end_index = -1;
 	this->status = -1;
@@ -160,8 +154,13 @@ void file_object::intialize()
 }
 void file_object::intialize_to_error()
 {
-	intialize();
+	this->passwords_found_vector.clear();
 	this->status = 5;
+	this->scheme_msg = "";
+	this->password_function = "";
+	this->passwords = "";
+	this->files_for_scheme = "";
+	this->arguments_to_hash = "";
 }
 void file_object::set_arguments(std::string &args)
 {
@@ -170,4 +169,13 @@ void file_object::set_arguments(std::string &args)
 std::string file_object::get_arguments()
 {
 	return this->arguments_to_hash;
+}
+void file_object::add_password_found_vector(std::string &pass)
+{
+	this->passwords_found_vector.push_back(pass);
+	return;
+}
+std::vector<std::string> file_object::get_passwords_found_vector()
+{
+	return this->passwords_found_vector;
 }

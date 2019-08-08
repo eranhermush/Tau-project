@@ -1,28 +1,39 @@
 #include "file_manager.h"
 
-file_manager::file_manager(std::string path, std::vector< std::vector<std::string> > &matrix_all_options, std::vector<std::string> &file_names, 
-    std::string &scheme_string,std::string &passwords, std::string &password_function, std::string &hash_args)
+file_manager::file_manager(const std::string& path, parser_main &parser, std::vector<std::string> &file_names, std::string &passwords, std::string &password_function, std::string &hash_args):
+    our_parser(parser),
+    file_names(file_names),
+    compress_scheme_string(parser.get_str_compress()),
+    file_char('f'),
+    curr_id(1),
+    sum_of_works(0),
+    current_index_of_work(0),
+    work_size(300),
+    passwords(passwords),
+    password_function(password_function),
+    dir_path(path),
+    hash_args(hash_args)
+
 {
-    this->matrix_all_options = matrix_all_options;
-    this->file_names = file_names;
-    this->scheme_string = scheme_string;
-    this->file_char = 'f';
-    this->curr_id = 1;
-    this->sum_of_works = 0;
-    this->current_index_of_work = 0;
-    this->work_size = 30;
-    this->passwords = passwords;
-    this->password_function = password_function;
-    this->dir_path = path;
-    this->hash_args =hash_args;
+    /*
+    :our_parser(parser),file_names(file_names),compress_scheme_string(our_parser.get_str_compress()), file_char('f'), curr_id(1), sum_of_works(0), current_index_of_work(0), work_size(30), passwords(passwords),
+        password_function(password_function), dir_path(path), hash_args(hash_args)
+*/
+    this->fileobj.intialize();
+    update_file_object_no_index(this->fileobj);
+    index_vec_con.intialize(this->fileobj);
     validate_input();
     save_sum_of_works();
 }
 std::string file_manager::get_files_in_string()
 {
     std::string result = "";
-    for (int i = 0; i<this->file_names.size();i++)
+    for (int i = 0; i< this->file_names.size();i++)
     {
+        if (i != 0)
+        {
+            result = result + "#";
+        }
         result += this->file_names[i];
     }
     return result;
@@ -30,15 +41,11 @@ std::string file_manager::get_files_in_string()
 }
 bool file_manager::validate_input()
 {
-    if(this->scheme_string.length() <=0)
+    if(this->compress_scheme_string.length() <=0)
     {
         throw std::invalid_argument("received an empty string");
     }
-    if(this->scheme_string.length() != this->matrix_all_options.size())
-    {
-        throw std::invalid_argument("received different sizes for the matrix and the string");
-    }
-    if(std::count(this->scheme_string.begin(), this->scheme_string.end(), this->file_char) != this->file_names.size())
+    if(std::count(this->compress_scheme_string.begin(), this->compress_scheme_string.end(), this->file_char) != this->file_names.size())
     {
         throw std::invalid_argument("received different sizes for the file names and the number of files in the scheme");
     }
@@ -46,17 +53,18 @@ bool file_manager::validate_input()
 }
 void file_manager::save_sum_of_works()
 {
-    if (this->scheme_string.length() <= 0)
+    if (this->compress_scheme_string.length() <= 0)
     {
         this->sum_of_works = 0;
         return;
     }
     int result = 1;
-    for (int i = 0; i<this->scheme_string.length();i++)
+    for (int i = 0; i< this->our_parser.get_str_original().length();i++)
     {
-        result *= size_of_object_in_scheme(i);
+        result *= index_vec_con.size_of_object_in_scheme_org(i);
     }
     this->sum_of_works = result;
+    std::cout << "Result = " << result << std::endl;
 }
 
 void file_manager::set_work_size(int size)
@@ -66,76 +74,6 @@ void file_manager::set_work_size(int size)
 int file_manager::get_sum_of_works()
 {
     return this->sum_of_works;
-}
-/*
-**********************************************************
-**********************************************************
-***************   This is the index Section **************
-**********************************************************
-**********************************************************
-*/
-int file_manager::vector_indexes_to_index(std::vector<int> &vec)
-{
-    int result = 0;
-    int sum = 1;
-    for (int i = 0; i<vec.size();i++)
-    {
-        result += sum*vec[i];
-        sum *= size_of_object_in_scheme(i);
-    }
-    return result;
-}
-
-
-int file_manager::size_of_object_in_scheme(int index)
-{
-    if(index <0 || index >= this->scheme_string.length()){
-        throw std::invalid_argument("unexpected index");
-    }
-    if(this->scheme_string.at(index) != file_char){
-        return this->matrix_all_options[index].size();
-    }
-    int file_index = 0;
-    for (int i = 0; i <= index; ++i)
-    {
-        if (this->scheme_string.at(i) == this->file_char)
-        {
-            file_index++;
-        }
-    }
-    // we start to count from 0, and file_index counts how many files were(the len)
-    file_index--;
-    return get_number_of_lines_in_file(this->file_names[file_index]);
-}
-int file_manager::get_number_of_lines_in_file(std::string filename)
-{
-    int number_of_lines = 0;
-    std::string line;
-    std::ifstream myfile;
-    myfile.open(filename);
-
-    while (std::getline(myfile, line))
-        ++number_of_lines;
-    return number_of_lines;
-}
-
-std::vector<int> file_manager::index_to_vector_indexes(int index){
-    std::vector<int> result; 
-
-    // fill the array with 0 this->scheme_string.length() times 
-    result.assign(this->scheme_string.length(), 0); 
-    int sum = 1;
-    for (int i = 0; i<this->scheme_string.length();i++){
-        sum *= size_of_object_in_scheme(i);
-    }
-
-    for (int i = this->scheme_string.length()-1; i >= 0; i--)
-    {
-        sum = sum / size_of_object_in_scheme(i);
-        result[i] = (int) index/sum;
-        index -= result[i]*sum;
-    }
-    return result;
 }
 
 
@@ -153,12 +91,25 @@ int file_manager::get_id_to_file()
     this->curr_id++;
     return this->curr_id-1;
 }
+void file_manager::update_file_object_no_index(file_object& f)
+{
+    f.set_status(0);
+    //file_obj.set_scheme_msg(this->scheme_string);
+    f.set_scheme_msg(this->our_parser.get_str_original());
+    f.set_passwords(this->passwords);
+    f.set_password_function(this->password_function);
+    f.set_files_for_scheme(get_files_in_string());
+    f.set_arguments(this->hash_args);
+    //std::cout << f.to_string() <<std::endl<<"f: " << this->password_function<<std::endl;
+}
 
 int file_manager::create_new_work(file_object& file_obj, int worker_id)
 {
     file_object file_obj_former;
-    if (this->current_index_of_work >= this->sum_of_works)
+    //std::cout << this->current_index_of_work << " " << this->sum_of_works <<std::endl;
+    if (this->current_index_of_work >= this->sum_of_works-1)
     {
+        std::cout << "here" << std::endl;
         return -1;
     }
     if (arr_didnt_do.empty())
@@ -174,102 +125,57 @@ int file_manager::create_new_work(file_object& file_obj, int worker_id)
     }
 
     file_obj.set_id(get_id_to_file());
-    file_obj.set_status(0);
-    file_obj.set_scheme_msg(this->scheme_string);
-    file_obj.set_passwords(this->passwords);
-    file_obj.set_password_function(this->password_function);
-    file_obj.set_files_for_scheme(get_files_in_string());
-    file_obj.set_worker_id(worker_id);
-    file_obj.set_arguments(this->hash_args);
+    update_file_object_no_index(file_obj);
     this->arr_of_works.push_back(file_obj);
     return 0;
 }
 
 int file_manager::write_work_to_file(file_object& file_obj)
 {
-    std::ofstream myfile;
-    FILE *fp;
+
+    bool retVal = false;
     // write the data without the status (write status 2)
     int worker_id = file_obj.get_worker_id();
+
     std::string path =  dir_path + "/" + std::to_string(worker_id) + ".txt";
+    retVal =  helpful_functions::change_status_of_file(path, 1);
+    if (! retVal) {
+        return -1;
+    }
+
+    std::ofstream myfile;
+    // write the data without the status (write status 2)
     //std::string path = std::to_string(worker_id) + ".txt";
-    myfile.open(path,std::fstream::in | std::fstream::out | std::fstream::trunc);
+
+    truncate(path.c_str(),2);
+
+    myfile.open(path, std::fstream::out | std::fstream::app);
+    
     if (! (myfile.is_open()))
     {
         std::cout << "Error opening file in write_work_to_file" << std::endl;
-        return -1;
+        return false;
     }
-    myfile << "1\n";
+
+    if (file_obj.get_status() == 5)
+    {
+        myfile << file_obj.get_message_to_write_in_file();
+        myfile.flush();
+        myfile.close();
+        return 0;
+    }
     myfile << file_obj.get_message_to_write_in_file_without_status();
     myfile.flush();
     myfile.close();
     // write the data
 
-    fp = std::fopen(path.c_str(),"r+");
-    fseek(fp, 0, SEEK_SET);
-    if (fp == NULL) {
-        perror("Error fopen in write_work_to_file ");
+    retVal =  helpful_functions::change_status_of_file(path, 0);
+    if (! retVal) {
         return -1;
     }
-    fprintf(fp, "0");
-    std::fclose (fp);
     return 0;
 }
 
-int file_manager::file_to_file_object(file_object& file_obj, std::string filename, bool print_error)
-{
-    std::string line, line2;
-    std::string msg;
-    std::string files = "";
-    std::ifstream myfile (filename);
-    int status = 0;
-    /*
-        std::string result = std::to_string(this->id) + '\n' + std::to_string(this->worker_id) + '\n' + this->scheme_msg+ '\n' + this->password_function + 
-        '\n' + std::to_string(this->start_index) + '\n' + std::to_string(this->end_index)+ '\n' + this->files_for_scheme + '\n' + this->passwords;
-    */
-    if (myfile.is_open())
-    {
-        getline (myfile,line);
-        file_obj.set_status(std::stoi(line));
-        getline (myfile,line);
-
-        file_obj.set_id(std::stoi(line));
-        getline (myfile,line);
-
-        file_obj.set_worker_id(std::stoi(line));
-        getline (myfile,line);
-        file_obj.set_scheme_msg(line);
-        msg = line;
-        getline (myfile,line);
-        file_obj.set_password_function(line);
-        getline (myfile,line);
-        getline (myfile,line2);
-
-        file_obj.set_index(std::stoi(line),std::stoi(line2));
-
-        for (int i = 1; i <= std::count(msg.begin(), msg.end(),'f'); i++)
-        {
-            getline (myfile,line);
-            files = files + line + '\n'; 
-        }
-        file_obj.set_files_for_scheme(files);
-        getline (myfile,line);
-        file_obj.set_passwords(line);
-        getline (myfile,line);
-        file_obj.set_arguments(line);
-
-        myfile.close();
-    }
-    else
-    {
-        if (print_error)
-        {
-            std::cout << "Error my file is not open :( file name is " << filename << std::endl;
-        }
-        return -1;
-    }
-    return 0;   
-}
 
 bool file_manager::check_validate_of_file(std::string file_name, std::string full_file_name, file_object& file_obj, bool print_error)
 {
@@ -277,26 +183,45 @@ bool file_manager::check_validate_of_file(std::string file_name, std::string ful
     int retVal = 0;
     bool find = false;
     int file_name_int = 0;
+
+
+
     try
     {
         // we also validate here that the filen-name consist of integers, we make substr to avoid the ".txt"
         file_name_int = std::stoi(file_name.substr(0, file_name.length() -4)); 
+    }
+    catch ( std::exception& e)
+    {
 
-        retVal = file_to_file_object(file_obj, full_file_name, print_error);
+        if (print_error)
+        {
+            std::cout << "An exception with stoi of file names "  << e.what()  << '\n';
+        }
+        return false;
+    }
+
+
+    try
+    {
+
+        retVal = helpful_functions::file_to_file_object(file_obj, full_file_name, print_error);
         if (retVal == -1){
+            std::cout << "file_to_file_object RETURNS -1 check_validate_of_file " << std::endl;
             return false;
         }
     }
-    catch ( ...)
+    catch ( std::exception& e)
     {
 
-        if (file_obj.get_status() == 3)
+        if (file_obj.get_status() == 3 || file_obj.get_status() == 5 || file_obj.get_status() == 7 || file_obj.get_status() == 0)
         {
             return true;
         }
         if (print_error)
         {
-            std::cout << "An exception occurred on open file in validate. Exception Nr. "   <<'\n';
+            std::cout << "An exception occurred on open file in validate. Exception Nr. "  << e.what() << " " << file_obj.get_status() << '\n';
+            std::cout << file_obj.to_string() << std::endl;
         }
         return false;
     }
@@ -309,6 +234,7 @@ bool file_manager::check_validate_of_file(std::string file_name, std::string ful
     // checks the worker id 
     if  (file_obj.get_worker_id() != file_name_int) 
     {
+       std::cout << "get_worker_id differ then filename check_validate_of_file " << std::endl;
         return false;
     }
     for (int i = 0; i < this->arr_of_works.size(); i++) {
@@ -322,22 +248,40 @@ bool file_manager::check_validate_of_file(std::string file_name, std::string ful
     // there is not a relevant file in the arr
     if (! find)
     {
+       std::cout << "find = false in check_validate_of_file " << std::endl;
         return false;
     }
-
+    // in this mode the file looks diferent, then we return here (the check equal will return false)
+    if (file_obj.get_status() == 6)
+    {
+        return true;
+    }
     // if the relevant file is not consistent with the real file
     if (! file_obj.check_equal(file_in_arr))
     {
+        std::cout << "not equal in check_validate_of_file " << std::endl;
         return false;
     }
     return true;
 }
+
+
+bool file_manager::finish_job()
+{
+    if (arr_didnt_do.size() >0 || arr_of_works.size() > 0)
+    {
+        return false;
+    }
+    return this->current_index_of_work >= this->sum_of_works-1;
+}
+
 
 // Todo: add print_erorr to all functions
 void file_manager::go_over_files( bool print_error)
 {
 
     std::vector<std::string> file_names;
+    std::vector<std::string> passwords_founds;
     std::string file_name;
     file_object obj, new_obj;
     file_object file_in_arr;
@@ -368,6 +312,7 @@ void file_manager::go_over_files( bool print_error)
             // removes the files
             std::cout << "remove a file, val not true " << std::endl;
             if( remove(file_name.c_str()) != 0 )
+            //if( false )
             {
                 if (print_error){
                     perror( "Error deleting file" );
@@ -387,26 +332,37 @@ void file_manager::go_over_files( bool print_error)
         }
         else
         {   
+            if(obj.get_status() == 6)
+            {
+                passwords_founds = obj.get_passwords_found_vector();
+                std::cout << "worker " << std::to_string(obj.get_worker_id()) << " found passwords!!!!!" << std::endl;
+                helpful_functions::printcoll(passwords_founds);
+                //password_function.clear();
+            }
             // if we finish a job, we remove it from the array
-            if(obj.get_status() == 4 ||  obj.get_status() == 2)
+            if(obj.get_status() == 4 ||  obj.get_status() == 2 || obj.get_status() == 6)
             {
                 for (int j = this->arr_of_works.size()-1; j >= 0 ; j--)
                 {
                     if(this->arr_of_works.at(j).get_worker_id() == file_name_int)
                     {
-                        this->arr_of_works.erase (this->arr_of_works.begin()+j);
+                        this->arr_of_works.erase(this->arr_of_works.begin()+j);
                     }
                 }
             }
             // if we want a new job - we make it here
-            if(obj.get_status() == 3 ||  obj.get_status() == 2)
+            if(obj.get_status() == 3 ||  obj.get_status() == 2 || obj.get_status() == 6)
             {
                 new_obj.intialize();
+                new_obj.set_worker_id(obj.get_worker_id());
                 retVal = create_new_work(new_obj, file_name_int);
                 if(retVal == -1){
                     new_obj.intialize_to_error();
                 }
+                //std::cout << new_obj.to_string() <<std::endl;
+
                 retVal = write_work_to_file(new_obj);
+
                 if(retVal == -1)
                 {
                     if(print_error)

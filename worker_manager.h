@@ -25,7 +25,6 @@ using namespace std;
  * This class is the main for the worker manager
  * Each worker asks the worker manager for the next job, and the manager organize all the worker job
  */
-
 class worker_manager{
 
     vector< vector<string> > matrix_all_options;
