@@ -8,7 +8,7 @@ file_manager::file_manager(const std::string& path, parser_main &parser, std::ve
     curr_id(1),
     sum_of_works(0),
     current_index_of_work(0),
-    work_size(300),
+    work_size(10000),
     passwords(passwords),
     password_function(password_function),
     dir_path(path),

@@ -167,6 +167,7 @@ bool client::work()
 {
 	bool retVal = false;
 	std::string msg = this->file_obj.get_scheme_msg();
+	std::string arguments = this->file_obj.get_arguments();
 	std::string pass_str;
 	std::vector<std::unique_ptr<Password_Generator>> generators;
 	initialize_generators(generators);
@@ -175,7 +176,7 @@ bool client::work()
 	std::vector<std::string> str_vec_args_server;
 	std::vector<int> int_vec_args_server;
 	std::vector<float> float_vec_args_server;
-	retVal =  helpful_functions::server_string_to_vectors(this->file_obj.get_arguments(), str_vec_args_server, int_vec_args_server,float_vec_args_server)
+	retVal =  helpful_functions::server_string_to_vectors(arguments, str_vec_args_server, int_vec_args_server,float_vec_args_server);
 	if (! retVal)
 	{
 		std::cout << "server_string_to_vectors returns false in client" << std::endl;
@@ -199,6 +200,12 @@ bool client::work()
 	else
 	{
 		std::unique_ptr<Preimage_Matcher> match = Matcher_By_Name::create_matcher(function_name, str_vec_args_server);
+		if(match == nullptr)
+		{
+			std::cout << "error in id name in work" << std::endl;
+			std::cout << this->file_obj.to_string() << std::endl;
+			return false;			
+		}
 		Preimage_Seeker seeker_for_passwords2(ngen, *match);
 		seek_all_results = seeker_for_passwords2.seek_all();
 		if(seek_all_results.size() != 0)
@@ -207,12 +214,7 @@ bool client::work()
 			helpful_functions::printcoll(seek_all_results);
 		}
 	}
-	else
-	{
-		std::cout << "error in id name in work" << std::endl;
-		std::cout << this->file_obj.to_string() << std::endl;
-		return false;
-	}
+
 	if(seek_all_results.size() == 0)
 	{
 		retVal =  set_job(2,"",0);

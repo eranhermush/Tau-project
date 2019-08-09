@@ -166,7 +166,6 @@ bool helpful_functions::server_string_to_vectors(std::string& server_str, std::v
 bool helpful_functions::write_data_to_file(std::string& dir, std::string filename, const std::string& data_to_file)
 {
     std::ofstream myfile;
-    FILE *fp;
     // write the data without the status (write status 2)
     std::string path =  dir + "/" + filename + ".txt";
     //std::string path = std::to_string(worker_id) + ".txt";
