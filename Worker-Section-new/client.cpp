@@ -171,20 +171,41 @@ bool client::work()
 	std::vector<std::unique_ptr<Password_Generator>> generators;
 	initialize_generators(generators);
 	std::vector<std::string> seek_all_results;
+
+	std::vector<std::string> str_vec_args_server;
+	std::vector<int> int_vec_args_server;
+	std::vector<float> float_vec_args_server;
+	retVal =  helpful_functions::server_string_to_vectors(this->file_obj.get_arguments(), str_vec_args_server, int_vec_args_server,float_vec_args_server)
+	if (! retVal)
+	{
+		std::cout << "server_string_to_vectors returns false in client" << std::endl;
+	}
 	//Nested_Password_Generator ngen(generators);
 	Char_Pattern_Password_Generator ngen (msg, this->file_obj.get_start_index(), this->file_obj.get_end_index());
-	if(this->file_obj.get_password_function() == "id")
+	std::string function_name = this->file_obj.get_password_function();
+	if( function_name == "id")
 	{
 		Hash_Matcher<Id_Hash> hm1(Id_Hash(), this->file_obj.get_passwords());
 		Preimage_Seeker seeker_for_passwords(ngen, hm1);
 		seek_all_results = seeker_for_passwords.seek_all();
 		if(seek_all_results.size() != 0)
 		{
-			std::cout << "here" <<file_obj.get_start_index() << std::endl;
+			std::cout << "find passwords at: " <<file_obj.get_start_index() << std::endl;
 			helpful_functions::printcoll(seek_all_results);
 		}
 		
 
+	}
+	else
+	{
+		std::unique_ptr<Preimage_Matcher> match = Matcher_By_Name::create_matcher(function_name, str_vec_args_server);
+		Preimage_Seeker seeker_for_passwords2(ngen, *match);
+		seek_all_results = seeker_for_passwords2.seek_all();
+		if(seek_all_results.size() != 0)
+		{
+			std::cout << "find passwords at: " <<file_obj.get_start_index() << std::endl;
+			helpful_functions::printcoll(seek_all_results);
+		}
 	}
 	else
 	{

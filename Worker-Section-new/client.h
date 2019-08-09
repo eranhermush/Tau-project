@@ -11,6 +11,7 @@
 #include "file_password_generator.h"
 #include "hash_matcher.h"
 #include "Id_Hash.h"
+#include "preimage_matcher_by_name.h"
 #include <string>
 #include <vector>
 
