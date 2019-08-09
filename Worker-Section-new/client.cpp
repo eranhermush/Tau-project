@@ -168,6 +168,7 @@ bool client::work()
 	bool retVal = false;
 	std::string msg = this->file_obj.get_scheme_msg();
 	std::string arguments = this->file_obj.get_arguments();
+	std::string password_msg = this->file_obj.get_passwords();
 	std::string pass_str;
 	std::vector<std::unique_ptr<Password_Generator>> generators;
 	initialize_generators(generators);
@@ -177,6 +178,7 @@ bool client::work()
 	std::vector<int> int_vec_args_server;
 	std::vector<float> float_vec_args_server;
 	retVal =  helpful_functions::server_string_to_vectors(arguments, str_vec_args_server, int_vec_args_server,float_vec_args_server);
+	str_vec_args_server.insert(str_vec_args_server.begin(), password_msg);
 	if (! retVal)
 	{
 		std::cout << "server_string_to_vectors returns false in client" << std::endl;

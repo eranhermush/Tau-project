@@ -99,7 +99,10 @@ bool helpful_functions::server_string_to_vectors(std::string& server_str, std::v
 	str_vec.clear();
 	int_vec.clear();
 	float_vec.clear();
-
+	if (server_str == "-1")
+	{
+		return true;
+	}
 	int index = 0;
 	int x, d1, d2, counter;
 	float fcounter;

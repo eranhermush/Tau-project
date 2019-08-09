@@ -68,7 +68,7 @@ int main()
 	cin >> passwords;
 	cout << "enter the password functions"  << endl;
 	cin >> password_functions;
-	cout << "enter the arguments"  << endl;
+	cout << "enter the arguments (-1 if there are no arguments)"  << endl;
 	cin >> hash_args;
 	//print_matrix(parser.get_matrix());
 
