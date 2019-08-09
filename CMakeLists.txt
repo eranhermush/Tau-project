@@ -12,3 +12,11 @@ add_executable(Worker_new_run Worker-Section-new/client_main.cpp file_object.h f
 
 -DNDEBUG -g3 -O2 -Wall -Wextra -pthread -march=native -std=c++11  -l:libcryptopp.a   -lntl -lgmp -lm
 
+
+
+g++ -o ServerFile tester_for_fileObject.cpp file_object.h file_object.cpp file_manager.h file_manager.cpp parser_main.h parser_main.cpp worker_manager_worker_object.h worker_manager_worker_object.cpp worker_manager.h worker_manager.cpp another_functions.h another_functions.cpp helpful_functions.h helpful_functions.cpp index_vector_convertor.h index_vector_convertor.cpp
+
+
+
+g++ -o Worker_new_run Worker-Section-new/client_main.cpp file_object.h file_object.cpp parser_main.h parser_main.cpp another_functions.h another_functions.cpp helpful_functions.h helpful_functions.cpp index_vector_convertor.h index_vector_convertor.cpp Worker-Section-new/char_password_generator.h Worker-Section-new/char_password_generator.cpp Worker-Section-new/client.h Worker-Section-new/client.cpp Worker-Section-new/file_password_generator.h Worker-Section-new/file_password_generator.cpp Worker-Section-new/hash_functions.h Worker-Section-new/hash_functions.cpp Worker-Section-new/hash_matcher.h Worker-Section-new/password_generator.h Worker-Section-new/nested_password_generator.h Worker-Section-new/nested_password_generator.cpp Worker-Section-new/preimage_matcher.h Worker-Section-new/preimage_seeker.h Worker-Section-new/preimage_seeker.cpp Worker-Section-new/Id_Hash.h Worker-Section-new/Id_Hash.cpp Worker-Section-new/preimage_matcher_by_name.h Worker-Section-new/preimage_matcher_by_name.cpp  Worker-Section-new/kdf_sae.h Worker-Section-new/ffc_pwe_sample_matcher.h  Worker-Section-new/ecc_pwe_sample_matcher.h Worker-Section-new/pwe_sample.h Worker-Section-new/pwe_sample.cpp -DNDEBUG -g3 -O2 -Wall -Wextra -pthread -march=native -std=c++11  -l:libcryptopp.a   -lntl -lgmp -lm
+

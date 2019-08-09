@@ -64,12 +64,13 @@ int main()
 	std::string password_functions, hash_args;
 	std::string passwords;
 
-	cout << "enter the passwords"  << endl;
+	std::cout << "enter the passwords (in the sae,  ecc, efc, enteer the file path)"  << std::endl;
 	cin >> passwords;
-	cout << "enter the password functions"  << endl;
+	std::cout << "enter the password functions"  << std::endl;
 	cin >> password_functions;
-	cout << "enter the arguments (-1 if there are no arguments)"  << endl;
+	std::cout << "enter the arguments (-1 if there are no arguments) "  << std::endl;
 	cin >> hash_args;
+	std::cout << hash_args << " f" << std::endl;
 	//print_matrix(parser.get_matrix());
 
 	// creates the manager
