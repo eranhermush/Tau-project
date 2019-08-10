@@ -7,6 +7,8 @@
 #include <dirent.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include <limits.h>
 #include <sstream>
 #include <iterator>
 #include <algorithm>
@@ -18,6 +20,18 @@
 class helpful_functions
 {
 	public:
+
+
+		/* Returns the size (in bytes) of the file in path
+			If the file doesn't exist, or an error occured, or the file
+			is empty, then 0 is returned (as there are no available bytes to read) */
+		static uint64_t get_file_size(const std::string& path);
+
+		/* Return the absolute path of the file in the relative path
+			Returns an empty string on failure */
+		static std::string get_absolute_path(const std::string& rel_path);
+
+
 		/*
 	    * This method goes over a directory and returns its files.
 		* credit: 

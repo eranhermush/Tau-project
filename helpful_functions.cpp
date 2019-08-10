@@ -1,6 +1,31 @@
 #include "helpful_functions.h"
 
+uint64_t helpful_functions::get_file_size(const std::string& path){
+	std::ifstream file(path, std::ifstream::in | std::ifstream::ate);
+	if(file.bad() || !file.is_open()){
+		return 0;
+	}
+	int64_t size = file.tellg();
+	if(size <= 0){
+		// cannot open or simply an empty file
+		return 0;
+	}
+	return(uint64_t) size;
+}
 
+// Using c++11 so it seem the C solution is the best available
+// https://stackoverflow.com/questions/4109638/what-is-the-safe-alternative-to-realpath
+std::string helpful_functions::get_absolute_path(const std::string& rel_path){
+	char* abs_path;
+	std::string absolute_path;
+	abs_path = realpath(rel_path.c_str(), NULL);
+	if(abs_path){
+		realpath(rel_path.c_str(), abs_path);
+		absolute_path = abs_path;
+		free(abs_path);
+	}
+	return absolute_path;
+}
  
 void helpful_functions::read_directory(std::string& name,  std::vector<std::string> &v)
 {
