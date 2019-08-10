@@ -26,6 +26,15 @@ Nested_Password_Generator::Nested_Password_Generator(const std::vector<std::uniq
 	init_generators(generators);
 
 	curr_pos_vector.reserve(gen_amount);
+	// calculate the maximal index possible 
+	uint64_t max_index = 1;
+	for(int i = 0; i < gen_amount; ++i){
+		max_index *= generator_lengths[i];
+	}
+	--max_index;
+
+	total_start = std::min(total_start, max_index);
+	total_end = std::min(total_end, max_index);
 	
 	std::vector<uint64_t> sp(gen_amount, 0);
 	std::vector<uint64_t> ep(gen_amount, 0);
@@ -67,10 +76,10 @@ std::unique_ptr<Password_Generator>  Nested_Password_Generator::clone() const{
 uint64_t Nested_Password_Generator::vector_to_number(const std::vector<uint64_t>& digits, const std::vector<uint64_t>& bases){
 	int length = std::min(bases.size(), digits.size());
 	uint64_t result = 0;
-	uint64_t prev_base = 1;
-	for(int i = 0; i < length; ++i){
-		result = result * prev_base + digits[i];
-		prev_base = bases[i];
+	uint64_t digit_worth = 1;
+	for(int i = length - 1; i >= 0; --i){
+		result += digit_worth * digits[i];
+		digit_worth *= bases[i];
 	}
 	return result;
 }

@@ -106,4 +106,5 @@ void File_Password_Generator::zero_params_on_file_error(){
 	first_byte = 0;
 	last_byte = 0;
 	curr_position = 0;
+	is_over_flag = true;
 }

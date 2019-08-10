@@ -1,8 +1,8 @@
 #ifndef TAU_PROJECT_NESTED_PASSWORD_GENERATOR_H
 #define TAU_PROJECT_NESTED_PASSWORD_GENERATOR_H
 
-#include <vector>
 #include "password_generator.h"
+#include <vector>
 #include <cstdint>
 #include <algorithm>
 
@@ -63,7 +63,7 @@ class Nested_Password_Generator: public Password_Generator{
 		/* Returns the current position in the range (from 0 *not* from reset)
 			Avoid using unless you are sure why, high complexity cost and not much use*/
 		uint64_t get_curr_position() const{
-			return vector_to_number(generator_lengths, curr_pos_vector);
+			return vector_to_number(curr_pos_vector, generator_lengths);
 		}
 
 	private:

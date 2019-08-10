@@ -2,13 +2,19 @@
 
 Char_Pattern_Password_Generator::Char_Pattern_Password_Generator(const std::string& rep_string, uint64_t first, uint64_t last)
 	:first(first), last(last){
+		if(last < first){
+			last = first;
+		}
 		init(rep_string, std::vector<int>());
 }
 
 Char_Pattern_Password_Generator::Char_Pattern_Password_Generator(const std::string& rep_string, const std::vector<int>& rep_indices,
  const std::vector<std::vector<char>>& data, uint64_t first, uint64_t last) 
-:first(first), last(last), additional_data(data){
-	init(rep_string, rep_indices);
+	:first(first), last(last), additional_data(data){
+		if(last < first){
+			last = first;
+		}
+		init(rep_string, rep_indices);
 }
 
 Char_Pattern_Password_Generator::Char_Pattern_Password_Generator(const Char_Pattern_Password_Generator& generator)
@@ -48,6 +54,7 @@ void Char_Pattern_Password_Generator::init(const std::string& rep_string, const 
 	length = 0;
 	unsigned int x_count = 0;
 	unsigned int x_index = 0;
+	uint64_t max_index = 1;
 
 	sources_index.reserve(rep_string.length());
 	char_sources.reserve(rep_string.length());
@@ -59,27 +66,32 @@ void Char_Pattern_Password_Generator::init(const std::string& rep_string, const 
 			case 'c':
 				char_sources.push_back(std::ref(DATA_LOWERCASE));
 				sources_index.push_back(-'c');
+				max_index *= 26;
 				break;
 			case 'C':
 				char_sources.push_back(std::ref(DATA_UPPERCASE));
 				sources_index.push_back(-'C');
+				max_index *= 26;
 				break;
 			case 'd':
 				char_sources.push_back(std::ref(DATA_DIGITS));
 				sources_index.push_back(-'d');
+				max_index *= 10;
 				break;
 			case 'p':
 				char_sources.push_back(std::ref(DATA_PUNCTUATION));
 				sources_index.push_back(-'p');
+				max_index *= 32;
 				break;
 			case 'x':
 				// check for the related data
 				if(x_count < rep_indices.size()){
 					x_index = rep_indices[x_count];
-					if(x_index < additional_data.size()){
+					if(x_index < additional_data.size() && additional_data[x_index].size() > 0){
 						char_sources.push_back(std::ref(additional_data[x_index]));
 						sources_index.push_back(x_index);
 						++x_count;
+						max_index *= additional_data[x_index].size();
 						break;
 					}
 				}
@@ -91,6 +103,9 @@ void Char_Pattern_Password_Generator::init(const std::string& rep_string, const 
 		}
 	}
 	// set to start
+	--max_index;
+	first = first < max_index ? first : max_index;
+	last = last < max_index ? last : max_index;
 	indices = std::vector<int>(length, 0);
 	curr_password = std::string(length, '\0');
 	reset();
