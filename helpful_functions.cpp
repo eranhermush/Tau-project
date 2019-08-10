@@ -218,6 +218,8 @@ int helpful_functions::file_to_file_object(file_object& file_obj, std::string fi
     std::string msg;
     std::string files = "";
     std::ifstream myfile (filename);
+    std::istringstream start_stream, finish_stream;
+    uint64_t start_index_value, finish_index_value;
     int status = 0;
     int len = 0;
     /*
@@ -238,14 +240,14 @@ int helpful_functions::file_to_file_object(file_object& file_obj, std::string fi
 
         getline (myfile,line);
         file_obj.set_worker_id(std::stoi(line));
-        if(status == 3)
+        if(status == file_object::start_worker_symbol)
         {
         	myfile.close();
         	return 0;
         } 
 
         //std::cout << "status = " << status << " " << file_obj.get_worker_id() << " " << file_obj.get_id() << std::endl;       
-        if( status != 6)
+        if( status != file_object::worker_found_password_symbol)
         {
         	getline (myfile,line);
 	        file_obj.set_scheme_msg(line);
@@ -255,7 +257,12 @@ int helpful_functions::file_to_file_object(file_object& file_obj, std::string fi
 	        getline (myfile,line);
 	        getline (myfile,line2);
 
-	        file_obj.set_index(std::stoi(line),std::stoi(line2));
+	        start_stream = std::istringstream(line);
+	        finish_stream = std::istringstream(line2);
+
+	        start_stream >> start_index_value;
+	        finish_stream >> finish_index_value;
+	        file_obj.set_index(start_index_value, finish_index_value);
 
 	        for (int i = 1; i <= std::count(msg.begin(), msg.end(),'f'); i++)
 	        {
@@ -296,7 +303,7 @@ int helpful_functions::file_to_file_object(file_object& file_obj, std::string fi
 bool helpful_functions::change_status_of_file(std::string& path, int status)
 {
 	FILE* fp;
-	if(status <0 || status > 9)
+	if(status < 0 || status > 9)
 	{
 		return false;
 	}

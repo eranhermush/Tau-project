@@ -1,9 +1,9 @@
 #include "file_manager.h"
 
-file_manager::file_manager(const std::string& path, parser_main &parser, std::vector<std::string> &file_names, std::string &passwords, std::string &password_function, std::string &hash_args):
-    our_parser(parser),
+file_manager::file_manager(const std::string& path, std::string& scheme_string, std::vector<std::string> &file_names, std::string &passwords, std::string &password_function, std::string &hash_args):
+    //our_parser(parser),
     file_names(file_names),
-    compress_scheme_string(parser.get_str_compress()),
+    this->scheme_string(scheme_string),
     file_char('f'),
     curr_id(1),
     sum_of_works(0),
@@ -21,7 +21,6 @@ file_manager::file_manager(const std::string& path, parser_main &parser, std::ve
 */
     this->fileobj.intialize();
     update_file_object_no_index(this->fileobj);
-    index_vec_con.intialize(this->fileobj);
     validate_input();
     save_sum_of_works();
 }
@@ -32,7 +31,7 @@ std::string file_manager::get_files_in_string()
     {
         if (i != 0)
         {
-            result = result + "#";
+            result = result + file_object::delimiter_of_files_in_fileobject_symbol;
         }
         result += this->file_names[i];
     }
@@ -41,11 +40,11 @@ std::string file_manager::get_files_in_string()
 }
 bool file_manager::validate_input()
 {
-    if(this->compress_scheme_string.length() <=0)
+    if(this->scheme_string.length() <=0)
     {
         throw std::invalid_argument("received an empty string");
     }
-    if(std::count(this->compress_scheme_string.begin(), this->compress_scheme_string.end(), this->file_char) != this->file_names.size())
+    if(std::count(this->scheme_string.begin(), this->scheme_string.end(), this->file_char) != this->file_names.size())
     {
         throw std::invalid_argument("received different sizes for the file names and the number of files in the scheme");
     }
@@ -53,25 +52,25 @@ bool file_manager::validate_input()
 }
 void file_manager::save_sum_of_works()
 {
-    if (this->compress_scheme_string.length() <= 0)
+
+    uint64_t result = 1;
+    std::string filter_pattern = Pattern_Utils::filter_pattern(this->scheme_string);
+    result *= Pattern_Utils::total_amount_by_char_tokens(filter_pattern);
+    std::string full_path;
+    for (int i = 0; i< this->file_names.size(); i++)
     {
-        this->sum_of_works = 0;
-        return;
-    }
-    int result = 1;
-    for (int i = 0; i< this->our_parser.get_str_original().length();i++)
-    {
-        result *= index_vec_con.size_of_object_in_scheme_org(i);
+        full_path = helpful_functions::get_absolute_path(this->file_names.at(i));
+        result *=  helpful_functions::get_file_size(full_path);
     }
     this->sum_of_works = result;
-    std::cout << "Result = " << result << std::endl;
+    std::cout << "Total Work = " << result << std::endl;
 }
 
 void file_manager::set_work_size(int size)
 {
     this->work_size = size;
 }
-int file_manager::get_sum_of_works()
+uint64_t file_manager::get_sum_of_works()
 {
     return this->sum_of_works;
 }
@@ -95,7 +94,7 @@ void file_manager::update_file_object_no_index(file_object& f)
 {
     f.set_status(0);
     //file_obj.set_scheme_msg(this->scheme_string);
-    f.set_scheme_msg(this->our_parser.get_str_original());
+    f.set_scheme_msg(this->scheme_string);
     f.set_passwords(this->passwords);
     f.set_password_function(this->password_function);
     f.set_files_for_scheme(get_files_in_string());
@@ -142,7 +141,7 @@ int file_manager::write_work_to_file(file_object& file_obj)
     int worker_id = file_obj.get_worker_id();
 
     std::string path =  dir_path + "/" + std::to_string(worker_id) + ".txt";
-    retVal =  helpful_functions::change_status_of_file(path, 1);
+    retVal =  helpful_functions::change_status_of_file(path, file_object::working_in_process_symbol);
     if (! retVal) {
         return -1;
     }
@@ -166,13 +165,13 @@ int file_manager::write_work_to_file(file_object& file_obj)
     myfile.flush();
     myfile.close();
     // write the data
-    if (file_obj.get_status() == 5)
+    if (file_obj.get_status() == file_object::no_more_works_symbol)
     {
-        retVal =  helpful_functions::change_status_of_file(path, 5);
+        retVal =  helpful_functions::change_status_of_file(path, file_object::no_more_works_symbol);
     }
     else
     {
-        retVal =  helpful_functions::change_status_of_file(path, 0);
+        retVal =  helpful_functions::change_status_of_file(path, file_object::dont_start_working_symbol);
     }
     if (! retVal) {
         return -1;
@@ -218,7 +217,7 @@ bool file_manager::check_validate_of_file(std::string file_name, std::string ful
     catch ( std::exception& e)
     {
 
-        if (file_obj.get_status() == 3 || file_obj.get_status() == 5 || file_obj.get_status() == 7 || file_obj.get_status() == 0)
+        if (file_obj.get_status() == file_object::start_worker_symbol || file_obj.get_status() == file_object::no_more_works_symbol || file_obj.get_status() == file_object::worker_write_to_file_symbol || file_obj.get_status() == file_object::dont_start_working_symbol)
         {
             return true;
         }
@@ -231,7 +230,7 @@ bool file_manager::check_validate_of_file(std::string file_name, std::string ful
     }
 
     // start worker
-    if (file_obj.get_status() == 3 || file_obj.get_status() == 5)
+    if (file_obj.get_status() == file_object::start_worker_symbol || file_obj.get_status() == file_object::no_more_works_symbol)
     {
         return true;
     }
@@ -256,7 +255,7 @@ bool file_manager::check_validate_of_file(std::string file_name, std::string ful
         return false;
     }
     // in this mode the file looks diferent, then we return here (the check equal will return false)
-    if (file_obj.get_status() == 6)
+    if (file_obj.get_status() == file_object::worker_found_password_symbol)
     {
         return true;
     }
@@ -272,7 +271,7 @@ bool file_manager::check_validate_of_file(std::string file_name, std::string ful
 
 bool file_manager::finish_job()
 {
-    if (arr_didnt_do.size() >0 || arr_of_works.size() > 0)
+    if (arr_didnt_do.size() > 0 || arr_of_works.size() > 0)
     {
         return false;
     }
@@ -340,7 +339,7 @@ void file_manager::go_over_files( bool print_error)
         }
         else
         {   
-            if(obj.get_status() == 6)
+            if(obj.get_status() == file_object::worker_found_password_symbol)
             {
                 passwords_founds = obj.get_passwords_found_vector();
                 std::cout << "worker " << std::to_string(obj.get_worker_id()) << " found passwords!!!!!" << std::endl;
@@ -348,7 +347,7 @@ void file_manager::go_over_files( bool print_error)
                 //password_function.clear();
             }
             // if we finish a job, we remove it from the array
-            if(obj.get_status() == 4 ||  obj.get_status() == 2 || obj.get_status() == 6)
+            if(obj.get_status() == file_object::finish_work_symbol ||  obj.get_status() == file_object::done_working_symbol || obj.get_status() == file_object::worker_found_password_symbol)
             {
                 for (int j = this->arr_of_works.size()-1; j >= 0 ; j--)
                 {
@@ -359,7 +358,7 @@ void file_manager::go_over_files( bool print_error)
                 }
             }
             // if we want a new job - we make it here
-            if(obj.get_status() == 3 ||  obj.get_status() == 2 || obj.get_status() == 6)
+            if(obj.get_status() == file_object::start_worker_symbol ||  obj.get_status() == file_object::done_working_symbol || obj.get_status() == file_object::worker_found_password_symbol)
             {
                 new_obj.intialize();
                 new_obj.set_worker_id(obj.get_worker_id());

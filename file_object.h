@@ -40,15 +40,27 @@
 
 class file_object{
 
-    int start_index, end_index, status, id, worker_id;
+    uint64_t  start_index, end_index;;
+    int status, id, worker_id;
     std::string scheme_msg, passwords, files_for_scheme, password_function, arguments_to_hash;
     std::vector<std::string> passwords_found_vector;
 
 
 
 public:
+
+    const int dont_start_working_symbol = 0;
+    const int working_in_process_symbol = 1;
+    const int done_working_symbol = 2;
+    const int start_worker_symbol = 3;
+    const int finish_work_symbol = 4;
+    const int no_more_works_symbol =5;
+    const int worker_found_password_symbol = 6;
+    const int worker_write_to_file_symbol = 7;
+    const char delimiter_of_files_in_fileobject_symbol = char(1);
+
     file_object();
-    void set_index(int start_index, int end_index);
+    void set_index(uint64_t  start_index, uint64_t  end_index);
     void set_status(int status);
     void set_id(int id);
     void set_scheme_msg(std::string scheme_msg);
@@ -61,8 +73,8 @@ public:
 
     std::vector<std::string> get_passwords_found_vector();
     int get_worker_id();
-    int get_start_index();
-    int get_end_index();
+    uint64_t get_start_index();
+    uint64_t get_end_index();
     int get_id();
     std::string get_scheme_msg();
     std::string get_passwords();

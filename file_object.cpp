@@ -10,7 +10,7 @@ int file_object::get_id()
 {
 	return this->id;
 }
-void file_object::set_index(int start_index, int end_index)
+void file_object::set_index(uint64_t  start_index, uint64_t  end_index)
 {
 	this->start_index = start_index;
 	this->end_index = end_index;
@@ -75,11 +75,11 @@ std::string file_object::to_string()
         '\n' + "files" + this->files_for_scheme + '\n' + "passwords " + this->passwords + '\n' + "arguments to hash:  " + this->arguments_to_hash;
     return result;
 }
-int file_object::get_start_index()
+uint64_t file_object::get_start_index()
 {
 	return this->start_index;
 }
-int file_object::get_end_index()
+uint64_t file_object::get_end_index()
 {
 	return this-> end_index;
 }

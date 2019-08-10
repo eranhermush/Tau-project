@@ -10,6 +10,7 @@
 #include "char_password_generator.h"
 #include "file_password_generator.h"
 #include "hash_matcher.h"
+#include "generator_creator.h"
 #include "Id_Hash.h"
 #include "preimage_matcher_by_name.h"
 #include <string>
@@ -58,7 +59,6 @@ public:
 	/*
 	* this function is called when we have a job, it intializes all the password generators in accordance with the file
 	*/
-	void initialize_generators(std::vector<std::unique_ptr<Password_Generator>>& generators);
 	std::string vector_passwords_to_sring_passwords(std::vector<std::string> &v);
 	void main();
 };
