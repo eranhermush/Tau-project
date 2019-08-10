@@ -30,7 +30,10 @@ struct pwe_sample{
 	static std::vector<pwe_sample> create_sample_vector(const std::vector<std::string>& macs1, const std::vector<std::string>& mac2,
 		const std::vector<unsigned char>& counts, const std::vector<char>& results);
 
-
+	/* Creates a vector of pwe_samples from file at path
+		The file should be in format
+		Each line containing a new sample is of the form (with separating spaces)
+			MAC_ADDRESS_1 MAC_ADDRESS_2 counter result*/
 	static std::vector<pwe_sample> create_sample_vector_from_file(const std::string& path);
 };
 
