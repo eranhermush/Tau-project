@@ -1,4 +1,0 @@
-Protocol:
-
-When the client want a new job it sends "1 ip"
-	The nthe server sends "job index"

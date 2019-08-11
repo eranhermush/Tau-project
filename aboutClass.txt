@@ -1,9 +1,0 @@
-1. parser_main: 					This class does the parsing process, gets the parsing string and returns the matrix.
-2. another_functions: 				This class send/recv an int/a char
-3. worker_manager_worker_object: 	This class represents a worker in the view of the worker manager, just has a socket.
-4. worker_manager: 					This class manages the working process, sends jobs for the workers, and gets the jobs for them. it works with sockets. (includes 1,2,3)
-5. WorkerSection/worker:			This class is the worker class, it gets here a job and then go over the relevant passwords and send the result for the server. (includes 1,2)
-
-File Section:
-
-6. file_object:						This class represents a file in the protocol between the workers and the server. It doesnt have special functions.

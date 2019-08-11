@@ -11,9 +11,7 @@
 #include <exception>
 #include "file_object.h"
 #include "helpful_functions.h"
-#include "parser_main.h"
 #include "pattern_utils.h"
-#include "index_vector_convertor.h"
 
 /*
  * This class is a server class, it reads here the files and updates them

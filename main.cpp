@@ -1,50 +1,47 @@
-
-#include <iostream>
-
-using namespace std;
-#include <bits/stdc++.h>
-#include "parser_main.h"
+#include "user_text_interface.h"
+#include "pattern_utils.h"
 #include <string>
-#include "worker_manager.h"
+#include <vector>
+#include <iostream>
+#include <unistd.h>
 
-/*
-	This function is for checking the matrix
-*/
-void print_matrix(vector< vector<string> > &matrix){
-	for(int i=0;i<matrix.size();i++){
-		for(int j=0; j<matrix.at(i).size(); j++){
-			cout << matrix.at(i).at(j);
-		}
-		cout <<endl;
+#include "file_manager.h"
+
+int main(){
+	std::string func_name;
+	std::string func_target;
+	std::string func_args_rep;
+	uint64_t start = 0, end = 0;
+	std::string password_pattern;
+	std::vector<std::string> paths;
+	unsigned int job_size = 1;
+	std::string path, dir_path = "a";
+	bool to_print = true;
+
+
+	if(User_Text_Interface::get_enumeration_parameters(func_name, func_target, func_args_rep,
+		password_pattern, paths, start, end, job_size)){
+		return 1;
 	}
-}
 
-int main()
-{	
-	int server_port = 8810;
-	string parser_string;
-	string target;
-	int ret_value = 0;
-	cout << "Hello, please enter the parser string:" << endl;
-	cin >> parser_string;
-
-	cout << "Hello, please enter the target:" << endl;
-	cin >> target;
-	parser_main parser (parser_string);
-	
-	// create the matrix
-	ret_value = parser.from_parser_string_to_matrix();
-	if(ret_value == -1){
-		cout << "Invalid input :( " << endl;
-		return 0;
+	std::cout << "---------printing params-------------" << std::endl;
+	std::cout << "function: " << func_name << std::endl;
+	std::cout << "target: " << func_target << std::endl;
+	std::cout << "func_args: " << func_args_rep << std::endl;
+	std::cout << "pattern: " << password_pattern << std::endl;
+	for(unsigned int i = 0; i < paths.size(); ++i){
+		std::cout << "file" << i+1 << ": " << paths[i] << std::endl;
 	}
-	//print_matrix(parser.get_matrix());
+	std::cout << "start: " << start << "\tend: " << end << std::endl;
+	std::cout << "Job size per worker: " << job_size << std::endl; 
 
-	// creates the manager
-	worker_manager manager(parser.get_matrix(), server_port, parser_string);
-	manager.main(target);
-
-
-    return 0;
-
+	file_manager manager(dir_path, password_pattern, paths, func_target, func_name, func_args_rep, start, end, job_size);
+	bool finish_loop = false;
+	while (! finish_loop)
+	{
+		usleep(100);
+		manager.go_over_files(to_print);
+		finish_loop = manager.finish_job();
+	}
+	return 0;
 }
