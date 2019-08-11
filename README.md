@@ -29,9 +29,10 @@ Compilation flags for the libraries:
 
 ---------------------------------------------------------------------------------------------------------
 
-To complie the server and the worker you can run:
+To compile the server can run:
 	g++ -Wall -Wextra -o SERVER main.cpp user_text_interface.cpp file_object.cpp file_manager.cpp helpful_functions.cpp pattern_utils.cpp aimd_sleep.cpp -std=c++11
-	
+
+And to compile the worker:
 	g++ -DNDEBUG -g3 -O2 -Wall -Wextra -o WORKER Worker/client_main.cpp file_object.cpp helpful_functions.cpp Worker/char_password_generator.cpp Worker/client.cpp Worker/file_password_generator.cpp Worker/hash_functions.cpp Worker/nested_password_generator.cpp Worker/preimage_seeker.cpp Worker/Id_Hash.cpp Worker/preimage_matcher_by_name.cpp Worker/pwe_sample.cpp Worker/generator_creator.cpp pattern_utils.cpp  -pthread -march=native -std=c++11 -l:/path/to/install/in/lib/libcryptopp.a -l:/path/to/install/in/lib/libntl.a -lgmp -lm -I:/path/to/install/in/inlcude
 
-To run multiple workers you can use the python script in ./Worker/create_workers.py
+To run multiple workers you can use the python script in ./Worker/create_workers.py with usage instructions in it.
