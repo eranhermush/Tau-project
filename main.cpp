@@ -10,10 +10,10 @@
 
 int main(int argc, char** argv){
 	if(argc < 2){
-		std::cerr << "Usage error: expecting 1 argument: a path to the working directory." << std::endl
+		std::cerr << "Usage error: expecting 1 argument: a path to the working directory." << std::endl;
 		return 1;
 	}
-	std::dir_path(argv[1]);
+	std::string dir_path(argv[1]);
 	std::string func_name;
 	std::string func_target;
 	std::string func_args_rep;
