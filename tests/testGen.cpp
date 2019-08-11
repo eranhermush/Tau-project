@@ -1,6 +1,6 @@
 #include <iostream>
-#include "char_password_generator.h"
-#include "file_password_generator.h"
+#include "../Worker/char_password_generator.h"
+#include "../Worker/file_password_generator.h"
  
  int main(){
  	Char_Pattern_Password_Generator cpg("xdxx",{0,1,0},{{'#'}, {'0','2','4','6','8'}}, 0, 49);

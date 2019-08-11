@@ -1,13 +1,11 @@
-
 #include <iostream>
-
 //using namespace std;
 #include <bits/stdc++.h>
 #include <string>
 #include <unistd.h>
 
-#include "file_manager.h"
-#include "helpful_functions.h"
+#include "../file_manager.h"
+#include "../helpful_functions.h"
 
 /*
 	This function is for checking the matrix
@@ -92,7 +90,7 @@ int main()
 			std::cin >> work_id;
 			path =  dir_path + "/" + std::to_string(work_id) + ".txt";
 
-			int result = manager.create_new_work(a, work_id);
+			int result = manager.create_new_work(a);
 			//std::cout << "first result is " << result << std::endl;
 			retVal =  manager.write_work_to_file(a);
 			if (retVal == -1){

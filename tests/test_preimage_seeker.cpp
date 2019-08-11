@@ -1,6 +1,6 @@
-#include "preimage_seeker.h"
-#include "char_password_generator.h"
-#include "hash_matcher.h"
+#include "../Worker/preimage_seeker.h"
+#include "../Worker/char_password_generator.h"
+#include "../Worker/hash_matcher.h"
 #include <string>
 #include <vector>
 #include <iostream>

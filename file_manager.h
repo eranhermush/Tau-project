@@ -30,7 +30,6 @@ class file_manager{
     unsigned int  work_size;
     std::string dir_path;
     file_object fileobj;
-    int last_printed;
 
 public:
 
@@ -96,7 +95,7 @@ public:
     * When the function returns, the file object is update and we can put it in the real file.
     * @ret: if the function returns -1 it means that we cant create the new file, since we go over all the possible passwords.
     */
-    int create_new_work(file_object& file_obj, int worker_id);
+    int create_new_work(file_object& file_obj);
     /*
     * This function gets a file_object instance, and writes it to a file
     * It first writes all the data, and then write the status (it does for consistency)

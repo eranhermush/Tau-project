@@ -36,6 +36,7 @@ void helpful_functions::read_directory(std::string& name,  std::vector<std::stri
     if (! dirp)
     {
     	perror("error in opendir");
+    	exit (EXIT_FAILURE);
     	return;
     }
     struct dirent * dp;

@@ -5,17 +5,18 @@ file_manager::file_manager(const std::string& path, std::string& scheme_string1,
     //our_parser(parser),
     file_names(file_names),
     scheme_string(scheme_string1),
+    passwords(passwords),
+    password_function(password_function),
+    hash_args(hash_args),
+
     file_char('f'),
     curr_id(1),
     sum_of_works(finish),
     current_index_of_work(start),
     start_index_work(start),
     work_size(size_of_job),
-    passwords(passwords),
-    password_function(password_function),
-    dir_path(path),
-    hash_args(hash_args),
-    last_printed(0)
+    dir_path(path)
+    
 
 {
     /*
@@ -26,15 +27,15 @@ file_manager::file_manager(const std::string& path, std::string& scheme_string1,
     //std::cout <<"f" << std::endl;
     update_file_object_no_index(this->fileobj);
     validate_input();
-    if(finish ==-1){
-        save_sum_of_works();
+    //if(finish ==-1){
+    //    save_sum_of_works();
 
-    }
+    //}
 }
 std::string file_manager::get_files_in_string()
 {
     std::string result = "";
-    for (int i = 0; i< this->file_names.size();i++)
+    for (unsigned int i = 0; i< this->file_names.size();i++)
     {
         if (i != 0)
         {
@@ -51,7 +52,9 @@ bool file_manager::validate_input()
     {
         throw std::invalid_argument("received an empty string");
     }
-    if(std::count(this->scheme_string.begin(), this->scheme_string.end(), this->file_char) != this->file_names.size())
+    int count_result = std::count(this->scheme_string.begin(), this->scheme_string.end(), this->file_char);
+    int file_size = this->file_names.size();
+    if(count_result != file_size)
     {
         throw std::invalid_argument("received different sizes for the file names and the number of files in the scheme");
     }
@@ -64,7 +67,7 @@ void file_manager::save_sum_of_works()
     std::string filter_pattern = Pattern_Utils::filter_pattern(this->scheme_string);
     result *= Pattern_Utils::total_amount_by_char_tokens(filter_pattern);
     std::string full_path;
-    for (int i = 0; i< this->file_names.size(); i++)
+    for (unsigned int i = 0; i< this->file_names.size(); i++)
     {
         full_path = helpful_functions::get_absolute_path(this->file_names.at(i));
         result *=  helpful_functions::get_file_size(full_path);
@@ -109,7 +112,7 @@ void file_manager::update_file_object_no_index(file_object& f)
     //std::cout << f.to_string() <<std::endl<<"f: " << this->password_function<<std::endl;
 }
 
-int file_manager::create_new_work(file_object& file_obj, int worker_id)
+int file_manager::create_new_work(file_object& file_obj)
 {
     file_object file_obj_former;
     /*
@@ -256,7 +259,7 @@ bool file_manager::check_validate_of_file(std::string file_name, std::string ful
         std::cerr << "get_worker_id differ then filename" << std::endl;
         return false;
     }
-    for (int i = 0; i < this->arr_of_works.size(); i++) {
+    for (unsigned int i = 0; i < this->arr_of_works.size(); i++) {
         if(this->arr_of_works.at(i).get_worker_id() == file_name_int)
         {
             file_in_arr = this->arr_of_works.at(i);
@@ -313,7 +316,7 @@ bool file_manager::go_over_files( bool print_error)
     int file_name_int = 0;
     bool find_new = false;
     helpful_functions::read_directory(this->dir_path, file_names);
-    for (int i = 0; i < file_names.size(); i++) {
+    for (unsigned int i = 0; i < file_names.size(); i++) {
         file_name = this->dir_path + "/" + file_names.at(i);
         try{
             file_name_int = std::stoi(file_name.substr(this->dir_path.length()+1, file_name.length() - 3));
@@ -381,7 +384,7 @@ bool file_manager::go_over_files( bool print_error)
             {
                 new_obj.intialize();
                 new_obj.set_worker_id(obj.get_worker_id());
-                retVal = create_new_work(new_obj, file_name_int);
+                retVal = create_new_work(new_obj);
                 if(retVal == -1){
                     new_obj.intialize_to_finish_work();
                 }

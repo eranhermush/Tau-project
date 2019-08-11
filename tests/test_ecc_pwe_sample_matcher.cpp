@@ -1,7 +1,7 @@
-#include "ecc_pwe_sample_matcher.h"
-#include "kdf_sae.h"
-#include "sae_groups.h"
-#include "pwe_sample.h"
+#include "../Worker/ecc_pwe_sample_matcher.h"
+#include "../Worker/kdf_sae.h"
+#include "../Worker/sae_groups.h"
+#include "../Worker/pwe_sample.h"
 #include "cryptopp/sha.h"
 #include "cryptopp/hmac.h"
 #include <NTL/ZZ.h>
