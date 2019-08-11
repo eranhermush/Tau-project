@@ -70,11 +70,10 @@ int main()
 	cin >> password_functions;
 	std::cout << "enter the arguments (-1 if there are no arguments) "  << std::endl;
 	cin >> hash_args;
-	std::cout << hash_args << " f" << std::endl;
 	//print_matrix(parser.get_matrix());
 
 	// creates the manager
-	file_manager manager(dir_path, parser, files_vec, passwords, password_functions, hash_args);
+	file_manager manager(dir_path, parser_string, files_vec, passwords, password_functions, hash_args);
 
 	int work_id = 0;
 	int retVal = 0;

@@ -12,7 +12,9 @@
 #include "file_object.h"
 #include "helpful_functions.h"
 #include "parser_main.h"
+#include "pattern_utils.h"
 #include "index_vector_convertor.h"
+
 /*
  * This class is a server class, it reads here the files and updates them
  */
@@ -23,15 +25,12 @@ class file_manager{
     std::vector<file_object> arr_didnt_do;
     //std::vector< std::vector<std::string> > matrix_all_options;
     std::vector<std::string> file_names;
-    std::string compress_scheme_string, passwords, password_function, hash_args;
+    std::string scheme_string, passwords, password_function, hash_args;
     char file_char; // char of a file in the string scheme
     int curr_id;
-    int sum_of_works;
-    int current_index_of_work, work_size;
+    uint64_t sum_of_works, current_index_of_work;
+    int  work_size;
     std::string dir_path;
-    parser_main our_parser;
-
-    index_vector_convertor index_vec_con;
     file_object fileobj;
 
 
@@ -50,7 +49,7 @@ public:
 	 * @param matrix_all_options- the matrix from the parser with all the options
      * @param file_names        - the names of our files (with repetitions) that we use in the scheme
 	 */
-    file_manager(const std::string& path, parser_main &parser, std::vector<std::string> &file_names, std::string &passwords, std::string &password_function, std::string &hash_args);
+    file_manager(const std::string& path, std::string& scheme_string, std::vector<std::string> &file_names, std::string &passwords, std::string &password_function, std::string &hash_args);
     /*
         This function validates that the input is valid:
             The size of the string == the size of the matrix
@@ -64,7 +63,7 @@ public:
     */
     void save_sum_of_works();
 
-    int get_sum_of_works();
+    uint64_t get_sum_of_works();
 
     void set_work_size(int size);
     std::string get_files_in_string();

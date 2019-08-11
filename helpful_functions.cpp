@@ -17,8 +17,10 @@ uint64_t helpful_functions::get_file_size(const std::string& path){
 // https://stackoverflow.com/questions/4109638/what-is-the-safe-alternative-to-realpath
 std::string helpful_functions::get_absolute_path(const std::string& rel_path){
 	char* abs_path;
+	char* abs_path2;
 	std::string absolute_path;
 	abs_path = realpath(rel_path.c_str(), NULL);
+	abs_path2 = abs_path;
 	if(abs_path){
 		if(realpath(rel_path.c_str(), abs_path) == NULL){
 			free(abs_path);
@@ -50,7 +52,8 @@ void helpful_functions::read_directory(std::string& name,  std::vector<std::stri
 int helpful_functions::index_of_file_object_to_fileindex(std::string& str, int index)
 {
 	int realIndex = 0;
-	for (int i = 0; i < index && i < str.length(); ++i)
+	int str_length = str.length();
+	for (int i = 0; i < index && i < str_length; ++i)
 	{
 		if(str[i] == 'f')
 		{
@@ -63,7 +66,8 @@ int helpful_functions::index_of_file_object_to_fileindex(std::string& str, int i
 void helpful_functions::my_print(std::vector<std::string> &input)
 {
 	std::cout << "size: " << input.size() << std::endl;
-    for (int i = 0; i < input.size(); i++) {
+	int input_size = input.size();
+    for (int i = 0; i < input_size; i++) {
         std::cout << input.at(i) << ' ';
     }
     std::cout << std::endl;
@@ -80,11 +84,12 @@ bool helpful_functions::get_next_int(std::string &str, int start_index, int size
 {
 	result = 0;
 	std::string current_working;
+	int str_length = str.length();
 	if (size < 1)
 	{
 		return false;
 	}
-	if (start_index + size > str.length())
+	if (start_index + size > str_length)
 	{
 		return false;
 	}
@@ -131,7 +136,7 @@ bool helpful_functions::server_string_to_vectors(std::string& server_str, std::v
 	{
 		return true;
 	}
-	int index = 0;
+	unsigned int index = 0;
 	int x, d1, d2, counter;
 	float fcounter;
 	std::string current_working;
@@ -221,6 +226,8 @@ int helpful_functions::file_to_file_object(file_object& file_obj, std::string fi
     std::string msg;
     std::string files = "";
     std::ifstream myfile (filename);
+    std::istringstream start_stream, finish_stream;
+    uint64_t start_index_value, finish_index_value;
     int status = 0;
     int len = 0;
     /*
@@ -241,14 +248,14 @@ int helpful_functions::file_to_file_object(file_object& file_obj, std::string fi
 
         getline (myfile,line);
         file_obj.set_worker_id(std::stoi(line));
-        if(status == 3)
+        if(status == file_object::start_worker_symbol)
         {
         	myfile.close();
         	return 0;
         } 
 
         //std::cout << "status = " << status << " " << file_obj.get_worker_id() << " " << file_obj.get_id() << std::endl;       
-        if( status != 6)
+        if( status != file_object::worker_found_password_symbol)
         {
         	getline (myfile,line);
 	        file_obj.set_scheme_msg(line);
@@ -258,12 +265,21 @@ int helpful_functions::file_to_file_object(file_object& file_obj, std::string fi
 	        getline (myfile,line);
 	        getline (myfile,line2);
 
-	        file_obj.set_index(std::stoi(line),std::stoi(line2));
+	        start_stream = std::istringstream(line);
+	        finish_stream = std::istringstream(line2);
+
+	        start_stream >> start_index_value;
+	        finish_stream >> finish_index_value;
+	        file_obj.set_index(start_index_value, finish_index_value);
 
 	        for (int i = 1; i <= std::count(msg.begin(), msg.end(),'f'); i++)
 	        {
 	            getline (myfile,line);
-	            files = files + line + '\n'; 
+	            if (i != 1)
+	            {
+	            	files = files + file_object::delimiter_of_files_in_fileobject_symbol;
+	            }
+	            files = files + line; 
 	        }
 	        file_obj.set_files_for_scheme(files);
 	        getline (myfile,line);
@@ -299,7 +315,7 @@ int helpful_functions::file_to_file_object(file_object& file_obj, std::string fi
 bool helpful_functions::change_status_of_file(std::string& path, int status)
 {
 	FILE* fp;
-	if(status <0 || status > 9)
+	if(status < 0 || status > 9)
 	{
 		return false;
 	}

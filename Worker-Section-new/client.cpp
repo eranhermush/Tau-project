@@ -77,7 +77,7 @@ bool client::get_job(int status_start, bool to_write)
         // we need status 
 
         // there are no more works, or gets a work
-	    if (fileob.get_status() == 5 || fileob.get_status() == 0) 
+	    if (fileob.get_status() == file_object::no_more_works_symbol || fileob.get_status() == file_object::dont_start_working_symbol) 
 	    {
 	    	//std::cout << "find a job" << std::endl;
 	    	this->file_obj = fileob;
@@ -96,8 +96,13 @@ static bool write_data_to_file2(std::string& dir, std::string filename, const st
     // write the data without the status (write status 2)
     std::string path =  dir + "/" + filename + ".txt";
     //std::string path = std::to_string(worker_id) + ".txt";
-
- 	truncate(path.c_str(),2);
+    int truncate_ret_val = 0;
+ 	truncate_ret_val = truncate(path.c_str(),2);
+ 	if(truncate_ret_val == -1)
+ 	{
+        std::cout << "Error, truncate returns -1" << std::endl;
+        return false; 		
+ 	}
 
     myfile.open(path, std::fstream::out | std::fstream::app);
     
@@ -120,9 +125,9 @@ bool client::set_job(int status, const std::string& passwords, int lines)
 	std::string path =  this->dir_path + "/" + std::to_string(this->id) + ".txt";
 
 	std::string data = "";
-	if(status == 6 && lines != 0)
+	if(status == file_object::worker_found_password_symbol && lines != 0)
 	{
-		ret_val = helpful_functions::change_status_of_file(path, 7);
+		ret_val = helpful_functions::change_status_of_file(path, file_object::worker_write_to_file_symbol);
 		if (! ret_val)
 		{
 			std::cout << "error in change_status_of_file1 in set_job" << std::endl;
@@ -138,7 +143,7 @@ bool client::set_job(int status, const std::string& passwords, int lines)
 			return false;
 		}
 		
-		ret_val = helpful_functions::change_status_of_file(path, 6);
+		ret_val = helpful_functions::change_status_of_file(path, file_object::worker_found_password_symbol);
 		if (! ret_val)
 		{
 			std::cout << "error in change_status_of_file1 in set_job" << std::endl;
@@ -147,7 +152,7 @@ bool client::set_job(int status, const std::string& passwords, int lines)
 		
 		return true;
 	}
-	if(status != 6)
+	if(status != file_object::worker_found_password_symbol)
 	{
 
 		ret_val = helpful_functions::change_status_of_file(path, status);
@@ -169,9 +174,10 @@ bool client::work()
 	std::string msg = this->file_obj.get_scheme_msg();
 	std::string arguments = this->file_obj.get_arguments();
 	std::string password_msg = this->file_obj.get_passwords();
+	std::string password_paths = this->file_obj.get_files_for_scheme();
+	std::string function_name = this->file_obj.get_password_function();
 	std::string pass_str;
-	std::vector<std::unique_ptr<Password_Generator>> generators;
-	initialize_generators(generators);
+
 	std::vector<std::string> seek_all_results;
 
 	std::vector<std::string> str_vec_args_server;
@@ -183,13 +189,15 @@ bool client::work()
 	{
 		std::cout << "server_string_to_vectors returns false in client" << std::endl;
 	}
-	//Nested_Password_Generator ngen(generators);
-	Char_Pattern_Password_Generator ngen (msg, this->file_obj.get_start_index(), this->file_obj.get_end_index());
-	std::string function_name = this->file_obj.get_password_function();
+
+	std::vector<std::string> file_paths_vector;
+	helpful_functions::split(password_paths, file_paths_vector, file_object::delimiter_of_files_in_fileobject_symbol);
+	std::unique_ptr<Password_Generator> msg_generator = Generator_By_Pattern::create_generator(msg, file_paths_vector, this->file_obj.get_start_index(), this->file_obj.get_end_index());
+	
 	if( function_name == "id")
 	{
 		Hash_Matcher<Id_Hash> hm1(Id_Hash(), this->file_obj.get_passwords());
-		Preimage_Seeker seeker_for_passwords(ngen, hm1);
+		Preimage_Seeker seeker_for_passwords(*msg_generator, hm1);
 		seek_all_results = seeker_for_passwords.seek_all();
 		if(seek_all_results.size() != 0)
 		{
@@ -208,7 +216,7 @@ bool client::work()
 			std::cout << this->file_obj.to_string() << std::endl;
 			return false;			
 		}
-		Preimage_Seeker seeker_for_passwords2(ngen, *match);
+		Preimage_Seeker seeker_for_passwords2(*msg_generator, *match);
 		seek_all_results = seeker_for_passwords2.seek_all();
 		if(seek_all_results.size() != 0)
 		{
@@ -233,49 +241,12 @@ bool client::work()
 	}
 	return true;
 }
-void client::initialize_generators(std::vector<std::unique_ptr<Password_Generator>>& generators)
-{
-	return;
-	/*
-	std::string msg = this->file_obj.get_scheme_msg();
-	parser.intialize(msg);
-	convertor.intialize(this->file_obj);
-	std::vector<int> start_vector, finish_vector;
-	start_vector = convertor.index_to_vector_indexes(this->file_obj.get_start_index());
-	finish_vector = convertor.index_to_vector_indexes(this->file_obj.get_end_index());
-	File_Password_Generator Pfile_gen("", 0, 0);
-	Char_Pattern_Password_Generator Cfile_gen("", 0, 0);
 
-	std::unique_ptr<Password_Generator> TempGen;
-	generators.clear();
-	std::vector<std::string> strs;
-    helpful_functions::split(this->file_obj.get_files_for_scheme(), strs, '#');
-    int index;
-	for (int i = 0; i < this->parser.get_str_compress().length(); ++i)
-	{
-		if(this->parser.get_str_compress().at(i) == 'f')
-		{
-			index = helpful_functions::index_of_file_object_to_fileindex(msg, i);
-			//Pfile_gen = File_Password_Generator( strs.at(index), start_vector.at(i), finish_vector.at(i));
-			//*TempGen = Pfile_gen;
-			generators.push_back(File_Password_Generator( strs.at(index), start_vector.at(i), finish_vector.at(i)));
-
-		}
-		else
-		{
-			//Cfile_gen = Char_Pattern_Password_Generator( msg.substr(i, this->parser.get_str_before_compress_size_at(i)), start_vector.at(i), finish_vector.at(i));
-			//*TempGen = Cfile_gen;
-			generators.push_back(Char_Pattern_Password_Generator( msg.substr(i, this->parser.get_str_before_compress_size_at(i)), start_vector.at(i), finish_vector.at(i)));
-			
-		}
-		generators.push_back(std::move(TempGen));
-	}
-	*/
-}
 std::string client::vector_passwords_to_sring_passwords(std::vector<std::string> &v)
 {
 	std::string result = "";
-	for (int i = 0; i < v.size(); ++i)
+
+	for (unsigned int i = 0; i < v.size(); ++i)
 	{
 		if (i != 0)
 		{
@@ -292,7 +263,7 @@ void client::main()
 	std::string path =  this->dir_path + "/" + std::to_string(this->id) + ".txt";
 	start();
 	
-	retVal = get_job(1, false);
+	retVal = get_job(file_object::working_in_process_symbol, false);
 	if (! retVal)
 	{
 		std::cout << "error in getting the first job" << std::endl;
@@ -306,13 +277,13 @@ void client::main()
 			std::cout << "error in working " << std::endl;
 			return;
 		}
-		retVal = get_job(1, false);
+		retVal = get_job(file_object::working_in_process_symbol, false);
 		if (! retVal)
 		{
 			std::cout << "error in getting the job" << std::endl;
 			return;
 		}	
-		if (this->file_obj.get_status() == 5)
+		if (this->file_obj.get_status() == file_object::no_more_works_symbol)
 		{
 			std::cout << "finisih!!!" << std::endl;
 			finish = true;

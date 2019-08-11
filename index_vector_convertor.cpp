@@ -20,7 +20,7 @@ std::vector<int> index_vector_convertor::index_to_vector_indexes(int index){
     // fill the array with 0 this->scheme_string.length() times 
     result.assign(this->parser.get_str_compress().length(), 0); 
     int sum = 1;
-    for (int i = 0; i<this->parser.get_str_compress().length();i++){
+    for (unsigned int i = 0; i<this->parser.get_str_compress().length();i++){
         sum *= size_of_object_in_scheme(i);
     }
 
@@ -38,7 +38,7 @@ int index_vector_convertor::vector_indexes_to_index(std::vector<int> &vec)
 {
     int result = 0;
     int sum = 1;
-    for (int i = 0; i<vec.size();i++)
+    for (unsigned int i = 0; i<vec.size();i++)
     {
         result += sum*vec[i];
         sum *= size_of_object_in_scheme(i);
@@ -49,7 +49,8 @@ int index_vector_convertor::vector_indexes_to_index(std::vector<int> &vec)
 
 int index_vector_convertor::size_of_object_in_scheme(int index)
 {
-    if(index < 0 || index >= this->parser.get_str_compress().length() ){
+    int length = this->parser.get_str_compress().length();
+    if(index < 0 || index >= length ){
         throw std::invalid_argument("unexpected index");
     }
     if(this->parser.get_str_compress().at(index) != file_char){
@@ -75,7 +76,8 @@ int index_vector_convertor::size_of_object_in_scheme(int index)
 
 int index_vector_convertor::size_of_object_in_scheme_org(int index)
 {
-    if(index < 0 || index >= this->parser.get_str_original().length() ){
+    int length = this->parser.get_str_original().length();
+    if(index < 0 || index >= length ){
         throw std::invalid_argument("unexpected index");
     }
     if(this->parser.get_str_original().at(index) != file_char){
