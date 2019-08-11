@@ -14,7 +14,8 @@ file_manager::file_manager(const std::string& path, std::string& scheme_string1,
     passwords(passwords),
     password_function(password_function),
     dir_path(path),
-    hash_args(hash_args)
+    hash_args(hash_args),
+    last_printed(0)
 
 {
     /*
@@ -119,11 +120,11 @@ int file_manager::create_new_work(file_object& file_obj, int worker_id)
     */
     uint64_t frac = (this->sum_of_works + 1 - this->start_index_work) / 5;
     uint64_t x1 = (this->current_index_of_work + 1 - this->start_index_work) / (frac);
-    uint64_t x2 = (this->current_index_of_work + this->work_size + 1 - this->start_index_work) / frac;
+    uint64_t x2 = (std::min(this->current_index_of_work + this->work_size, this->sum_of_works-1)+ 1 - this->start_index_work) / frac;
     if(x1 < x2)
     {
         x2 = x2*20;
-        std::cout << "We are close to do " << x2 << "\% of the job." <<  std::endl;
+        std::cout << "We are close to do " << x2 << "\% of the job. the index is: "  << std::endl;
     }
     //std::cout << this->current_index_of_work << " " << this->sum_of_works <<std::endl;
     if (this->current_index_of_work >= this->sum_of_works-1)

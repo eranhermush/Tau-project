@@ -30,7 +30,7 @@ class file_manager{
     unsigned int  work_size;
     std::string dir_path;
     file_object fileobj;
-
+    int last_printed;
 
 public:
 
