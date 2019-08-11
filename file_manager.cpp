@@ -296,7 +296,7 @@ bool file_manager::finish_job()
     }
     if (this->current_index_of_work >= this->sum_of_works-1)
     {
-        std::cout << "The server finish its job" << std::endl;
+        std::cout << "The enumeration is over." << std::endl;
     }
     return this->current_index_of_work >= this->sum_of_works-1;
 }
@@ -362,8 +362,19 @@ bool file_manager::go_over_files( bool print_error)
             if(obj.get_status() == file_object::worker_found_password_symbol)
             {
                 passwords_founds = obj.get_passwords_found_vector();
-                std::cout << "worker " << std::to_string(obj.get_worker_id()) << " found passwords!!!!!" << std::endl;
-                helpful_functions::printcoll(passwords_founds);
+                if(passwords_founds.size() == 1){
+                    std::cout << "A matching password was found:" << std::endl << "\t" << passwords_founds[0] << std::endl;
+                }
+                else if(passwords_founds.size() > 1){
+                    std::cout << "Multiple passwords were found:" << std::endl;
+                    for(unsigned int p = 0; p < passwords_founds.size() && p < 10; ++p){
+                        std::cout << "\t" << passwords_founds[p] << std::endl;
+                    }
+                    if(passwords_founds.size() > 10){
+                        std::cout << "And " << passwords_founds.size() - 10 << " more..." << std::endl;
+                    }
+                }
+                //helpful_functions::printcoll(passwords_founds);
                 find_new = true;
                 //password_function.clear();
             }

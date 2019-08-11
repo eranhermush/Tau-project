@@ -82,7 +82,7 @@ namespace User_Text_Interface{
 	const std::string ECC_HELP("The possible ECC groups are group19, group20 and group21");
 	const std::string FFC_HELP("The possible FFC groups are group22, group23 and group24");
 	const std::string NO_HELP("--help is not supported here.");
-	const std::string WAIT_MSG("Please wait. This might take a while...");
+	const std::string WAIT_MSG("Please wait. This might take a while...\n"); // last \n is on purpose
 }
 
 

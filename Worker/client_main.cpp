@@ -1,24 +1,18 @@
-#include <iostream>
-
-//using namespace std;
-#include <bits/stdc++.h>
-#include <string>
-
 #include "client.h"
 
+#include <iostream>
+#include <string>
 
-
-int main()
+int main(int argc, char** argv)
 {	
-
-
-	int id;
-	std::cout << "Hello, please enter the id:" << std::endl;
-	std::cin >> id;
-
-	std::string a = "a";
-	client c(id, a,10000);
+	if(argc < 3){
+		std::cerr << "Usage error: expecting 2 arguments: a path to the working directory and worker id number." << std::endl;
+		return 1;
+	}
+	std::string dir(argv[1]);
+	int id = std::stoi(argv[2]);
+	client c(id, dir, 10000);
 	c.main();
-    return 0;
 
+	return 0;
 }

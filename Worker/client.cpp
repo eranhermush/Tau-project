@@ -291,7 +291,6 @@ void client::main()
 		}	
 		if (this->file_obj.get_status() == file_object::no_more_works_symbol)
 		{
-			std::cout << "finisih!!!" << std::endl;
 			finish = true;
 		}	
 	}
