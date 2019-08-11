@@ -1,6 +1,6 @@
 #include "user_text_interface.h"
 
-/*--------------Private small utility function------------*/
+/*--------------Private small utility functions------------*/
 
 /* Returns the string represents a positive number */
 bool check_number(const std::string& number);
@@ -23,89 +23,8 @@ uint64_t overflow_safe_mul(uint64_t a, uint64_t b);
 /* Returna an estimate of a good job size per worker for the parameters */
 unsigned int estimate_good_job_size(uint64_t workload, unsigned int num_of_files, const std::string& func_name);
 
+/*----------------------------------------------------------*/
 
-bool check_number(const std::string& number){
-	for(unsigned int i = 0; i < number.size(); ++i){
-		if('0' <= number[i] && number[i] <= '9'){
-			continue;
-		}
-		return false;
-	}
-	return true;
-}
-
-bool check_hex(const std::string& hex){
-	for(unsigned int i = 0; i < hex.size(); ++i){
-		if('0' <= hex[i] && hex[i] <= '9'){
-			continue;
-		}
-		if('a' <= hex[i] && hex[i] <= 'f'){
-			continue;
-		}
-		if('A' <= hex[i] && hex[i] <= 'F'){
-			continue;
-		}
-		return false;
-	}
-	return true;
-}
-
-int get_group_number(const std::string& group_name){
-	std::string lc_name, str;
-	lc_name.resize(group_name.size());
-	std::transform(group_name.begin(), group_name.end(), lc_name.begin(), [](unsigned char c){ return std::tolower(c); });
-	for(unsigned int g = 19; g <= 24; ++g){
-		str = std::to_string(g);
-		if(lc_name == str || lc_name == "group"+str || lc_name == "group "+str){
-			return g;
-		}
-	}
-	return 0;
-}
-
-std::string pack_args(const std::vector<std::string>& args){
-	if(args.size() == 0){
-		return "-1";
-	}
-	std::string result;
-	std::string len_str;
-	std::string lenlen_str;
-	for(unsigned int i = 0; i < args.size(); ++i){
-		len_str = std::to_string(args[i].length());
-		lenlen_str = std::to_string(len_str.length());
-		result += "0" + lenlen_str + len_str + args[i];
-	}
-	return result;
-}
-
-uint64_t overflow_safe_mul(uint64_t a, uint64_t b){
-	if(a == 0 || b == 0){
-		return 0;
-	}
-	uint64_t mul = a*b;
-	if(mul/b != a){
-		//overflow
-		return UINT64_MAX;
-	}
-	return mul;
-}
-
-unsigned int estimate_good_job_size(uint64_t workload, unsigned int num_of_files, const std::string& func_name){
-	unsigned int base_size = 250000;
-	if(func_name == "sae ecc" || func_name == "sae ffc"){
-		base_size = 100000;
-	}
-	if(workload < 1000000){
-		base_size *= 4;
-		base_size /= 5;
-	}
-	if(num_of_files == 0){
-		return base_size;
-	}
-	unsigned int file_factor = num_of_files >= 3 ? 12 : 6;
-	return file_factor * base_size;
-
-}
 
 
 bool User_Text_Interface::get_enumeration_parameters(std::string& func_name, std::string& func_target, std::string& func_args_rep_string,
@@ -173,8 +92,11 @@ void User_Text_Interface::please_wait_prompt(){
 
 
 bool User_Text_Interface::check_for_help_or_exit(const std::string& reply, const std::string& help_reply, bool& should_exit){
-	if(reply == EXIT_REQUEST){
+	if(reply == EXIT_REQUEST || std::cin.eof()){
 		should_exit = true;
+		if(std::cin.eof()){
+			std::cout << std::endl; //fix prompt sign
+		}
 		return true;
 	}
 	if(reply == HELP_REQUEST){
@@ -238,8 +160,11 @@ std::string User_Text_Interface::get_password_pattern(bool& should_exit){
 			while(!answered_check){
 				std::cout << PROMPT_REPLY;
 				std::getline(std::cin, reply);
-				if(reply == EXIT_REQUEST){
+				if(reply == EXIT_REQUEST || std::cin.eof()){
 					should_exit = true;
+					if(std::cin.eof()){
+						std::cout << std::endl;
+					}
 					return "";
 				}
 				else if(reply.size() == 0){
@@ -308,10 +233,35 @@ std::string User_Text_Interface::get_file_path(int file_number, bool& should_exi
 void User_Text_Interface::get_enumeration_bounds(bool& should_exit, uint64_t& start, uint64_t& end, uint64_t total_upper_bound){
 	std::string reply;
 	std::stringstream reply_stream;
-	std::cout << "Please enter the enumeration bounds (between 0 and " << total_upper_bound << ") or \"all\":" << std::endl;
+	std::cout << "Do you want to check the whole range of passwords?(y/n)" << std::endl;
 	bool answered = false;
 	bool got_start = false;
 	uint64_t val = 0;
+	while(!answered){
+		std::cout << PROMPT_REPLY;
+		std::getline(std::cin, reply);
+		if(reply == EXIT_REQUEST || std::cin.eof()){
+			should_exit = true;
+			if(std::cin.eof()){
+				std::cout << std::endl;
+			}
+			return;
+		}
+		else if(reply.size() == 0){
+			continue;
+		}
+		else if(reply[0] == 'y'){
+			answered = true;
+			end = total_upper_bound - 1;
+			start = 0;
+			return;
+		}
+		else if(reply[0] == 'n'){
+			answered = true;
+		}
+	}
+	answered = false;
+	std::cout << "Please enter the enumeration bounds (between 0 and " << total_upper_bound << ") or \"all\":" << std::endl;
 	while(!answered){
 		std::cout << PROMPT_REPLY;
 		std::getline(std::cin, reply);
@@ -403,8 +353,11 @@ void User_Text_Interface::get_hash_parametes(const std::string& func_name, bool&
 				while(!answered_check){
 					std::cout << PROMPT_REPLY;
 					std::getline(std::cin, reply);
-					if(reply == EXIT_REQUEST){
+					if(reply == EXIT_REQUEST || std::cin.eof()){
 						should_exit = true;
+						if(std::cin.eof()){
+							std::cout << std::endl;
+						}
 						return;
 					}
 					else if(reply.size() == 0){
@@ -441,7 +394,7 @@ void User_Text_Interface::get_sampling_parameters(const std::string& protocol, b
 	while(!answered){
 		std::cout << PROMPT_REPLY;
 		std::getline(std::cin, reply);
-		if(check_for_help_or_exit(reply, NO_HELP, should_exit)){
+		if(check_for_help_or_exit(reply, SAMPLES_HELP, should_exit)){
 			if(should_exit){
 				return;
 			}
@@ -490,4 +443,92 @@ void User_Text_Interface::get_sampling_parameters(const std::string& protocol, b
 			std::cout << "Invalid group name. Please try again." << std::endl;
 		}
 	}
+}
+
+
+/*---------------Utility functions implementation-------------*/
+
+
+
+bool check_number(const std::string& number){
+	for(unsigned int i = 0; i < number.size(); ++i){
+		if('0' <= number[i] && number[i] <= '9'){
+			continue;
+		}
+		return false;
+	}
+	return true;
+}
+
+bool check_hex(const std::string& hex){
+	for(unsigned int i = 0; i < hex.size(); ++i){
+		if('0' <= hex[i] && hex[i] <= '9'){
+			continue;
+		}
+		if('a' <= hex[i] && hex[i] <= 'f'){
+			continue;
+		}
+		if('A' <= hex[i] && hex[i] <= 'F'){
+			continue;
+		}
+		return false;
+	}
+	return true;
+}
+
+int get_group_number(const std::string& group_name){
+	std::string lc_name, str;
+	lc_name.resize(group_name.size());
+	std::transform(group_name.begin(), group_name.end(), lc_name.begin(), [](unsigned char c){ return std::tolower(c); });
+	for(unsigned int g = 19; g <= 24; ++g){
+		str = std::to_string(g);
+		if(lc_name == str || lc_name == "group"+str || lc_name == "group "+str){
+			return g;
+		}
+	}
+	return 0;
+}
+
+std::string pack_args(const std::vector<std::string>& args){
+	if(args.size() == 0){
+		return "-1";
+	}
+	std::string result;
+	std::string len_str;
+	std::string lenlen_str;
+	for(unsigned int i = 0; i < args.size(); ++i){
+		len_str = std::to_string(args[i].length());
+		lenlen_str = std::to_string(len_str.length());
+		result += "0" + lenlen_str + len_str + args[i];
+	}
+	return result;
+}
+
+uint64_t overflow_safe_mul(uint64_t a, uint64_t b){
+	if(a == 0 || b == 0){
+		return 0;
+	}
+	uint64_t mul = a*b;
+	if(mul/b != a){
+		//overflow
+		return UINT64_MAX;
+	}
+	return mul;
+}
+
+unsigned int estimate_good_job_size(uint64_t workload, unsigned int num_of_files, const std::string& func_name){
+	unsigned int base_size = 250000;
+	if(func_name == "sae ecc" || func_name == "sae ffc"){
+		base_size = 100000;
+	}
+	if(workload < 1000000){
+		base_size *= 4;
+		base_size /= 5;
+	}
+	if(num_of_files == 0){
+		return base_size;
+	}
+	unsigned int file_factor = num_of_files >= 3 ? 12 : 6;
+	return file_factor * base_size;
+
 }

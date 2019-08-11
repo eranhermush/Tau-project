@@ -70,14 +70,15 @@ namespace User_Text_Interface{
 	/*---------------Replies and prompts-------------------*/
 
 
-	const std::string BEGIN_PROMPT("Passwords Enumeration");
+	const std::string BEGIN_PROMPT("--------------------\nPASSWORD ENUMERATION\n--------------------\n(For more information use --help)\n"); // last \n is on purpose
 	const std::string PROMPT_REPLY(">>> ");
 	const std::string EXIT_REQUEST("exit");
 	const std::string HELP_REQUEST("--help");
 	const std::string PATTERN_HELP("The password pattern is a non-empty string describing how to build the passwords.\nThere are a few special token representing sets:\n\t'f' - a word from a file.\n\t'c' - a lowercase english letter.\n\t'C' - an uppercase English letter.\n\t'D' - a decimal digit.\n\t'p' - a punctuation mark.\nIf you want to specify your own set of characters, place it in between brackets without any separators: { }.\nNote that if you want to include the } character, you should place it in the end of the set (e.g. {0}} ).\n\nFor example, the string \"09!\" matches the patterns \"{01}dp\" and \"dd{!?}\" but it does not match \"pdC\" or \"ddpp\".");
 	const std::string FUNCTION_HELP("The function you want to inverse.\nThe supported hash functions are:\n\tKeccak-256\n\tMD5\n\tSHA1\n\tSHA2-256\n\tSHA2-384\n\tSHA2-512\n\tSHA3-256\n\tSHA3-384\n\tSHA3-512\n\tWhirlpool\nTo enumerate with samples taken from Hash-to-Element algorithm in the SAE protocol choose:\n\tSAE ECC\n\tSAE FFC");
-	const std::string BOUNDS_HELP("Set the bounds of the enumeration using lexicorgaphic ordering of the pattern (where files are indexed by bytes).\nWrite the lower bound and then the upperbound, or simply write \"all\" to enumerate all passwords.");
+	const std::string BOUNDS_HELP("Set the bounds of the enumeration using lexicogarphic order of the pattern (where files are indexed by bytes).\nWrite the lower bound and then the upperbound, or simply write \"all\" to enumerate all passwords.");
 	const std::string HASH_HELP("A hash value should be given as hexadecimal digits.");
+	const std::string SAMPLES_HELP("A sample file should consist of samples from a run of a SAE password-to-element function.\nEach sample should be in a new line in the format:\n\t<MAC ADDRESS1> <MAC ADDRESS2> <COUNTER> <SAMPLE REUSLT>\nSeparated by spaces.");
 	const std::string ECC_HELP("The possible ECC groups are group19, group20 and group21");
 	const std::string FFC_HELP("The possible FFC groups are group22, group23 and group24");
 	const std::string NO_HELP("--help is not supported here.");
