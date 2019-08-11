@@ -17,10 +17,8 @@ uint64_t helpful_functions::get_file_size(const std::string& path){
 // https://stackoverflow.com/questions/4109638/what-is-the-safe-alternative-to-realpath
 std::string helpful_functions::get_absolute_path(const std::string& rel_path){
 	char* abs_path;
-	char* abs_path2;
 	std::string absolute_path;
 	abs_path = realpath(rel_path.c_str(), NULL);
-	abs_path2 = abs_path;
 	if(abs_path){
 		if(realpath(rel_path.c_str(), abs_path) == NULL){
 			free(abs_path);
