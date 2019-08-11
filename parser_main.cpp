@@ -72,11 +72,11 @@ void parser_main::update_compress_scheme_str()
     bool is_char = false;
     int element_size = 0;
     int block_size = 0;
-
+    int str_exp_length = this->str_regular_expression.length();
     this->str_compress_size.clear();
     this->str_before_compress_size.clear();
 
-    for (int i = 0; i < this->str_regular_expression.length(); i++)
+    for (int i = 0; i < str_exp_length; i++)
     {
         if (this->str_regular_expression[i] != 'f')
         {

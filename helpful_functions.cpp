@@ -17,10 +17,12 @@ uint64_t helpful_functions::get_file_size(const std::string& path){
 // https://stackoverflow.com/questions/4109638/what-is-the-safe-alternative-to-realpath
 std::string helpful_functions::get_absolute_path(const std::string& rel_path){
 	char* abs_path;
+	char* abs_path2;
 	std::string absolute_path;
 	abs_path = realpath(rel_path.c_str(), NULL);
+	abs_path2 = abs_path;
 	if(abs_path){
-		realpath(rel_path.c_str(), abs_path);
+		abs_path2 = realpath(rel_path.c_str(), abs_path);
 		absolute_path = abs_path;
 		free(abs_path);
 	}
@@ -47,7 +49,8 @@ void helpful_functions::read_directory(std::string& name,  std::vector<std::stri
 int helpful_functions::index_of_file_object_to_fileindex(std::string& str, int index)
 {
 	int realIndex = 0;
-	for (int i = 0; i < index && i < str.length(); ++i)
+	int str_length = str.length();
+	for (int i = 0; i < index && i < str_length; ++i)
 	{
 		if(str[i] == 'f')
 		{
@@ -60,7 +63,8 @@ int helpful_functions::index_of_file_object_to_fileindex(std::string& str, int i
 void helpful_functions::my_print(std::vector<std::string> &input)
 {
 	std::cout << "size: " << input.size() << std::endl;
-    for (int i = 0; i < input.size(); i++) {
+	int input_size = input.size();
+    for (int i = 0; i < input_size; i++) {
         std::cout << input.at(i) << ' ';
     }
     std::cout << std::endl;
@@ -77,11 +81,12 @@ bool helpful_functions::get_next_int(std::string &str, int start_index, int size
 {
 	result = 0;
 	std::string current_working;
+	int str_length = str.length();
 	if (size < 1)
 	{
 		return false;
 	}
-	if (start_index + size > str.length())
+	if (start_index + size > str_length)
 	{
 		return false;
 	}
@@ -128,7 +133,7 @@ bool helpful_functions::server_string_to_vectors(std::string& server_str, std::v
 	{
 		return true;
 	}
-	int index = 0;
+	unsigned int index = 0;
 	int x, d1, d2, counter;
 	float fcounter;
 	std::string current_working;

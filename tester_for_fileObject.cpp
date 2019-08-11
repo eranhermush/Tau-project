@@ -74,7 +74,7 @@ int main()
 	//print_matrix(parser.get_matrix());
 
 	// creates the manager
-	file_manager manager(dir_path, parser, files_vec, passwords, password_functions, hash_args);
+	file_manager manager(dir_path, parser_string, files_vec, passwords, password_functions, hash_args);
 
 	int work_id = 0;
 	int retVal = 0;

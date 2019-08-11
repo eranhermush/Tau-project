@@ -130,6 +130,7 @@ bool file_object::check_equal(file_object& obj)
 
     if  (!(this->files_for_scheme == obj.get_files_for_scheme() ))
     {
+    	std::cout << "here" << this->files_for_scheme << " ttt " << obj.get_files_for_scheme() << std::endl;
         return false;
     } 
     if  (!(this->arguments_to_hash == obj.get_arguments() ))

@@ -96,8 +96,13 @@ static bool write_data_to_file2(std::string& dir, std::string filename, const st
     // write the data without the status (write status 2)
     std::string path =  dir + "/" + filename + ".txt";
     //std::string path = std::to_string(worker_id) + ".txt";
-
- 	truncate(path.c_str(),2);
+    int truncate_ret_val = 0;
+ 	truncate_ret_val = truncate(path.c_str(),2);
+ 	if(truncate_ret_val == -1)
+ 	{
+        std::cout << "Error, truncate returns -1" << std::endl;
+        return false; 		
+ 	}
 
     myfile.open(path, std::fstream::out | std::fstream::app);
     
@@ -186,7 +191,7 @@ bool client::work()
 	}
 
 	std::vector<std::string> file_paths_vector;
-	split(password_paths, file_paths_vector, file_object::delimiter_of_files_in_fileobject_symbol);
+	helpful_functions::split(password_paths, file_paths_vector, file_object::delimiter_of_files_in_fileobject_symbol);
 	std::unique_ptr<Password_Generator> msg_generator = Generator_By_Pattern::create_generator(msg, file_paths_vector, this->file_obj.get_start_index(), this->file_obj.get_end_index());
 	
 	if( function_name == "id")
@@ -240,7 +245,8 @@ bool client::work()
 std::string client::vector_passwords_to_sring_passwords(std::vector<std::string> &v)
 {
 	std::string result = "";
-	for (int i = 0; i < v.size(); ++i)
+
+	for (unsigned int i = 0; i < v.size(); ++i)
 	{
 		if (i != 0)
 		{

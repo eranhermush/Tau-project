@@ -49,15 +49,15 @@ class file_object{
 
 public:
 
-    const int dont_start_working_symbol = 0;
-    const int working_in_process_symbol = 1;
-    const int done_working_symbol = 2;
-    const int start_worker_symbol = 3;
-    const int finish_work_symbol = 4;
-    const int no_more_works_symbol =5;
-    const int worker_found_password_symbol = 6;
-    const int worker_write_to_file_symbol = 7;
-    const char delimiter_of_files_in_fileobject_symbol = char(1);
+    static const int dont_start_working_symbol = 0;
+    static const int working_in_process_symbol = 1;
+    static const int done_working_symbol = 2;
+    static const int start_worker_symbol = 3;
+    static const int finish_work_symbol = 4;
+    static const int no_more_works_symbol =5;
+    static const int worker_found_password_symbol = 6;
+    static const int worker_write_to_file_symbol = 7;
+    static const char delimiter_of_files_in_fileobject_symbol = char(1);
 
     file_object();
     void set_index(uint64_t  start_index, uint64_t  end_index);

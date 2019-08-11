@@ -28,8 +28,8 @@ class file_manager{
     std::string scheme_string, passwords, password_function, hash_args;
     char file_char; // char of a file in the string scheme
     int curr_id;
-    uint64_t sum_of_works;
-    int current_index_of_work, work_size;
+    uint64_t sum_of_works, current_index_of_work;
+    int  work_size;
     std::string dir_path;
     file_object fileobj;
 

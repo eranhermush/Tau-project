@@ -1,9 +1,9 @@
 #include "file_manager.h"
 
-file_manager::file_manager(const std::string& path, std::string& scheme_string, std::vector<std::string> &file_names, std::string &passwords, std::string &password_function, std::string &hash_args):
+file_manager::file_manager(const std::string& path, std::string& scheme_string1, std::vector<std::string> &file_names, std::string &passwords, std::string &password_function, std::string &hash_args):
     //our_parser(parser),
     file_names(file_names),
-    this->scheme_string(scheme_string),
+    scheme_string(scheme_string1),
     file_char('f'),
     curr_id(1),
     sum_of_works(0),
