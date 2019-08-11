@@ -124,7 +124,7 @@ int file_manager::create_new_work(file_object& file_obj, int worker_id)
     if(x1 < x2)
     {
         x2 = x2*20;
-        std::cout << "We are close to do " << x2 << "\% of the job. the index is: "  << std::endl;
+        std::cout << "Searching approximately " << x2 << "\% of the passwords." << std::endl;
     }
     //std::cout << this->current_index_of_work << " " << this->sum_of_works <<std::endl;
     if (this->current_index_of_work >= this->sum_of_works-1)
