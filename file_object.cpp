@@ -155,7 +155,7 @@ void file_object::intialize()
 	this->files_for_scheme = "";
 	this->arguments_to_hash = "";
 }
-void file_object::intialize_to_error()
+void file_object::intialize_to_finish_work()
 {
 	this->passwords_found_vector.clear();
 	this->status = 5;

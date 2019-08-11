@@ -113,7 +113,9 @@ bool helpful_functions::isFloat(std::string &s)
         s[char_pos] == '.' ? ++n_pt : ++n_nm;
     }
     if (n_pt>1 || n_nm<1) // no more than one point, at least one digit
+    {
         return false;
+    }
 
     // skip the trailing whitespaces
     while (s[char_pos] == ' ') {
@@ -207,7 +209,7 @@ bool helpful_functions::write_data_to_file(std::string& dir, std::string filenam
     
     if (! (myfile.is_open()))
     {
-        std::cout << "Error opening file in write_work_to_file" << std::endl;
+        std::cerr << "Error opening file " << path << std::endl;
         return false;
     }
     myfile << data_to_file;
@@ -303,7 +305,7 @@ int helpful_functions::file_to_file_object(file_object& file_obj, std::string fi
     {
         if (print_error)
         {
-            std::cout << "Error my file is not open :( file name is " << filename << std::endl;
+            std::cerr << "error in open file. the filename is " << filename << std::endl;
         }
         return -1;
     }

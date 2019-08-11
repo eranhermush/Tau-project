@@ -26,7 +26,7 @@ class file_manager{
     std::string scheme_string, passwords, password_function, hash_args;
     char file_char; // char of a file in the string scheme
     int curr_id;
-    uint64_t sum_of_works, current_index_of_work;
+    uint64_t sum_of_works, current_index_of_work, start_index_work;
     unsigned int  work_size;
     std::string dir_path;
     file_object fileobj;
@@ -119,7 +119,7 @@ public:
     *    b. If the status is 2 - we removes this work from the arr, and update the file with a new work
     *    c. If the status is 3 we gives the worker a new work.
     */
-    void go_over_files( bool print_error);
+    bool go_over_files( bool print_error);
 
     /*
     * This function gets a file name and returns if this file is validate - like the protocol.

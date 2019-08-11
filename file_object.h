@@ -98,7 +98,7 @@ public:
     void intialize();
 
     // initialize the object to error values  (-1/"" to all, expect status, which is 5)   
-    void intialize_to_error();
+    void intialize_to_finish_work();
 
 };
 

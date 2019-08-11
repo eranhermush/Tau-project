@@ -13,7 +13,7 @@ bool client::start()
 	ret_val =  helpful_functions::write_data_to_file(this->dir_path, std::to_string(this->id), "3\n1\n" + std::to_string(this->id) ); // 3 indicates that we start a new worker
 	if (! ret_val)
 	{
-		std::cout << "error in write_data_to_file in start" << std::endl;
+		//std::cout << "error in write_data_to_file in start" << std::endl;
 		return false;
 	}
 	/*
@@ -40,7 +40,7 @@ bool client::get_job(int status_start, bool to_write)
 		ret_val =  helpful_functions::change_status_of_file(path , status_start); 
 		if (! ret_val)
 		{
-			std::cout << "error in write_data_to_file in get_job" << std::endl;
+			//std::cout << "error in write_data_to_file in get_job" << std::endl;
 			return false;
 		}		
 	}
@@ -63,15 +63,15 @@ bool client::get_job(int status_start, bool to_write)
     	{
     		if(fileob.get_status() != 1)
     		{
-	            std::cout << "An exception occurred on open file in validate. Exception Nr. "  << e.what() << " " << file_obj.get_status() << '\n';
-	            std::cout << fileob.to_string() << std::endl;
+	            std::cerr << "An exception occurred in function helpful_functions::file_to_file_object. the exception is: "  << e.what()  << std::endl;
+	            //std::cout << fileob.to_string() << std::endl;
 		        return false;
 		    }
     	}
 		//std::cout << "2| " <<std::endl;
 
 		if (retVal == -1){
-			std::cout << "error in file_to_file_object in get_job" << std::endl;
+			//std::cout << "error in file_to_file_object in get_job" << std::endl;
             return false;
         }
         // we need status 
@@ -100,7 +100,7 @@ static bool write_data_to_file2(std::string& dir, std::string filename, const st
  	truncate_ret_val = truncate(path.c_str(),2);
  	if(truncate_ret_val == -1)
  	{
-        std::cout << "Error, truncate returns -1" << std::endl;
+        std::cerr << "Error, truncate returns -1" << std::endl;
         return false; 		
  	}
 
@@ -108,7 +108,7 @@ static bool write_data_to_file2(std::string& dir, std::string filename, const st
     
     if (! (myfile.is_open()))
     {
-        std::cout << "Error opening file in write_work_to_file" << std::endl;
+        std::cerr << "Error opening file in write_work_to_file" << std::endl;
         return false;
     }
     myfile << data_to_file;
@@ -130,7 +130,7 @@ bool client::set_job(int status, const std::string& passwords, int lines)
 		ret_val = helpful_functions::change_status_of_file(path, file_object::worker_write_to_file_symbol);
 		if (! ret_val)
 		{
-			std::cout << "error in change_status_of_file1 in set_job" << std::endl;
+			//std::cout << "error in change_status_of_file1 in set_job" << std::endl;
 			return false;
 		}
 		data = std::to_string(this->file_obj.get_id()) + "\n" + std::to_string(this->id) + "\n" + std::to_string(lines) + "\n" + passwords;	
@@ -139,14 +139,14 @@ bool client::set_job(int status, const std::string& passwords, int lines)
 		//std::cout << data << std::endl;
 		if (! ret_val)
 		{
-			std::cout << "error in write_data_to_file in set_job" << std::endl;
+			//std::cout << "error in write_data_to_file in set_job" << std::endl;
 			return false;
 		}
 		
 		ret_val = helpful_functions::change_status_of_file(path, file_object::worker_found_password_symbol);
 		if (! ret_val)
 		{
-			std::cout << "error in change_status_of_file1 in set_job" << std::endl;
+			//std::cout << "error in change_status_of_file1 in set_job" << std::endl;
 			return false;
 		}
 		
@@ -159,11 +159,12 @@ bool client::set_job(int status, const std::string& passwords, int lines)
 
 		if (! ret_val)
 		{
-			std::cout << "error in change_status_of_file in set_job" << std::endl;
+			//std::cout << "error in change_status_of_file in set_job" << std::endl;
 			return false;
 		}
 		return true;
 	}
+	std::cerr << "invalid parameters to set job function" << std::endl;
 	return false;
 
 }
@@ -187,7 +188,8 @@ bool client::work()
 	str_vec_args_server.insert(str_vec_args_server.begin(), password_msg);
 	if (! retVal)
 	{
-		std::cout << "server_string_to_vectors returns false in client" << std::endl;
+		std::cerr << "arguments string is not in the format"  << std::endl;
+
 	}
 
 	std::vector<std::string> file_paths_vector;
@@ -199,11 +201,13 @@ bool client::work()
 		Hash_Matcher<Id_Hash> hm1(Id_Hash(), this->file_obj.get_passwords());
 		Preimage_Seeker seeker_for_passwords(*msg_generator, hm1);
 		seek_all_results = seeker_for_passwords.seek_all();
+		/*
 		if(seek_all_results.size() != 0)
 		{
 			std::cout << "find passwords at: " <<file_obj.get_start_index() << std::endl;
 			helpful_functions::printcoll(seek_all_results);
 		}
+		*/
 		
 
 	}
@@ -212,17 +216,19 @@ bool client::work()
 		std::unique_ptr<Preimage_Matcher> match = Matcher_By_Name::create_matcher(function_name, str_vec_args_server);
 		if(match == nullptr)
 		{
-			std::cout << "error in id name in work" << std::endl;
-			std::cout << this->file_obj.to_string() << std::endl;
+			std::cerr << "error with function name in create_matcher" << std::endl;
+			//std::cout << this->file_obj.to_string() << std::endl;
 			return false;			
 		}
 		Preimage_Seeker seeker_for_passwords2(*msg_generator, *match);
 		seek_all_results = seeker_for_passwords2.seek_all();
+		/*
 		if(seek_all_results.size() != 0)
 		{
 			std::cout << "find passwords at: " <<file_obj.get_start_index() << std::endl;
 			helpful_functions::printcoll(seek_all_results);
 		}
+		*/
 	}
 
 	if(seek_all_results.size() == 0)
@@ -236,7 +242,7 @@ bool client::work()
 	}
 	if (! retVal)
 	{
-		std::cout << "error in set job 1" << std::endl;
+		//std::cout << "error in set job 1" << std::endl;
 		return false;
 	}
 	return true;
@@ -266,7 +272,7 @@ void client::main()
 	retVal = get_job(file_object::working_in_process_symbol, false);
 	if (! retVal)
 	{
-		std::cout << "error in getting the first job" << std::endl;
+		//std::cout << "error in getting the first job" << std::endl;
 		return;
 	}
 	while (! finish)
@@ -274,13 +280,13 @@ void client::main()
 		retVal = work();
 		if (! retVal)
 		{
-			std::cout << "error in working " << std::endl;
+			//std::cout << "error in working " << std::endl;
 			return;
 		}
 		retVal = get_job(file_object::working_in_process_symbol, false);
 		if (! retVal)
 		{
-			std::cout << "error in getting the job" << std::endl;
+			//std::cout << "error in getting the job" << std::endl;
 			return;
 		}	
 		if (this->file_obj.get_status() == file_object::no_more_works_symbol)
