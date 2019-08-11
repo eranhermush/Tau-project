@@ -22,7 +22,7 @@ AIMD_Sleep::AIMD_Sleep(unsigned int min_sleep, unsigned int max_sleep, unsigned 
 	}
 	add = add_inc > 1 ? add_inc : 1;
 	mul = mul_dec > 2 ? mul_dec : 2;
-	max_long_sleeps = max_sleep_before_stop > 1 ? max_sleep_before_stop : 1; // allow for at lest one sleep
+	max_long_sleeps = max_sleep_before_stop > 1 ? max_sleep_before_stop : 1; // allow for at least one long sleep
 	sleep_time = min;
 	count_long_sleeps = 0;
 }
