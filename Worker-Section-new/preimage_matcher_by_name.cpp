@@ -18,15 +18,15 @@ std::unique_ptr<Preimage_Matcher> Matcher_By_Name::create_matcher(const std::str
 	}
 	std::string target(hexstring_to_bytes(args[0]));
 	// SHA2-s
-	if(lc_name.compare("sha2") == 0 || lc_name.compare("sha-256") == 0 || lc_name.compare("sha256") == 0){
+	if(lc_name.compare("sha2") == 0 || lc_name.compare("sha2-256") == 0 || lc_name.compare("sha256") == 0){
 		CryptoPP::SHA256 sha256;
 		return std::unique_ptr<Preimage_Matcher>(new Hash_Matcher<CryptoPP::SHA256>(sha256, target));
 	}
-	if(lc_name.compare("sha384") == 0 || lc_name.compare("sha-384") == 0){
+	if(lc_name.compare("sha384") == 0 || lc_name.compare("sha2-384") == 0){
 		CryptoPP::SHA384 sha384;
 		return std::unique_ptr<Preimage_Matcher>(new Hash_Matcher<CryptoPP::SHA384>(sha384, target));
 	}
-	if(lc_name.compare("sha512") == 0 || lc_name.compare("sha-512") == 0){
+	if(lc_name.compare("sha512") == 0 || lc_name.compare("sha2-512") == 0){
 		CryptoPP::SHA512 sha512;
 		return std::unique_ptr<Preimage_Matcher>(new Hash_Matcher<CryptoPP::SHA512>(sha512, target));
 	}

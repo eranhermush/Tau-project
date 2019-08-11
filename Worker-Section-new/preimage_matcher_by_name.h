@@ -28,9 +28,9 @@ namespace Matcher_By_Name{
 		Else, create_matcher creates a hash matcher
 			args should be of lenght at least 1, and args[0] should be the target is a hexstring (with printable characters, e.g. "02fbc5")
 			The supported hashes are (case insensitive)
-				sha2/sha256/sha256
-				sha384/sha-384
-				sha512/sha-512
+				sha2/sha256/sha2-256
+				sha384/sha2-384
+				sha512/sha2-512
 				sha3/sha3-256
 				sha3-384
 				sha3-512
