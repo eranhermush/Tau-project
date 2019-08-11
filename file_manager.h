@@ -29,7 +29,7 @@ class file_manager{
     char file_char; // char of a file in the string scheme
     int curr_id;
     uint64_t sum_of_works, current_index_of_work;
-    int  work_size;
+    unsigned int  work_size;
     std::string dir_path;
     file_object fileobj;
 
@@ -49,7 +49,8 @@ public:
 	 * @param matrix_all_options- the matrix from the parser with all the options
      * @param file_names        - the names of our files (with repetitions) that we use in the scheme
 	 */
-    file_manager(const std::string& path, std::string& scheme_string, std::vector<std::string> &file_names, std::string &passwords, std::string &password_function, std::string &hash_args);
+    file_manager(const std::string& path, std::string& scheme_string, std::vector<std::string> &file_names, 
+        std::string &passwords, std::string &password_function, std::string &hash_args, uint64_t start, uint64_t finish, unsigned int size_of_job);
     /*
         This function validates that the input is valid:
             The size of the string == the size of the matrix
@@ -65,7 +66,7 @@ public:
 
     uint64_t get_sum_of_works();
 
-    void set_work_size(int size);
+    void set_work_size(unsigned int size);
     std::string get_files_in_string();
     //go_over_messages();
     //bool generate_new_work_to_file();

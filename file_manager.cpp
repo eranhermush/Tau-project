@@ -1,14 +1,15 @@
 #include "file_manager.h"
 
-file_manager::file_manager(const std::string& path, std::string& scheme_string1, std::vector<std::string> &file_names, std::string &passwords, std::string &password_function, std::string &hash_args):
+file_manager::file_manager(const std::string& path, std::string& scheme_string1, std::vector<std::string> &file_names, 
+        std::string &passwords, std::string &password_function, std::string &hash_args, uint64_t start, uint64_t finish, unsigned int size_of_job):
     //our_parser(parser),
     file_names(file_names),
     scheme_string(scheme_string1),
     file_char('f'),
     curr_id(1),
-    sum_of_works(0),
-    current_index_of_work(0),
-    work_size(30000),
+    sum_of_works(finish),
+    current_index_of_work(start),
+    work_size(size_of_job),
     passwords(passwords),
     password_function(password_function),
     dir_path(path),
@@ -22,7 +23,7 @@ file_manager::file_manager(const std::string& path, std::string& scheme_string1,
     this->fileobj.intialize();
     update_file_object_no_index(this->fileobj);
     validate_input();
-    save_sum_of_works();
+    //save_sum_of_works();
 }
 std::string file_manager::get_files_in_string()
 {
@@ -63,10 +64,10 @@ void file_manager::save_sum_of_works()
         result *=  helpful_functions::get_file_size(full_path);
     }
     this->sum_of_works = result;
-    std::cout << "Total Work = " << result << std::endl;
+    //std::cout << "Total Work = " << result << std::endl;
 }
 
-void file_manager::set_work_size(int size)
+void file_manager::set_work_size(unsigned int size)
 {
     this->work_size = size;
 }
@@ -105,10 +106,10 @@ void file_manager::update_file_object_no_index(file_object& f)
 int file_manager::create_new_work(file_object& file_obj, int worker_id)
 {
     file_object file_obj_former;
-    if(this->current_index_of_work % 1000000 < 100)
-    {
-        std::cout << "current index of work is " << current_index_of_work << " result is " <<this->sum_of_works <<  std::endl;
-    }
+    //if(this->current_index_of_work % 1000000 < 100)
+    //{
+    //    std::cout << "current index of work is " << current_index_of_work << " result is " <<this->sum_of_works <<  std::endl;
+    //}
     //std::cout << this->current_index_of_work << " " << this->sum_of_works <<std::endl;
     if (this->current_index_of_work >= this->sum_of_works-1)
     {
