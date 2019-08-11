@@ -21,6 +21,7 @@ file_manager::file_manager(const std::string& path, std::string& scheme_string1,
         password_function(password_function), dir_path(path), hash_args(hash_args)
 */
     this->fileobj.intialize();
+    std::cout <<"f" << std::endl;
     update_file_object_no_index(this->fileobj);
     validate_input();
     //save_sum_of_works();
