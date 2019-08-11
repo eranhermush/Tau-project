@@ -3,11 +3,9 @@
 
 //using namespace std;
 #include <bits/stdc++.h>
-#include "parser_main.h"
 #include <string>
 #include <unistd.h>
 
-#include "worker_manager.h"
 #include "file_manager.h"
 #include "helpful_functions.h"
 
@@ -17,9 +15,9 @@
 void print_matrix(std::vector< std::vector<std::string> > &matrix){
 	for(int i=0;i<matrix.size();i++){
 		for(int j=0; j<matrix.at(i).size(); j++){
-			cout << matrix.at(i).at(j);
+			std::cout << matrix.at(i).at(j);
 		}
-		cout <<endl;
+		std::cout << std::endl;
 	}
 }
 
@@ -29,8 +27,8 @@ int main()
 
 
 
-	string parser_string;
-	string target;
+	std::string parser_string;
+	std::string target;
 	int ret_value = 0;
 	int index_test = 0;
 	bool to_print = true;
@@ -41,8 +39,8 @@ int main()
 	std::vector<int> int_vec;
 	std::vector<float> float_vec;
 
-	std::cout << "Hello, please enter the parser string:" << endl;
-	cin >> parser_string;
+	std::cout << "Hello, please enter the parser string:" << std::endl;
+	std::cin >> parser_string;
 
 
     std::vector<std::string> files_vec; 
@@ -50,48 +48,48 @@ int main()
     for (int i = 1; i <= std::count(parser_string.begin(), parser_string.end(),'f'); i++)
     {
     	std::cout << "enter the file number " << i << " (we have " << std::count(parser_string.begin(), parser_string.end(),'f') << " files)" << std::endl;
-  		cin >> user_input_file;
+  		std::cin >> user_input_file;
         files_vec.push_back(user_input_file); 
     }
-	parser_main parser (parser_string);
+	//parser_main parser (parser_string);
 	
 	// create the matrix
-	ret_value = parser.from_parser_string_to_matrix();
+	//ret_value = parser.from_parser_string_to_matrix();
 	if(ret_value == -1){
-		cout << "Invalid input :( " << endl;
+		std::cout << "Invalid input :( " << std::endl;
 		return 0;
 	}
 	std::string password_functions, hash_args;
 	std::string passwords;
 
 	std::cout << "enter the passwords (in the sae,  ecc, efc, enteer the file path)"  << std::endl;
-	cin >> passwords;
+	std::cin >> passwords;
 	std::cout << "enter the password functions"  << std::endl;
-	cin >> password_functions;
+	std::cin >> password_functions;
 	std::cout << "enter the arguments (-1 if there are no arguments) "  << std::endl;
-	cin >> hash_args;
+	std::cin >> hash_args;
 	//print_matrix(parser.get_matrix());
 
 	// creates the manager
-	file_manager manager(dir_path, parser_string, files_vec, passwords, password_functions, hash_args);
+	file_manager manager(dir_path, parser_string, files_vec, passwords, password_functions, hash_args, 0, -1, 10000);
 
 	int work_id = 0;
 	int retVal = 0;
 	bool str_vec_bool;
-
+	bool return_value = false;
 	while (! finish)
 	{
 		std::cout << std::endl << "enter an index (choose what to do): " << std::endl << "1 - add a work to file " << std::endl << "2 - check the index section "
 				 << std::endl << "3 - check the files(read files in a dir) " << std::endl << "4 - check the method 'go over the files' "
 				  << std::endl << "5 - check string args "<< std::endl << "6 -work " << std::endl << "7 - exit " << std::endl;
-		cin >> index_test;
+		std::cin >> index_test;
 
 
 		if(index_test == 1)
 		{
 			file_object a;
 			std::cout << "enter the worker id " << std::endl;
-			cin >> work_id;
+			std::cin >> work_id;
 			path =  dir_path + "/" + std::to_string(work_id) + ".txt";
 
 			int result = manager.create_new_work(a, work_id);
@@ -111,11 +109,12 @@ int main()
 			}
 			//std::cout << a.to_string() << std::endl;			
 		}
+		/*
 		if(index_test == 2)
 		{
-			/*
-			This is the tester for the indexes section
-			*/
+			
+			//This is the tester for the indexes section
+			
 		    std::vector<int> index_vec; 
 		    std::string result = "";
 		    for (int i = 0; i< files_vec.size();i++)
@@ -158,19 +157,20 @@ int main()
 			}
 			std::cout << std::endl;
 		}
-
+		*/
 		if (index_test == 3)
 		{
 			std::vector<std::string> file_names;
 			std::string directory_name;
-			cout << "enter the directory name "  << endl;
-			cin >> directory_name;
+			std::cout << "enter the directory name "  << std::endl;
+			std::cin >> directory_name;
 			helpful_functions::read_directory(directory_name, file_names);
 			helpful_functions::my_print(file_names);
 		}
 		if (index_test == 4)
 		{
-			manager.go_over_files(to_print);
+			return_value = manager.go_over_files(to_print);
+			std::cout << "ret valuue is " << return_value << std::endl;
 		}
 		if (index_test == 5)
 		{

@@ -25,7 +25,10 @@ file_manager::file_manager(const std::string& path, std::string& scheme_string1,
     //std::cout <<"f" << std::endl;
     update_file_object_no_index(this->fileobj);
     validate_input();
-    //save_sum_of_works();
+    if(finish ==-1){
+        save_sum_of_works();
+
+    }
 }
 std::string file_manager::get_files_in_string()
 {
@@ -114,12 +117,13 @@ int file_manager::create_new_work(file_object& file_obj, int worker_id)
         std::cout << "current index of work is " << current_index_of_work << " result is " <<this->sum_of_works <<  std::endl;
     }
     */
-    uint64_t frac = (this->sum_of_works + 1 - this->start_index_work) / (uint64_t) 5;
-    uint64_t x1 = this->current_index_of_work / (uint64_t) frac;
-    uint64_t x2 = (this->current_index_of_work + this->work_size) / (uint64_t) 5;
+    uint64_t frac = (this->sum_of_works + 1 - this->start_index_work) / 5;
+    uint64_t x1 = (this->current_index_of_work + 1 - this->start_index_work) / (frac);
+    uint64_t x2 = (this->current_index_of_work + this->work_size + 1 - this->start_index_work) / frac;
     if(x1 < x2)
     {
-        std::cout << "make " << x2 << " % of the job" <<  std::endl;
+        x2 = x2*20;
+        std::cout << "We are close to do " << x2 << "\% of the job." <<  std::endl;
     }
     //std::cout << this->current_index_of_work << " " << this->sum_of_works <<std::endl;
     if (this->current_index_of_work >= this->sum_of_works-1)
@@ -385,7 +389,7 @@ bool file_manager::go_over_files( bool print_error)
             }            
         }
     }
-    return (! find_new);
+    return ( find_new);
 }
 
 
