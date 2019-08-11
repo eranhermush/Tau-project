@@ -272,7 +272,11 @@ int helpful_functions::file_to_file_object(file_object& file_obj, std::string fi
 	        for (int i = 1; i <= std::count(msg.begin(), msg.end(),'f'); i++)
 	        {
 	            getline (myfile,line);
-	            files = files + line + '\n'; 
+	            if (i != 1)
+	            {
+	            	files = files + file_object::delimiter_of_files_in_fileobject_symbol;
+	            }
+	            files = files + line; 
 	        }
 	        file_obj.set_files_for_scheme(files);
 	        getline (myfile,line);

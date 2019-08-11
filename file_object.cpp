@@ -111,26 +111,35 @@ bool file_object::check_equal(file_object& obj)
 	if (this->end_index != obj.get_end_index()){
 		return false;
 	}
-
+	std::cout << "her11" << std::endl;
 	if (this->id != obj.get_id()){
 		return false;
 	}
+		std::cout << "her11777" << std::endl;
+
     if  (!(this->scheme_msg == obj.get_scheme_msg() )) 
     {
         return false;
     }  
+    	std::cout << "her11454" << std::endl;
+
     if  (!(this->passwords  == obj.get_passwords() ))
     {
+    	std::cout << "here" << this->passwords << " ttt " <<this->passwords.length()<< " ttt " << obj.get_passwords() << " ttt " << obj.get_passwords().length() << std::endl;
+
         return false;
     }   
+    	std::cout << "her114" << std::endl;
+
     if  (!(this->password_function == obj.get_password_function() ))
     {
         return false;
     }
+	std::cout << "her1rrrrr1" << std::endl;
 
     if  (!(this->files_for_scheme == obj.get_files_for_scheme() ))
     {
-    	std::cout << "here" << this->files_for_scheme << " ttt " << obj.get_files_for_scheme() << std::endl;
+    	//std::cout << "here" << this->files_for_scheme << " ttt " <<this->files_for_scheme.length()<< " ttt " << obj.get_files_for_scheme() << " ttt " << obj.get_files_for_scheme().length() << std::endl;
         return false;
     } 
     if  (!(this->arguments_to_hash == obj.get_arguments() ))
