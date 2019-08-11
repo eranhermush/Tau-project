@@ -8,7 +8,7 @@ file_manager::file_manager(const std::string& path, std::string& scheme_string1,
     curr_id(1),
     sum_of_works(0),
     current_index_of_work(0),
-    work_size(10000),
+    work_size(30000),
     passwords(passwords),
     password_function(password_function),
     dir_path(path),
@@ -105,7 +105,7 @@ void file_manager::update_file_object_no_index(file_object& f)
 int file_manager::create_new_work(file_object& file_obj, int worker_id)
 {
     file_object file_obj_former;
-    if(this->current_index_of_work % 90000 < 100)
+    if(this->current_index_of_work % 1000000 < 100)
     {
         std::cout << "current index of work is " << current_index_of_work << " result is " <<this->sum_of_works <<  std::endl;
     }

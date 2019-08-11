@@ -57,7 +57,7 @@ public:
     static const int no_more_works_symbol =5;
     static const int worker_found_password_symbol = 6;
     static const int worker_write_to_file_symbol = 7;
-    static const char delimiter_of_files_in_fileobject_symbol = char(1);
+    static const char delimiter_of_files_in_fileobject_symbol = '\n';//char(1);
 
     file_object();
     void set_index(uint64_t  start_index, uint64_t  end_index);

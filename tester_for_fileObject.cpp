@@ -70,7 +70,6 @@ int main()
 	cin >> password_functions;
 	std::cout << "enter the arguments (-1 if there are no arguments) "  << std::endl;
 	cin >> hash_args;
-	std::cout << hash_args << " f" << std::endl;
 	//print_matrix(parser.get_matrix());
 
 	// creates the manager
