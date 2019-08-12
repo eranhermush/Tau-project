@@ -6,7 +6,7 @@ And of workers who preform the enumeration.
 
 The project supports various hash functions, and an enumeration over data collected from attacks of the SAE protocol password-to-element
 functions as is presented in https://eprint.iacr.org/2019/383.
-The code also includes an implementation of the necessary parts of these functions.
+The code also includes an implementation of the necessary parts of these functions. These implementations are in the Worker directory, under files with prefixes such as ecc/ffc/sae/kdf . 
 
 ---------------------------------------------------------------------------------------------------------
 
@@ -35,6 +35,6 @@ To compile the server can run:
 
 And to compile the worker:
 	
-	g++ -DNDEBUG -g3 -O2 -Wall -Wextra -o WORKER Worker/client_main.cpp file_object.cpp helpful_functions.cpp Worker/char_password_generator.cpp Worker/client.cpp Worker/file_password_generator.cpp Worker/hash_functions.cpp Worker/nested_password_generator.cpp Worker/preimage_seeker.cpp Worker/Id_Hash.cpp Worker/preimage_matcher_by_name.cpp Worker/pwe_sample.cpp Worker/generator_creator.cpp pattern_utils.cpp  -pthread -march=native -std=c++11 -l:/path/to/install/in/lib/libcryptopp.a -l:/path/to/install/in/lib/libntl.a -lgmp -lm -I:/path/to/install/in/inlcude
+	g++ -DNDEBUG -g3 -O2 -Wall -Wextra -o WORKER Worker/client_main.cpp file_object.cpp helpful_functions.cpp Worker/char_password_generator.cpp Worker/client.cpp Worker/file_password_generator.cpp Worker/hash_functions.cpp Worker/nested_password_generator.cpp Worker/preimage_seeker.cpp Worker/Id_Hash.cpp Worker/preimage_matcher_by_name.cpp Worker/pwe_sample.cpp Worker/generator_creator.cpp pattern_utils.cpp  -pthread -march=native -std=c++11 -l:/path/to/install/in/lib/libcryptopp.a -l:/path/to/install/in/lib/libntl.a -lgmp -lm -I/path/to/install/in/inlcude
 
 To run multiple workers you can use the python script in ./Worker/create_workers.py with usage instructions in it.
