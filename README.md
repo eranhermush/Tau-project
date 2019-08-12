@@ -29,7 +29,7 @@ Compilation flags for the libraries:
 
 ---------------------------------------------------------------------------------------------------------
 
-To compile the server can run:
+To compile the server you can run:
 
 	g++ -Wall -Wextra -o SERVER main.cpp user_text_interface.cpp file_object.cpp file_manager.cpp helpful_functions.cpp pattern_utils.cpp aimd_sleep.cpp -std=c++11
 
